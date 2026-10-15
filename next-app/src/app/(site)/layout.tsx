@@ -16,6 +16,8 @@ import "@/styles/site/native-page.css";
 import "@/styles/site/contacts.css";
 import "@/styles/site/typography.css";
 import "@/styles/site/agent-workflow.css";
+import "@/styles/site/laptop-chat.css";
+import "@/styles/site/laptop-feature.css";
 
 // The site CSS refers to these variables instead of hard-coded family names.
 const body = Manrope({

@@ -10,6 +10,14 @@ npm run build    # production build
 npm start        # serve the production build → http://localhost:3000
 ```
 
+### GitHub Pages
+
+```bash
+npm run build:pages   # static export → next-app/out/, served under /THG/
+```
+
+`.github/workflows/pages.yml` builds and deploys on every push to `main`. One-time setup on GitHub: **Settings → Pages → Build and deployment → Source: GitHub Actions**. The site then lives at https://quanminhnguyen199.github.io/THG/. The base path follows the repository name in CI; locally set `PAGES_BASE_PATH` to override it (e.g. `""` for a custom domain).
+
 Four concepts: `?theme=tech`, `?theme=corporate`, `?theme=industrial`, `?theme=native` (or the switcher at the bottom of the page). See `next-app/README.md` for the code structure.
 
 ## Legacy static prototype (`dist/`)

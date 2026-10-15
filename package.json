@@ -2,6 +2,7 @@
   "scripts": {
     "dev": "npm --prefix next-app run dev",
     "build": "npm --prefix next-app run build",
+    "build:pages": "npm --prefix next-app run build:pages",
     "start": "npm --prefix next-app run start",
     "dev:static": "python -m http.server 4175 --bind 127.0.0.1 --directory dist"
   },

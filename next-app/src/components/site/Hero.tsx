@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState, type MouseEvent, type PointerEvent } from "react";
+import { asset } from "@/lib/asset";
 import { useSite } from "./SiteContext";
 
 const PauseIcon = () => (
@@ -184,7 +185,7 @@ export function Hero() {
         loop
         playsInline
         preload="auto"
-        poster="/media/hero-poster.jpg"
+        poster={asset("/media/hero-poster.jpg")}
         aria-hidden="true"
         onPlay={() => {
           if (!visibleNow() || !inView.current || document.hidden) { video.current?.pause(); return; }
@@ -193,10 +194,10 @@ export function Hero() {
         onPause={() => setPlaying(false)}
       >
         {/* H.264 first (widest support); VP9 WebM for browsers without H.264. Phones get 720p. */}
-        <source src="/media/hero-720.mp4" type={MP4} media="(max-width: 900px)" />
-        <source src="/media/hero-720.webm" type={WEBM} media="(max-width: 900px)" />
-        <source src="/media/hero-1080.mp4" type={MP4} />
-        <source src="/media/hero-1080.webm" type={WEBM} />
+        <source src={asset("/media/hero-720.mp4")} type={MP4} media="(max-width: 900px)" />
+        <source src={asset("/media/hero-720.webm")} type={WEBM} media="(max-width: 900px)" />
+        <source src={asset("/media/hero-1080.mp4")} type={MP4} />
+        <source src={asset("/media/hero-1080.webm")} type={WEBM} />
       </video>
       <div className="hero-shade" />
 
@@ -221,24 +222,6 @@ export function Hero() {
             Đặt lịch tư vấn
           </a>
         </div>
-      </div>
-
-      <div className="hero-bottom">
-        <span>
-          <button
-            type="button"
-            className="hero-toggle"
-            aria-pressed={!playing}
-            aria-label={playing ? "Tạm dừng video" : "Phát video"}
-            onClick={toggle}
-          >
-            {playing ? <PauseIcon /> : <PlayIcon />}
-          </button>
-          <span className="hero-status"><i className="status-dot" /> AI CHỦ QUYỀN. CON NGƯỜI LÀM CHỦ.</span>
-        </span>
-        <a href="#metrics">
-          CUỘN ĐỂ KHÁM PHÁ <span className="scroll-line" />
-        </a>
       </div>
 
       <div ref={cursor} className={`hero-cursor${cursorOn ? " is-visible" : ""}`} aria-hidden="true">

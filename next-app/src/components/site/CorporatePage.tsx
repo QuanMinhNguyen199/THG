@@ -10,6 +10,7 @@ import { CONTACT_EMAIL, ContactList } from "./Contacts";
 import { Logo } from "./Logo";
 import { HeroDemo, Sovereignty, StepFlow, useCaseTilt } from "./CorporateShowcase";
 import { Plexus } from "./Plexus";
+import { asset } from "@/lib/asset";
 import { useSite } from "./SiteContext";
 import { AgentWorkflow } from "./AgentWorkflow";
 
@@ -34,9 +35,9 @@ const DIFF = [
 
 // Images are frames from the company's own hero film until real project photos are supplied.
 const CASES = [
-  { img: "/media/case-tax.jpg", org: "Thuế TP Hà Nội", body: "Phân tích sức khỏe tài chính và rủi ro thuế doanh nghiệp" },
-  { img: "/media/case-city.jpg", org: "TP Hà Nội", body: "Một nền tảng AI cho nhiều cơ quan: HKD, A360DN,.." },
-  { img: "/media/case-ptsc.jpg", org: "PTSC M&C", body: "Trợ lý AI cho hồ sơ kỹ thuật dự án công nghiệp" },
+  { img: asset("/media/case-tax.jpg"), org: "Thuế TP Hà Nội", body: "Phân tích sức khỏe tài chính và rủi ro thuế doanh nghiệp" },
+  { img: asset("/media/case-city.jpg"), org: "TP Hà Nội", body: "Một nền tảng AI cho nhiều cơ quan: HKD, A360DN,.." },
+  { img: asset("/media/case-ptsc.jpg"), org: "PTSC M&C", body: "Trợ lý AI cho hồ sơ kỹ thuật dự án công nghiệp" },
 ];
 
 
@@ -220,8 +221,9 @@ export function CorporatePage() {
           </div>
         </section>
 
-        <section className="ca-wrap ca-what" id="ca-what">
-          <div className="ca-what-head" data-reveal>
+        <section className="ca-what" id="ca-what">
+          <div className="ca-what-banner">
+          <div className="ca-wrap ca-what-head" data-reveal>
             <div className="ca-what-copy">
             <h2>
               <span>GEO Agent</span>
@@ -232,16 +234,22 @@ export function CorporatePage() {
               GEO Agent là trợ lý AI làm việc bên trong cơ quan, doanh nghiệp: đọc văn bản, xác định việc cần làm, ai
               làm, hạn nào, rồi theo dõi đến khi việc xong.
             </p>
+            <div className="ca-what-points">
+              {["Đọc văn bản", "Theo dõi nhiệm vụ", "Con người duyệt"].map((text, index) => <span key={text}>
+                {STEP_ICONS[index]}<span>{text}</span>
+              </span>)}
+            </div>
             </div>
             <AgentWorkflow />
           </div>
-          <p className="ca-kicker" data-reveal>
+          </div>
+          <div className="ca-wrap ca-three-steps" ref={steps}>
+          <h3 className="ca-kicker" data-reveal>
             GEO Agent làm việc qua ba bước
-          </p>
-        </section>
-        <div ref={steps}>
+          </h3>
           <StepFlow icons={STEP_ICONS} />
-        </div>
+          </div>
+        </section>
 
         <section className="ca-diff" id="ca-diff">
           <Plexus className="ca-plexus ca-plexus-side" density={1.6} />

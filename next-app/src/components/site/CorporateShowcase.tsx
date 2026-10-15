@@ -130,28 +130,29 @@ export function HeroDemo() {
 /* ------------------------------------------------------------------ 2. Pinned three-step flow */
 
 const STEP_COPY = [
-  { title: "1.Đọc.", body: "Kết nối hệ thống văn bản, bóc tách nhiệm vụ từ từng văn bản" },
-  { title: "2.Đề xuất.", body: "Đề xuất người phụ trách và hạn; người có thẩm quyền duyệt" },
+  { title: "1. Đọc.", body: "Kết nối hệ thống văn bản, bóc tách nhiệm vụ từ từng văn bản" },
+  { title: "2. Đề xuất.", body: "Đề xuất người phụ trách và hạn; người có thẩm quyền duyệt" },
   { title: "3. Theo đến cùng.", body: "Theo dõi, kiểm đếm, đôn đốc, báo cáo và tính KPI/OKR" },
 ];
 
 /**
- * The section is tall and its stage sticks; scroll position (not hijacked) picks the step.
+ * Compact, user-selected steps stay alongside the introduction.
  * Each step shows the same sample document one stage further along.
  */
 export function StepFlow({ icons }: { icons: ReactNode[] }) {
   const scene = useRef<HTMLDivElement>(null);
   const [step, setStep] = useState(0);
+  const { pausedRef } = useSite();
 
+  // The section is tall and its stage sticks; native scroll position (never hijacked) picks the step.
   useEffect(() => {
     let frame = 0;
     const update = () => {
       frame = 0;
       const el = scene.current;
       if (!el) return;
-      const r = el.getBoundingClientRect();
       const travel = Math.max(1, el.offsetHeight - innerHeight);
-      const progress = Math.min(1, Math.max(0, -r.top / travel));
+      const progress = Math.min(1, Math.max(0, -el.getBoundingClientRect().top / travel));
       setStep(Math.min(2, Math.floor(progress * 3)));
     };
     const queue = () => {
@@ -167,11 +168,15 @@ export function StepFlow({ icons }: { icons: ReactNode[] }) {
     };
   }, []);
 
+  // Choosing a step scrolls to the middle of its slice, so scroll and selection never disagree.
   const jump = (i: number) => {
     const el = scene.current;
     if (!el) return;
     const travel = el.offsetHeight - innerHeight;
-    scrollTo({ top: el.getBoundingClientRect().top + scrollY + (travel * (i + 0.5)) / 3, behavior: "smooth" });
+    scrollTo({
+      top: el.getBoundingClientRect().top + scrollY + (travel * (i + 0.5)) / 3,
+      behavior: pausedRef.current ? "instant" : "smooth",
+    });
   };
 
   return (
