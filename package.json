@@ -1,5 +1,21 @@
 {
+  "scripts": {
+    "dev": "npm --prefix next-app run dev",
+    "build": "npm --prefix next-app run build",
+    "start": "npm --prefix next-app run start",
+    "dev:static": "python -m http.server 4175 --bind 127.0.0.1 --directory dist"
+  },
   "dependencies": {
-    "animejs": "4.5.0"
+    "@gsap/react": "^2.1.2",
+    "@react-three/drei": "^10.7.9",
+    "@react-three/fiber": "^9.8.1",
+    "animejs": "4.5.0",
+    "gsap": "^3.15.0",
+    "lenis": "^1.3.26",
+    "motion": "^14.1.0",
+    "three": "^0.186.1"
+  },
+  "devDependencies": {
+    "@types/three": "^0.186.0"
   }
 }

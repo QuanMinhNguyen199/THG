@@ -1,0 +1,39 @@
+.ca-what .ca-what-head {
+  display: grid;
+  grid-template-columns: minmax(230px, 0.75fr) minmax(0, 1.5fr);
+  align-items: center;
+  gap: 6%;
+}
+.ca-what-copy > p { margin-top: 28px; font-size: 14px; line-height: 1.8; max-width: 360px; color: var(--ca-muted); }
+.ca-agent-workflow { min-width: 0; }
+.ca-agent-canvas { height: 330px; width: 100%; }
+.ca-agent-canvas canvas { display: block; }
+.ca-agent-steps { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; border-bottom: 1px solid var(--ca-line); }
+.ca-agent-steps button {
+  display: flex; align-items: center; justify-content: center; gap: 6px;
+  position: relative; background: transparent; color: var(--ca-muted);
+  padding: 14px 0; font-size: 11px; font-weight: 600; min-height: 44px;
+}
+.ca-agent-steps button::after { content: ""; position: absolute; bottom: -1px; left: 0; right: 0; height: 2px; background: var(--ca-red); transform: scaleX(0); transition: transform 180ms ease-out; }
+.ca-agent-steps button[aria-pressed=true] { color: var(--ca-red); }
+.ca-agent-steps button[aria-pressed=true]::after { transform: scaleX(1); }
+.ca-agent-step-dot { width: 5px; height: 5px; border-radius: 50%; background: currentColor; flex-shrink: 0; }
+.ca-what-head .ca-agent-detail { max-width: none; font-size: 13px; line-height: 1.7; margin-top: 17px; min-height: 45px; }
+.ca-agent-caption { display: flex; justify-content: space-between; align-items: center; gap: 12px; color: var(--ca-muted); font-size: 10px; margin-top: 10px; }
+.ca-agent-caption button { background: transparent; color: var(--ca-ink); text-decoration: underline; text-underline-offset: 4px; font-size: 11px; padding: 10px 0 10px 10px; flex-shrink: 0; min-height: 44px; }
+.ca-agent-caption button:disabled { color: var(--ca-muted); text-decoration: none; cursor: default; }
+@media (max-width: 1000px) {
+  .ca-what .ca-what-head { gap: 30px; grid-template-columns: minmax(210px, 0.8fr) minmax(0, 1.2fr); }
+  .ca-agent-canvas { height: 280px; }
+  .ca-agent-steps button { font-size: 10px; }
+}
+@media (max-width: 720px) {
+  .ca-what .ca-what-head { grid-template-columns: 1fr; gap: 12px; }
+  .ca-what-copy > p { max-width: 460px; }
+  .ca-agent-canvas { height: 240px; }
+  .ca-agent-steps { gap: 5px; }
+  .ca-agent-steps button { flex-direction: column; gap: 8px; text-align: center; font-size: 10px; }
+  .ca-agent-caption { align-items: flex-start; }
+  .ca-agent-caption > span { max-width: 210px; padding-top: 10px; line-height: 1.6; }
+  .ca-what .ca-kicker { margin-top: 44px !important; }
+}

@@ -1,0 +1,14 @@
+/* Closing CTA: centred, one red headline, one filled primary action in every concept. */
+.cta{padding:120px 0 130px;border-top:1px solid var(--line);text-align:center;position:relative;overflow:hidden}
+.cta:before{content:'';position:absolute;left:50%;top:0;width:min(900px,90vw);height:100%;transform:translateX(-50%);background:radial-gradient(ellipse at 50% 30%,color-mix(in srgb,var(--red) 14%,transparent),transparent 65%);pointer-events:none}
+.cta-inner{position:relative;display:flex;flex-direction:column;align-items:center}
+.cta h2{font-family:var(--font-display),sans-serif;font-size:clamp(36px,4.6vw,64px);font-weight:600;line-height:1.12;letter-spacing:-.03em;color:var(--accent-text);margin:0;text-wrap:balance}
+.cta-question{font-size:clamp(16px,1.4vw,19px);font-weight:600;color:var(--white);margin:28px 0 0}
+.cta-body{font-size:14px;line-height:1.85;color:var(--muted);max-width:620px;margin:14px 0 0;text-wrap:pretty}
+.cta .cta-button{margin-top:44px;background:var(--red);border-color:var(--red);color:#fff;font-weight:600;letter-spacing:.06em;text-transform:uppercase;font-size:12px;padding:18px 26px}
+.cta .cta-button:hover,.cta .cta-button:focus-visible{background:#9e1023;border-color:#9e1023;color:#fff}
+[data-theme=industrial] .cta .cta-button{border-radius:6px}
+[data-theme=industrial] .cta .cta-button:hover,[data-theme=industrial] .cta .cta-button:focus-visible{background:#fff;border-color:#fff;color:#b63545}
+[data-theme=industrial] .cta-inner{padding:64px 32px;border:1px solid var(--line);background:linear-gradient(180deg,#ab3141,#9e2e3d);box-shadow:0 30px 80px -40px var(--ambient-strong,transparent)}
+[data-theme=tech] .cta,[data-theme=industrial] .cta{background:transparent}
+@media(max-width:720px){.cta{padding:72px 0 80px}.cta-question{margin-top:22px}.cta .cta-button{width:100%;justify-content:center;gap:16px;padding:17px 18px;font-size:11px}[data-theme=industrial] .cta-inner{padding:44px 20px}}

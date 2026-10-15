@@ -1,0 +1,59 @@
+/* Shared contact strip (Contacts.tsx). Each page sets --ct-accent and --ct-text. */
+.contact-list {
+  --ct-accent: #c1152b;
+  --ct-text: #c1152b;
+  display: flex;
+  justify-content: space-between;
+  gap: 18px 24px;
+  flex-wrap: wrap;
+}
+.contact-list > * {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--ct-text);
+  font-size: 13px;
+}
+.ct-ico {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--ct-accent) 10%, transparent);
+  transition: background 0.3s, transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.ct-ico svg {
+  width: 19px;
+  height: 19px;
+  fill: none;
+  stroke: var(--ct-accent);
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition: stroke 0.3s;
+}
+.contact-list > *:hover .ct-ico {
+  background: var(--ct-accent);
+  transform: scale(1.06);
+}
+.contact-list > *:hover .ct-ico svg {
+  stroke: #ffffff;
+}
+
+/* Concepts 1 and 3 (shared page footer): a strip between the tagline and the legal row. */
+.footer-contacts {
+  --ct-accent: var(--red);
+  --ct-text: var(--white);
+  margin-top: 44px;
+  padding: 26px 0;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+
+@media (max-width: 720px) {
+  .contact-list {
+    flex-direction: column;
+  }
+}

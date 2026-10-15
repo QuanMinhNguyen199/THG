@@ -1,0 +1,103 @@
+/* Industrial — 60 / 30 / 10.
+   The hero is a dark film (hero.css) and is left out of the split.
+   60% white: the base palette (concepts.css): four-tier scene, case studies, the pillar cards.
+   30% red:   the pillars section and the CTA, redefined here as red zones (white type, black buttons).
+   The red is a softened brand red, #b63545 (same hue as #c1152b, saturation 55% instead of 80%).
+   The header is a white bar so it can carry the Corporate logo as designed (navy and red on white).
+   10% black: the metrics band and the footer, plus buttons and markers.
+   Zones only redefine colour variables, so every component keeps its own rules. */
+
+[data-theme=industrial] {
+  --ambient: rgba(18, 18, 18, 0.12);
+  --ambient-strong: rgba(18, 18, 18, 0.2);
+  --footer-word: #222222;
+}
+
+/* White header bar with the Corporate logo. */
+[data-theme=industrial] header {
+  --bg: #ffffff;
+  --white: #121212;
+  --muted: #555555;
+  --line: #e5e5e5;
+  background: var(--bg);
+  color: var(--white);
+}
+
+/* Red zones. White on #b63545 is 5.9:1. */
+[data-theme=industrial] .control,
+[data-theme=industrial] .cta {
+  --bg: #b63545;
+  --surface: #a63040;
+  --art: #9e2e3d;
+  --soft: #922a38;
+  --line: #ffffff33;
+  --white: #ffffff;
+  --muted: #ffe3e7;
+  --accent-text: #ffffff;
+  --red: #121212;
+  --canvas-accent: #ffffff;
+  --ambient: rgba(0, 0, 0, 0.18);
+  --ambient-strong: rgba(0, 0, 0, 0.28);
+  color: var(--white);
+}
+[data-theme=industrial] .control,
+[data-theme=industrial] .cta {
+  background: var(--bg);
+}
+
+/* Black zones: the metrics band under the hero, and the footer that closes the page.
+   Large soft-red figures on black reach 3.2:1, enough for display-size text. */
+[data-theme=industrial] .metrics,
+[data-theme=industrial] footer {
+  --bg: #121212;
+  --white: #ffffff;
+  --muted: #a3a3a3;
+  --line: #2b2b2b;
+  --red: #b63545;
+  --accent-text: #b63545;
+  background: var(--bg);
+  color: var(--white);
+  border-top-color: var(--line);
+}
+
+/* White zones: light cards with neutral shadows; red is kept for figures, icons and edges. */
+/* .metrics sits in the 88% .wrap; paint its band edge to edge. */
+[data-theme=industrial] .metrics {
+  margin-top: 0;
+  border: 0;
+  padding: 75px 0 85px;
+  box-shadow: 0 0 0 100vmax var(--bg);
+  clip-path: inset(0 -100vmax);
+}
+/* Pillar cards stay white inside the red section, so they carry their own white-zone colours. */
+[data-theme=industrial] .pillars article {
+  --white: #121212;
+  --muted: #555555;
+  --line: #e5e5e5;
+  --red: #b63545;
+  --accent-text: #b63545;
+  color: var(--white);
+  background: #ffffff;
+  border: 1px solid var(--line);
+  border-top: 2px solid var(--red);
+  box-shadow: 0 24px 50px -34px var(--ambient-strong);
+}
+[data-theme=industrial] .pillars article:hover {
+  box-shadow: 0 30px 60px -30px rgba(182, 53, 69, 0.28);
+}
+[data-theme=industrial] .project-visual {
+  box-shadow: 0 0 0 1px var(--line), 0 30px 60px -40px var(--ambient-strong);
+}
+[data-theme=industrial] .project:hover .project-visual {
+  box-shadow: 0 0 0 1px rgba(182, 53, 69, 0.45), 0 30px 70px -34px rgba(182, 53, 69, 0.3);
+}
+
+@media (max-width: 720px) {
+  [data-theme=industrial] .metrics {
+    padding: 48px 0;
+  }
+  /* The open mobile menu drops below the white header; keep it a white panel. */
+  [data-theme=industrial] nav.open {
+    background: var(--bg);
+  }
+}

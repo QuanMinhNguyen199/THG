@@ -1,0 +1,80 @@
+/* Floating back-to-top sphere, stacked just above the concept dock. */
+.to-top {
+  position: fixed;
+  right: 28px;
+  bottom: 96px;
+  z-index: 31;
+  width: 58px;
+  height: 58px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: none;
+  opacity: 0;
+  transform: translateY(14px) scale(0.85);
+  pointer-events: none;
+  transition: opacity 0.3s, transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.to-top.is-shown {
+  opacity: 1;
+  transform: none;
+  pointer-events: auto;
+}
+.to-top-ring {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+  fill: none;
+  stroke-width: 2;
+}
+.to-top-ring circle:first-child {
+  stroke: color-mix(in srgb, var(--white) 18%, transparent);
+}
+.to-top-ring circle:last-child {
+  stroke: var(--red);
+  stroke-linecap: round;
+}
+/* A lit sphere: highlight up-left, shade down-right. */
+.to-top-sphere {
+  position: absolute;
+  inset: 6px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: radial-gradient(circle at 34% 28%, color-mix(in srgb, var(--red) 55%, #ffffff) 0%, var(--red) 46%, color-mix(in srgb, var(--red) 70%, #000000) 100%);
+  box-shadow: 0 10px 24px -8px color-mix(in srgb, var(--red) 70%, transparent), inset 0 -3px 8px rgba(0, 0, 0, 0.25);
+  transition: transform 0.25s;
+}
+.to-top-sphere svg {
+  width: 20px;
+  height: 20px;
+  fill: none;
+  stroke: #ffffff;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.to-top:hover .to-top-sphere,
+.to-top:focus-visible .to-top-sphere {
+  transform: translateY(-2px);
+}
+.to-top:focus-visible {
+  outline: 2px solid var(--red);
+  outline-offset: 4px;
+}
+@media (max-width: 720px) {
+  .to-top {
+    right: 16px;
+    bottom: 76px;
+    width: 52px;
+    height: 52px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .to-top {
+    transition: opacity 0.2s;
+    transform: none;
+  }
+}

@@ -1,0 +1,108 @@
+/* Four-tier section: view switch and the "inside GEO Core" stage. */
+.layers-mode {
+  position: absolute;
+  top: 4px;
+  right: 0;
+  z-index: 3;
+  display: flex;
+  padding: 3px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--bg) 88%, transparent);
+}
+.layers-mode button {
+  border: 0;
+  border-radius: 999px;
+  background: none;
+  padding: 7px 12px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  color: var(--muted);
+  transition: background-color 0.2s, color 0.2s;
+}
+.layers-mode button:hover {
+  color: var(--white);
+}
+.layers-mode button[aria-pressed=true] {
+  background: var(--red);
+  color: #ffffff;
+}
+
+/* Dive stage palette per concept: resting dots and the active shell (the canvas itself is transparent). */
+[data-theme] .architecture-art {
+  --stage-ink: #8a8a8f;
+  --stage-accent: #c1152b;
+  --stage-node: #cbd5df;
+  --stage-pulse: #ffffff;
+}
+[data-theme=corporate] .architecture-art {
+  --stage-ink: #0f172a;
+  --stage-accent: #c1152b;
+  --stage-node: #0f172a;
+  --stage-pulse: #c1152b;
+}
+[data-theme=industrial] .architecture-art {
+  --stage-ink: #121212;
+  --stage-accent: #b63545;
+  --stage-node: #121212;
+  --stage-pulse: #c1152b;
+}
+
+/* display:none also stops the tower's loop (its IntersectionObserver sees it leave). */
+.architecture-art.is-dive #globe {
+  display: none;
+}
+/* No frame: a transparent canvas, so the sphere sits directly on the section background. */
+.dive-stage {
+  position: absolute;
+  inset: 0;
+}
+.dive-stage canvas {
+  display: block;
+}
+
+/* A quiet, app-like surface lets the neural model carry the detail. */
+.architecture-scroll.is-core-view {
+  background: var(--bg);
+}
+.is-core-view .architecture-art:after {
+  color: var(--muted);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+}
+.is-core-view .layers-mode,
+.is-core-view .layers-mode button {
+  border-radius: 7px;
+}
+.is-core-view .layers-mode button[aria-pressed=true] {
+  background: var(--soft);
+  color: var(--white);
+}
+.is-core-view .tabs button[aria-selected=true] {
+  color: var(--white);
+  text-shadow: none;
+}
+.is-core-view .tabs button[aria-selected=true]:after {
+  box-shadow: none;
+}
+.is-core-view .architecture-art {
+  overflow: hidden;
+}
+.is-core-view .dive-stage {
+  top: 44px;
+  bottom: 30px;
+}
+.is-core-view .art-caption {
+  border-top: 1px solid var(--line);
+  padding-top: 12px;
+  bottom: 0;
+}
+
+
+@media (max-width: 720px) {
+  .layers-mode button {
+    padding: 6px 9px;
+    font-size: 10px;
+  }
+}

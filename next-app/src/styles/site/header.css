@@ -1,0 +1,161 @@
+/* Top navigation. One 6% gutter is shared by the logo, the hero copy and the content below, and
+   the type is sized against the logo: 14px/500 labels, a spaced language tag, and an outlined
+   action. Loaded last so it settles the older header rules. */
+
+header {
+  height: 80px;
+  padding: 0 6%;
+  gap: 40px;
+}
+.brand {
+  width: 172px;
+}
+
+nav {
+  gap: 36px;
+}
+nav a {
+  font-family: var(--font-body), sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: 0.005em;
+  padding: 10px 0;
+}
+nav a:after {
+  bottom: 2px;
+}
+
+.nav-actions {
+  gap: 20px;
+  font-size: 13px;
+  font-weight: 500;
+}
+.language {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  padding-right: 20px;
+  border-right: 1px solid color-mix(in srgb, currentColor 30%, transparent);
+}
+.nav-theme {
+  display: flex;
+  position: relative;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+  font-size: 11px;
+}
+.nav-theme select {
+  appearance: none;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 500;
+  color: inherit;
+  background: transparent;
+  border: 1px solid color-mix(in srgb, currentColor 35%, transparent);
+  border-radius: 6px;
+  padding: 10px 27px 10px 10px;
+  cursor: pointer;
+  min-height: 40px;
+}
+.nav-theme select:focus-visible {
+  outline: 2px solid var(--red);
+  outline-offset: 3px;
+}
+.nav-theme option {
+  color: var(--white);
+  background: var(--bg);
+}
+.nav-theme svg {
+  position: absolute;
+  right: 9px;
+  width: 12px;
+  height: 12px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.5;
+  pointer-events: none;
+}
+.theme-dock button[data-concept=native] {
+  --swatch-bg: #ffffff;
+  --swatch-accent: #c1152b;
+}
+.contact-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 38px;
+  padding: 0 16px;
+  border: 1px solid color-mix(in srgb, currentColor 35%, transparent);
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 600;
+  transition: border-color 0.2s, background-color 0.2s;
+}
+.contact-link span {
+  padding-left: 0;
+  font-size: 14px;
+}
+.contact-link:hover,
+.contact-link:focus-visible {
+  border-color: currentColor;
+  background: color-mix(in srgb, currentColor 8%, transparent);
+}
+
+/* Hero copy and its bottom bar share the header's gutter. */
+[data-theme] .hero-copy,
+[data-theme] .hero-bottom {
+  left: 6%;
+  right: 6%;
+}
+
+@media (max-width: 1050px) {
+  /* Narrow screens keep the language tag and menu only; the nav links already cover the action. */
+  .contact-link {
+    display: none;
+  }
+  nav {
+    gap: 24px;
+  }
+  nav a {
+    font-size: 13px;
+  }
+}
+
+@media (min-width: 721px) and (max-width: 1250px) {
+  .shared-page header { gap: 20px; }
+  .shared-page .contact-link { display: none; }
+  .shared-page nav { gap: 20px; }
+  .nav-theme > span { display: none; }
+}
+
+@media (max-width: 720px) {
+  header {
+    height: 64px;
+  }
+  .shared-page header { gap: 12px; }
+  .shared-page .nav-actions { gap: 12px; }
+  .nav-theme > span { display: none; }
+  .nav-theme select { padding-left: 8px; padding-right: 24px; font-size: 11px; }
+  .brand {
+    width: 140px;
+  }
+  .language {
+    padding-right: 0;
+    border-right: 0;
+  }
+  nav {
+    top: 64px;
+    gap: 6px;
+  }
+  nav a {
+    font-size: 16px;
+    padding: 12px 0;
+  }
+}
+
+@media (max-width: 380px) {
+  .shared-page .brand { width: 120px; }
+  .shared-page .language { display: none; }
+}

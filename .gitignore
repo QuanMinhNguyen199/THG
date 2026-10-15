@@ -3,3 +3,7 @@
 node_modules/
 qa.cjs
 qa-concepts.cjs
+qa-demo.cjs
+preview.log
+preview-error.log
+output/

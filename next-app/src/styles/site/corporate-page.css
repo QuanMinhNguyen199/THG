@@ -1,0 +1,609 @@
+/* Concept 2 (Corporate): a separate page following the supplied design. Monospace type, white
+   canvas, red accents (#c1152b), a light grey band for the case studies.
+   Only one of the two pages shows, chosen by <html data-theme> before first paint. */
+
+html[data-theme=corporate] .shared-page,
+html[data-theme=native] .shared-page,
+html:not([data-theme=corporate]) .corporate-page {
+  display: none;
+}
+
+.corporate-page {
+  --ca-red: #c1152b;
+  --ca-red-dark: #9e1023;
+  --ca-ink: #111111;
+  --ca-muted: #4a4a4a;
+  --ca-line: #e3e3e3;
+  --ca-grey: #ececec;
+  background: #ffffff;
+  color: var(--ca-ink);
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 13px;
+  line-height: 1.6;
+}
+.corporate-page h1,
+.corporate-page h2,
+.corporate-page h3,
+.corporate-page p {
+  margin: 0;
+}
+.ca-wrap {
+  width: min(1240px, 88%);
+  margin: 0 auto;
+}
+
+/* The shared stylesheet styles bare h1/h2/header/nav for the other concepts; neutralise that here. */
+.corporate-page h1,
+.corporate-page h2,
+.corporate-page h3 {
+  font-family: inherit;
+  white-space: normal;
+}
+[data-theme=corporate] .ca-header {
+  background: transparent;
+  border-bottom: 0;
+}
+.ca-header nav a::after {
+  bottom: 0;
+}
+
+/* Header */
+.ca-header {
+  position: absolute;
+  inset: 0 0 auto 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  gap: 40px;
+  height: 80px;
+  padding: 0 6%;
+}
+.ca-brand {
+  width: 150px;
+  flex-shrink: 0;
+  --logo-ink: #172337;
+}
+.ca-brand .brand-logo {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.ca-header nav {
+  display: flex;
+  gap: 44px;
+  margin-left: auto;
+}
+.ca-header nav a {
+  position: relative;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--ca-ink);
+  padding: 6px 0;
+}
+.ca-header nav a.is-current {
+  color: var(--ca-red);
+}
+.ca-header nav a::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 1px;
+  background: var(--ca-red);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.ca-header nav a:hover::after,
+.ca-header nav a:focus-visible::after {
+  transform: scaleX(1);
+}
+.ca-tools {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.ca-lang {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 700;
+}
+.ca-lang svg {
+  width: 18px;
+  height: 18px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.5;
+}
+
+/* Hero */
+.ca-hero {
+  position: relative;
+  min-height: 620px;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  padding: 120px 0 90px;
+}
+.ca-plexus {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+/* Show the network top-right and along the bottom; keep it off the headline. */
+.ca-plexus-hero {
+  -webkit-mask-image: radial-gradient(ellipse 55% 75% at 92% 8%, #000 25%, transparent 70%), linear-gradient(0deg, #000 0%, transparent 22%);
+  mask-image: radial-gradient(ellipse 55% 75% at 92% 8%, #000 25%, transparent 70%), linear-gradient(0deg, #000 0%, transparent 22%);
+}
+.ca-hero-copy {
+  position: relative;
+}
+.ca-hero h1 {
+  font-size: clamp(44px, 5.4vw, 76px);
+  font-weight: 700;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  color: var(--ca-red);
+}
+.ca-tagline {
+  font-size: clamp(20px, 2.3vw, 32px);
+  font-weight: 700;
+  margin-top: 8px !important;
+}
+.ca-tagline::after {
+  content: "";
+  display: inline-block;
+  width: 0.55em;
+  height: 0.12em;
+  margin-left: 4px;
+  background: var(--ca-red);
+  animation: ca-caret 1s steps(1) infinite;
+}
+@keyframes ca-caret {
+  50% {
+    opacity: 0;
+  }
+}
+.ca-lead {
+  max-width: 470px;
+  margin-top: 48px !important;
+  font-size: 13px;
+  line-height: 1.75;
+}
+.ca-pill {
+  display: inline-block;
+  margin-top: 30px;
+  padding: 12px 20px;
+  border-radius: 999px;
+  background: var(--ca-red);
+  color: #ffffff;
+  font-family: var(--font-body), sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  box-shadow: 0 10px 24px -12px rgba(193, 21, 43, 0.7);
+  transition: background 0.25s, transform 0.3s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.3s;
+}
+.ca-pill:hover,
+.ca-pill:focus-visible {
+  background: var(--ca-red-dark);
+  transform: translateY(-2px);
+  box-shadow: 0 16px 30px -14px rgba(193, 21, 43, 0.8);
+}
+
+/* What it is + three steps */
+.ca-what {
+  padding: 110px 0 40px;
+}
+.ca-what-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 40px;
+}
+.ca-what h2,
+.ca-diff h2 {
+  font-size: clamp(34px, 4vw, 58px);
+  font-weight: 700;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+}
+.ca-what h2 span,
+.ca-diff h2 span {
+  color: var(--ca-red);
+}
+.ca-what-head p {
+  max-width: 380px;
+  font-size: 12px;
+  line-height: 1.75;
+}
+.ca-kicker {
+  margin-top: 70px !important;
+  font-size: 12px;
+  font-weight: 700;
+}
+.ca-steps {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 40px;
+  margin-top: 36px;
+}
+.ca-step {
+  display: grid;
+  grid-template-columns: 44px 1fr;
+  gap: 14px;
+  align-items: start;
+}
+.ca-step svg {
+  width: 44px;
+  height: 44px;
+  fill: none;
+  stroke: var(--ca-red);
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.ca-step svg path {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 0;
+}
+.ca-step h3 {
+  font-size: 12px;
+  font-weight: 700;
+}
+.ca-step p {
+  font-size: 12px;
+  color: var(--ca-muted);
+}
+
+/* Differences: slanted cards */
+.ca-diff {
+  position: relative;
+  padding: 90px 0 90px;
+  overflow: hidden;
+}
+.ca-plexus-side {
+  -webkit-mask-image: radial-gradient(ellipse 30% 55% at 0% 45%, #000 20%, transparent 70%);
+  mask-image: radial-gradient(ellipse 30% 55% at 0% 45%, #000 20%, transparent 70%);
+}
+.ca-diff .ca-wrap {
+  position: relative;
+}
+.ca-cards {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 22px;
+  margin-top: 46px;
+  padding: 0 14px;
+}
+.ca-card-slot {
+  display: flex;
+}
+.ca-card {
+  flex: 1;
+  transform: skewX(-12deg);
+  border-radius: 14px;
+  border: 1.5px solid #2a2a2a;
+  background: #ffffff;
+  min-height: 186px;
+  transition: background 0.35s, color 0.35s, border-color 0.35s, transform 0.4s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.4s;
+}
+.ca-card.is-filled {
+  background: var(--ca-red);
+  border-color: var(--ca-red);
+  color: #ffffff;
+}
+.ca-card-inner {
+  transform: skewX(12deg);
+  padding: 20px 26px 24px;
+  display: grid;
+  gap: 18px;
+}
+.ca-card-num {
+  font-size: 18px;
+  color: var(--ca-red);
+}
+.ca-card.is-filled .ca-card-num {
+  color: #ffffff;
+}
+.ca-card p {
+  font-size: 11.5px;
+  line-height: 1.55;
+}
+.ca-card p span {
+  display: block;
+  font-weight: 700;
+}
+.ca-card-usual {
+  opacity: 0.75;
+}
+/* Hover: every card lifts and swaps fill — outlined cards take the red, red cards go white. */
+.ca-card:hover {
+  transform: skewX(-12deg) translateY(-6px);
+  box-shadow: 0 22px 40px -24px rgba(193, 21, 43, 0.55);
+}
+.ca-card:not(.is-filled):hover {
+  background: var(--ca-red);
+  border-color: var(--ca-red);
+  color: #ffffff;
+}
+.ca-card:not(.is-filled):hover .ca-card-num {
+  color: #ffffff;
+}
+/* …and filled cards invert to the outlined look, so every card answers the pointer. */
+.ca-card.is-filled:hover {
+  background: #ffffff;
+  border-color: var(--ca-red);
+  color: var(--ca-ink);
+}
+.ca-card.is-filled:hover .ca-card-num {
+  color: var(--ca-red);
+}
+.ca-team {
+  margin-top: 64px !important;
+  font-size: clamp(14px, 1.3vw, 17px);
+  font-weight: 700;
+  line-height: 1.7;
+}
+.ca-years {
+  color: var(--ca-red);
+  font-variant-numeric: tabular-nums;
+}
+.ca-team em {
+  font-style: normal;
+  background: linear-gradient(var(--ca-red), var(--ca-red)) left 92% / 0% 3px no-repeat;
+  transition: background-size 1s cubic-bezier(0.22, 1, 0.36, 1) 0.4s;
+}
+.ca-team.is-swept em {
+  background-size: 100% 3px;
+}
+
+/* Cases */
+.ca-cases {
+  background: var(--ca-grey);
+  padding: 80px 0 70px;
+  text-align: center;
+}
+.ca-cases h2,
+.ca-demo h2 {
+  font-size: clamp(26px, 2.8vw, 40px);
+  font-weight: 700;
+  color: var(--ca-red);
+  letter-spacing: -0.01em;
+}
+.ca-sub {
+  margin-top: 12px !important;
+  font-size: 11.5px;
+}
+.ca-case-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  width: min(900px, 100%);
+  margin: 44px auto 0;
+  background: #ffffff;
+  text-align: left;
+}
+.ca-case-media {
+  overflow: hidden;
+  aspect-ratio: 16 / 11;
+  background: #222;
+}
+.ca-case-media img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.ca-case:hover .ca-case-media img {
+  transform: scale(1.06);
+}
+.ca-case h3 {
+  margin: 12px 14px 2px;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--ca-red);
+}
+.ca-case p {
+  margin: 0 14px 16px;
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+/* Demo form */
+.ca-demo {
+  padding: 90px 0 40px;
+  text-align: center;
+}
+.ca-form {
+  margin-top: 54px;
+  text-align: left;
+}
+.ca-form-card {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 26px 28px;
+  padding: 36px 38px 42px;
+  border-radius: 14px;
+  background: #ffffff;
+  box-shadow: 0 30px 60px -30px rgba(0, 0, 0, 0.18), 0 0 0 1px #f0f0f0;
+  font-family: var(--font-body), sans-serif;
+}
+.ca-field {
+  display: grid;
+  gap: 10px;
+}
+.ca-field span {
+  font-size: 14px;
+  font-weight: 600;
+}
+.ca-field-wide {
+  grid-column: 1 / -1;
+}
+.ca-field input,
+.ca-field textarea {
+  width: 100%;
+  border: 1px solid var(--ca-line);
+  border-radius: 12px;
+  padding: 16px;
+  font: 14px var(--font-body), sans-serif;
+  color: var(--ca-ink);
+  background: #ffffff;
+  resize: vertical;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.ca-field input:focus,
+.ca-field textarea:focus {
+  outline: none;
+  border-color: var(--ca-red);
+  box-shadow: 0 0 0 3px rgba(193, 21, 43, 0.12);
+}
+.ca-field.has-error input,
+.ca-field.has-error textarea {
+  border-color: var(--ca-red);
+}
+.ca-field small {
+  font-size: 12px;
+  color: var(--ca-red);
+}
+.ca-submit {
+  margin-top: 26px;
+  margin-left: 38px;
+  padding: 16px 46px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--ca-red);
+  color: #ffffff;
+  font: 700 14px var(--font-mono), monospace;
+  cursor: pointer;
+  box-shadow: 0 14px 30px -16px rgba(193, 21, 43, 0.8);
+  transition: background 0.25s, transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.ca-submit:hover,
+.ca-submit:focus-visible {
+  background: var(--ca-red-dark);
+  transform: translateY(-2px);
+}
+.ca-submit:active {
+  transform: scale(0.97);
+}
+.ca-form-note {
+  min-height: 1.5em;
+  margin: 14px 0 0 38px !important;
+  font-size: 12px;
+  color: var(--ca-muted);
+}
+
+/* Footer */
+.ca-footer {
+  padding: 50px 0 120px;
+}
+.ca-legal {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 46px;
+  padding-top: 20px;
+  border-top: 1px solid var(--ca-line);
+  font-size: 11px;
+  color: var(--ca-muted);
+}
+.ca-legal button {
+  background: none;
+  border: 0;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+}
+
+/* Entrance states: only while motion runs (set from JS), so nothing is ever stuck hidden. */
+.corporate-page[data-motion] .ca-step,
+.corporate-page[data-motion] .ca-card-slot {
+  opacity: 0;
+}
+.corporate-page[data-motion] .ca-step svg path {
+  stroke-dashoffset: 1;
+}
+.corporate-page[data-motion] .ca-case-media {
+  clip-path: inset(0 0 100% 0);
+}
+
+@media (max-width: 1000px) {
+  .ca-header nav {
+    gap: 22px;
+  }
+  .ca-cards {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 28px 26px;
+  }
+}
+@media (max-width: 720px) {
+  .ca-header {
+    flex-wrap: wrap;
+    height: auto;
+    padding: 14px 6% 0;
+    gap: 10px 16px;
+  }
+  .ca-brand {
+    width: 130px;
+  }
+  .ca-tools {
+    margin-left: auto;
+  }
+  .ca-header nav {
+    display: flex;
+    position: static;
+    flex-direction: row;
+    background: none;
+    border: 0;
+    order: 3;
+    width: 100%;
+    margin: 0;
+    gap: 20px;
+    overflow-x: auto;
+    padding: 0 0 6px;
+  }
+  .ca-header nav a {
+    white-space: nowrap;
+  }
+  .ca-hero {
+    padding: 150px 0 80px;
+    min-height: 560px;
+  }
+  .ca-tagline {
+    font-size: 17px;
+  }
+  .ca-what-head {
+    flex-direction: column;
+  }
+  .ca-steps {
+    grid-template-columns: 1fr;
+    gap: 26px;
+  }
+  .ca-cards {
+    grid-template-columns: 1fr;
+    padding: 0 10px;
+  }
+  .ca-case-grid {
+    grid-template-columns: 1fr;
+  }
+  .ca-form-card {
+    grid-template-columns: 1fr;
+    padding: 24px 20px 28px;
+  }
+  .ca-submit,
+  .ca-form-note {
+    margin-left: 0 !important;
+  }
+    .ca-footer {
+    padding-bottom: 140px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ca-tagline::after {
+    animation: none;
+  }
+}

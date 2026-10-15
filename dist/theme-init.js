@@ -1,2 +1,2 @@
-// Apply a saved or shared concept before the first paint.
-(()=>{const themes=['charcoal','navy','ruby'];let theme='charcoal';try{const requested=new URLSearchParams(location.search).get('theme');const saved=localStorage.getItem('geo-theme');theme=themes.includes(requested)?requested:themes.includes(saved)?saved:theme}catch{}document.documentElement.dataset.theme=theme})();
+// Apply a saved or shared concept before the first paint. Old concept names still resolve for shared links.
+(()=>{const themes=['tech','corporate','industrial'],legacy={charcoal:'tech',ruby:'corporate',navy:'industrial'};const pick=v=>themes.includes(v)?v:legacy[v];let theme='tech';try{theme=pick(new URLSearchParams(location.search).get('theme'))||pick(localStorage.getItem('geo-theme'))||theme}catch{}document.documentElement.dataset.theme=theme})();

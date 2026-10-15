@@ -1,0 +1,9 @@
+/* One variable family across GEOagents, Corporate and Agent Native. */
+:root {
+  --font-display: var(--font-body);
+  --font-mono: var(--font-body);
+}
+
+input, textarea, select {
+  font-family: inherit;
+}
