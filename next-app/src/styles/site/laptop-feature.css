@@ -92,20 +92,49 @@
 .ca-what-points > span { flex: 1; display: flex; flex-direction: column; align-items: flex-start; gap: 13px; max-width: 105px; color: #fff; font-size: 10px; font-weight: 600; line-height: 1.5; }
 .ca-what-points svg { width: 45px; height: 45px; padding: 10px; border: 1px solid #ffffff6b; border-radius: 50%; fill: none; stroke: #ffffff; stroke-width: 1.6; stroke-linejoin: round; stroke-linecap: round; }
 .ca-what-banner .ca-laptop-stage { height: 560px; }
-/* The desk the laptop stands on: it runs the full width of the banner (clipped by its overflow)
-   from the back edge projected by the 3D camera (inline `top`) down to the bottom, under the
-   transparent canvas, so the baked ground shadows fall on it. A lit back edge, a soft sheen under
-   the laptop and a darker near edge give it depth. */
-.ca-laptop-desk {
-  position: absolute; z-index: 0; left: -100vw; right: -100vw; bottom: -100vh;
-  pointer-events: none;
-  background:
-    radial-gradient(ellipse 22vw 34vh at 50% 0%, #ff9fb024 0%, transparent 70%),
-    linear-gradient(180deg, #5a0d1c 0%, #3c0814 14%, #24040c 42%, #160207 100%);
-  border-top: 1px solid #ff8fa333;
-  box-shadow: 0 -18px 40px -12px #12020766;
+/* The 3D scene is portalled into the banner and covers it: the desk runs edge to edge, the wall
+   above it is transparent so the backdrop layers (z-index -1) show through, and the copy (z-index 3)
+   stays on top. Only the live laptop screen takes pointer input. */
+.ca-laptop-scene { position: absolute; inset: 0; z-index: 0; pointer-events: none; }
+/* The copy column must sit above the scene, but the reveal animation's transform makes the head
+   its own stacking context, so the head itself is lifted; it lets pointer input through to the
+   laptop screen underneath, and only the copy takes it back. */
+.ca-what .ca-what-banner .ca-what-head { position: relative; z-index: 1; pointer-events: none; }
+.ca-what-banner .ca-what-copy { pointer-events: auto; }
+.ca-laptop-scene > div:first-child { position: absolute !important; inset: 0; }
+.ca-laptop-scene .ca-laptop-screen-overlay { pointer-events: auto; }
+/* LED strip animation, laid over the strip as projected from 3D (inline position). 56 segments are
+   one repeating gradient; the chasing light is a moving mask over a brighter copy, the double blink
+   an opacity flash, the glow a drop shadow. Tiny, so repainting it each frame is cheap, and the 3D
+   scene never re-renders for it. */
+.ca-laptop-led {
+  --seg: calc(100% / 56);
+  position: absolute; z-index: 1; pointer-events: none;
+  background: linear-gradient(90deg, #ff2d4861 0 78%, transparent 78% 100%) 0 0 / var(--seg) 100%;
+  filter: drop-shadow(0 0 3px #ff2d48) drop-shadow(0 0 10px #ff2d48a0);
 }
-.ca-laptop-stage > div:has(> canvas) { z-index: 1; }
+.ca-laptop-led::before, .ca-laptop-led::after {
+  content: ""; position: absolute; inset: 0;
+  background: linear-gradient(90deg, #fff1f3 0 78%, transparent 78% 100%) 0 0 / var(--seg) 100%;
+}
+.ca-laptop-led::before {
+  -webkit-mask: linear-gradient(90deg, transparent 0, #0003 55%, #000 93%, transparent 100%) -40% 0 / 32% 100% no-repeat;
+  mask: linear-gradient(90deg, transparent 0, #0003 55%, #000 93%, transparent 100%) -40% 0 / 32% 100% no-repeat;
+  animation: ca-led-chase 2.3s linear infinite paused;
+}
+.ca-laptop-led::after { opacity: 0; animation: ca-led-blink 4.5s linear infinite paused; }
+.ca-laptop-led.is-running::before, .ca-laptop-led.is-running::after { animation-play-state: running; }
+.ca-laptop-led.is-reflection { opacity: 0.32; filter: blur(2.5px); }
+@keyframes ca-led-chase {
+  from { -webkit-mask-position: -40% 0; mask-position: -40% 0; }
+  to { -webkit-mask-position: 140% 0; mask-position: 140% 0; }
+}
+@keyframes ca-led-blink {
+  0%, 80% { opacity: 0; } 80.1%, 82.6% { opacity: 1; } 82.7%, 85.3% { opacity: 0; } 85.4%, 88% { opacity: 1; } 88.1%, 100% { opacity: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ca-laptop-led::before, .ca-laptop-led::after { animation: none; }
+}
 .ca-what-head .ca-laptop-caption { color: #fce9ed; font-size: 11px; }
 .ca-what .ca-three-steps { margin: 42px auto 0; border-top: 0; padding-top: 0; }
 @media (max-width: 1000px) {

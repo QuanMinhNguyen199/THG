@@ -1,0 +1,35 @@
+diff --git a/node_modules/three/build/three.module.js b/node_modules/three/build/three.module.js
+index c52087a..8ae6700 100644
+--- a/node_modules/three/build/three.module.js
++++ b/node_modules/three/build/three.module.js
+@@ -3360,7 +3360,10 @@ function _getGGXShader( lodMax, width, height ) {
+ 		uniforms: {
+ 			'envMap': { value: null },
+ 			'roughness': { value: 0.0 },
+-			'mipInt': { value: 0 }
++			'mipInt': { value: 0 },
++			// A uniform loop bound keeps the D3D (ANGLE) compiler from unrolling the 256 samples and
++			// constant-folding the Hammersley sequence, which logs X4122 precision warnings.
++			'ggxSamples': { value: GGX_SAMPLES }
+ 		},
+ 
+ 		vertexShader: _getCommonVertexShader(),
+@@ -3375,6 +3378,7 @@ function _getGGXShader( lodMax, width, height ) {
+ 			uniform sampler2D envMap;
+ 			uniform float roughness;
+ 			uniform float mipInt;
++			uniform int ggxSamples;
+ 
+ 			#define ENVMAP_TYPE_CUBE_UV
+ 			#include <cube_uv_reflection_fragment>
+@@ -3439,8 +3443,8 @@ function _getGGXShader( lodMax, width, height ) {
+ 				vec3 tangent = normalize(cross(up, N));
+ 				vec3 bitangent = cross(N, tangent);
+ 
+-				for(uint i = 0u; i < uint(GGX_SAMPLES); i++) {
+-					vec2 Xi = hammersley(i, uint(GGX_SAMPLES));
++				for(uint i = 0u; i < uint(ggxSamples); i++) {
++					vec2 Xi = hammersley(i, uint(ggxSamples));
+ 
+ 					// For PMREM, V = N, so in tangent space V is always (0, 0, 1)
+ 					vec3 H_tangent = importanceSampleGGX_VNDF(Xi, vec3(0.0, 0.0, 1.0), roughness);

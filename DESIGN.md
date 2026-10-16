@@ -34,3 +34,6 @@ The GeoAgent introduction is a full-width product banner inspired by the supplie
 
 The Corporate laptop set now uses a brighter wine-red and rose backdrop with visible translucent light sheets and drifting light pools. These composite through transform/opacity and pause offscreen, in hidden tabs, with site pause or reduced motion. The graphite laptop, desk keyboard and mouse use physical coatings with object-space microfinish shaders; the mat has a filtered weave shader. Neutral studio softboxes, cool screen spill, directional shadows and soft contact shadows keep the devices distinct from the red set. The live chat and camera framing remain independent of the decoration.
 
+
+On desktop at 1024px and above, the shared four-tier architecture section allocates 70% of its column space to the tower or GEO Core visual and 30% to the standard copy. The scene uses a wider container and taller canvas; the text column has compact vertical tabs and responsive headings. Phones retain the stacked layout and native scroll behavior.
+

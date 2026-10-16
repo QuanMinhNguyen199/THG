@@ -27,10 +27,10 @@
 .ca-laptop-messages { overflow-y: auto; overscroll-behavior: contain; flex: 1; min-height: 0; padding: 17px; scrollbar-width: thin; scrollbar-color: #bdc5d0 transparent; }
 .ca-laptop-message { max-width: 94%; margin-bottom: 17px; overflow-wrap: anywhere; }
 .ca-laptop-message > span { display: block; font-size: 11px; color: #616b7a; margin-bottom: 5px; font-weight: 600; }
-.ca-what-head .ca-laptop-message p { max-width: none; margin: 0; padding: 10px 13px; border-radius: 8px; font: inherit; line-height: 1.5; color: #253041; background: #fff; }
+.ca-laptop-scene .ca-laptop-message p { max-width: none; margin: 0; padding: 10px 13px; border-radius: 8px; font: inherit; line-height: 1.5; color: #253041; background: #fff; }
 .ca-laptop-message.is-user { margin-left: auto; max-width: 88%; }
 .ca-laptop-message.is-user > span { text-align: right; }
-.ca-what-head .ca-laptop-message.is-user p { background: #e5eaf0; }
+.ca-laptop-scene .ca-laptop-message.is-user p { background: #e5eaf0; }
 .ca-laptop-caret { display: inline-block; width: 2px; height: 1em; vertical-align: -0.12em; background: #c1152b; margin-left: 3px; }
 .ca-laptop-typing { color: #6b7482; font-size: 14px; }
 .ca-laptop-composer { display: flex; gap: 8px; align-items: center; flex-shrink: 0; padding: 7px 8px 7px 13px; margin: 0 14px 13px; background: white; border: 1px solid #b9c2cf; border-radius: 9px; }

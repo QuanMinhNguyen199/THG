@@ -1,11 +1,17 @@
 "use client";
 
-// A studio product shot: graphite laptop with a red-backlit keyboard, a desk keyboard and mouse
-// on baked two-layer ground shadows, seen nearly head-on from slightly above. The screen is real HTML (the live demo chat),
-// mapped onto the perspective screen with a CSS homography, so focus and typing stay native.
+// A studio product shot: graphite laptop with a red-backlit keyboard and an LED strip, a desk
+// keyboard and a mouse on a glossy desk that runs the full width of the banner, seen nearly head-on
+// from slightly above. The canvas covers the whole banner (the wall above the desk is transparent,
+// so the CSS backdrop shows through) while a lens shift keeps the laptop centred on its layout slot.
+// The screen is real HTML (the live demo chat), mapped onto the perspective screen with a CSS
+// homography, so focus and typing stay native. The scene itself is static: it renders on mount and
+// resize only, and the LED strip's animation is a small CSS layer laid over the projected strip.
 
 import { Canvas, useThree, type ThreeElements } from "@react-three/fiber";
-import { Environment, Lightformer, RoundedBox } from "@react-three/drei";
+import { Environment, Lightformer, MeshReflectorMaterial, RoundedBox } from "@react-three/drei";
+import { Bloom, EffectComposer, N8AO, SMAA, ToneMapping } from "@react-three/postprocessing";
+import { ToneMappingMode } from "postprocessing";
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState, type CSSProperties, type ReactNode } from "react";
 import * as THREE from "three";
 
@@ -169,7 +175,8 @@ function KeyField({ keys, W, D, y }: { keys: Key[]; W: number; D: number; y: num
       </instancedMesh>
       <mesh position={[0, 0.019, 0]} rotation={[-Math.PI / 2, 0, 0]}>
         <planeGeometry args={[W, D]} />
-        <meshBasicMaterial map={legends} transparent depthWrite={false} toneMapped={false} />
+        {/* Slightly over-bright so the bloom pass gives the legends a faint halo. */}
+        <meshBasicMaterial map={legends} color={[4.5, 4.5, 4.5]} transparent depthWrite={false} toneMapped={false} />
       </mesh>
     </group>
   );
@@ -233,7 +240,7 @@ function Laptop({ screenRef }: { screenRef: React.RefObject<THREE.Mesh | null> }
 
 function DeskKeyboard() {
   return (
-    <group position={[0, 0, 3.55]} rotation={[0.035, 0, 0]}>
+    <group position={[0, 0, 4.25]} rotation={[0.035, 0, 0]}>
       <Slab position={[0, 0.09, 0]} size={[4.62, 0.18, 1.72]} color={BODY} radius={0.07} roughness={0.4} metalness={0.45} />
       <KeyField keys={DESK_KEYS} W={4.3} D={1.45} y={0.205} />
     </group>
@@ -269,52 +276,87 @@ function Mouse() {
 }
 
 /**
- * Baked ground shadow for one object, as product renders do it: a tight, dark contact line under
- * the footprint plus a broad, faint penumbra, painted once into a canvas texture. Deterministic and
- * free to draw, unlike screen-space or shadow-map techniques at this size.
+ * The desk: one wide, glossy surface from the wall line forward, past every edge of the frame. Its
+ * blurred reflection picks up the laptop and the LED strip, and it receives the real shadows.
  */
-function GroundShadow({ w, d, x = 0, z = 0, round = 0.12, ellipse = false, strength = 1, spread = 1 }: {
-  w: number; d: number; x?: number; z?: number; round?: number; ellipse?: boolean; strength?: number;
-  /** Penumbra size; smaller on narrow stages so the falloff ends before the canvas edge. */
-  spread?: number;
-}) {
-  const PAD = 0.3 + 0.75 * spread; // world units of falloff around the footprint
-  const texture = useMemo(() => {
-    const scale = 96; // px per world unit
+function Desk() {
+  const depth = 40;
+  // Grey-scale ramp for the wall band (alphaMap reads the green channel): dark at the desk line,
+  // clear a hand's width up, like the soft occlusion where a desk meets a wall.
+  const ramp = useMemo(() => {
     const c = document.createElement("canvas");
-    c.width = Math.ceil((w + PAD * 2) * scale);
-    c.height = Math.ceil((d + PAD * 2) * scale);
+    c.width = 4;
+    c.height = 128;
     const g = c.getContext("2d")!;
-    const shape = (inset: number) => {
-      const fw = (w - inset * 2) * scale, fd = (d - inset * 2) * scale;
-      const fx = (c.width - fw) / 2, fy = (c.height - fd) / 2;
-      g.beginPath();
-      if (ellipse) g.ellipse(c.width / 2, c.height / 2, fw / 2, fd / 2, 0, 0, Math.PI * 2);
-      else g.roundRect(fx, fy, fw, fd, round * scale);
-      g.fill();
-    };
-    // Painted as an opaque grey-scale coverage mask (used as alphaMap, which reads the green
-    // channel), so it never depends on how canvas alpha survives the texture upload.
-    g.fillStyle = "#000";
-    g.fillRect(0, 0, c.width, c.height);
-    const grey = (v: number) => { const n = Math.round(Math.min(1, v) * 255); return `rgb(${n},${n},${n})`; };
-    // broad penumbra
-    g.filter = `blur(${0.32 * spread * scale}px)`;
-    g.fillStyle = grey(0.6 * strength);
-    shape(-0.18 * spread);
-    // contact occlusion: reaches just past the footprint, or the object itself would hide it
-    g.filter = `blur(${0.08 * scale}px)`;
-    g.globalCompositeOperation = "lighten";
-    g.fillStyle = grey(0.9 * strength);
-    shape(-0.05);
+    const grad = g.createLinearGradient(0, 0, 0, 128);
+    grad.addColorStop(0, "#000");
+    grad.addColorStop(1, "#8c8c8c");
+    g.fillStyle = grad;
+    g.fillRect(0, 0, 4, 128);
     return new THREE.CanvasTexture(c);
-  }, [w, d, round, ellipse, strength, spread, PAD]);
-  useEffect(() => () => texture.dispose(), [texture]);
+  }, []);
+  useEffect(() => () => ramp.dispose(), [ramp]);
   return (
-    <mesh rotation={[-Math.PI / 2, 0, 0]} position={[x, 0.002, z]} renderOrder={-1}>
-      <planeGeometry args={[w + PAD * 2, d + PAD * 2]} />
-      <meshBasicMaterial color="#0c0106" alphaMap={texture} transparent depthWrite={false} toneMapped={false} />
-    </mesh>
+    <>
+      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0, DESK_BACK_Z + depth / 2]} receiveShadow>
+        <planeGeometry args={[90, depth]} />
+        {/* Satin lacquer in a deep brand-red brown: light enough for shadows and AO to read, glossy
+            enough for a soft, blurred reflection of the laptop and the LED strip. */}
+        <MeshReflectorMaterial
+          color="#74303a"
+          roughness={0.5}
+          metalness={0.15}
+          blur={[240, 60]}
+          resolution={512}
+          mixBlur={0.9}
+          mixStrength={2.6}
+          mixContrast={1.1}
+          depthScale={1.2}
+          minDepthThreshold={0.3}
+          maxDepthThreshold={1.4}
+          mirror={0.55}
+          envMapIntensity={0.2}
+        />
+      </mesh>
+      {/* the desk's back edge catches the key light */}
+      <mesh position={[0, -0.02, DESK_BACK_Z + 0.03]} rotation={[0, 0, Math.PI / 2]}>
+        <cylinderGeometry args={[0.03, 0.03, 90, 8]} />
+        <meshStandardMaterial color="#7a3640" roughness={0.35} metalness={0.2} />
+      </mesh>
+      <mesh position={[0, 0.75, DESK_BACK_Z - 0.01]}>
+        <planeGeometry args={[90, 1.5]} />
+        <meshBasicMaterial color="#1a0307" alphaMap={ramp} transparent depthWrite={false} toneMapped={false} />
+      </mesh>
+    </>
+  );
+}
+
+const LED_COUNT = 56;
+const LED_SPAN = 5.6;
+const LED_Y = 0.112;
+const LED_Z = 2.204;
+
+/**
+ * The LED strip as lit in the render (steady, for its bloom and its reflection in the desk). The
+ * chasing light on top is CSS (see the stage's `led` layout), so the scene never has to re-render.
+ */
+function LedStrip() {
+  const strip = useRef<THREE.InstancedMesh>(null);
+  useLayoutEffect(() => {
+    const mesh = strip.current;
+    if (!mesh) return;
+    const m = new THREE.Matrix4();
+    for (let i = 0; i < LED_COUNT; i++) {
+      m.makeTranslation(-LED_SPAN / 2 + (i + 0.5) * (LED_SPAN / LED_COUNT), 0, 0);
+      mesh.setMatrixAt(i, m);
+    }
+    mesh.instanceMatrix.needsUpdate = true;
+  }, []);
+  return (
+    <instancedMesh ref={strip} args={[undefined, undefined, LED_COUNT]} position={[0, LED_Y, LED_Z]}>
+      <boxGeometry args={[(LED_SPAN / LED_COUNT) * 0.78, 0.036, 0.006]} />
+      <meshBasicMaterial color={new THREE.Color(GLOW).multiplyScalar(2.2)} toneMapped={false} />
+    </instancedMesh>
   );
 }
 
@@ -354,26 +396,31 @@ function homography(w: number, h: number, dst: [number, number][]) {
   return `matrix3d(${a},${d},0,${g},${bb},${e},0,${hh},0,0,1,0,${c},${f},0,1)`;
 }
 
-/** `desk` is the y (px, stage space) of the desk's back edge, where the CSS desk surface begins. */
-type ScreenLayout = { style: CSSProperties; compact: boolean; desk: number };
+/** `led` / `ledReflection` place the CSS LED layer over the strip and its mirror image in the desk. */
+type ScreenLayout = { style: CSSProperties; compact: boolean; led: CSSProperties; ledReflection: CSSProperties };
+/** The laptop's layout slot, in canvas pixels (the canvas covers the whole banner). */
+export type SceneFrame = { x: number; y: number; w: number; h: number };
 
-function Stage({ onLayout }: { onLayout: (layout: ScreenLayout) => void }) {
+function Stage({ onLayout, frame }: { onLayout: (layout: ScreenLayout) => void; frame: SceneFrame }) {
   const { camera, size, scene, invalidate } = useThree();
   // R3F's size also carries the canvas's page offset, which changes on every scroll; depend only on
   // the dimensions, or the scene re-renders (and the screen overlay re-maps) throughout a scroll.
   const { width, height } = size;
   const screenRef = useRef<THREE.Mesh>(null);
-  const panelWidth = width < 520 ? 440 : 760;
-  const spread = width < 520 ? 0.45 : 1;
-
+  const narrow = frame.w < 520;
+  const panelWidth = narrow ? 440 : 760;
   useEffect(() => {
-    const cam = camera as THREE.PerspectiveCamera;
-    const narrow = width < 520;
+    const cam = camera as THREE.PerspectiveCamera & { manual?: boolean };
+    // R3F would reset the aspect on resize and undo the lens shift below; this camera is ours.
+    cam.manual = true;
     cam.fov = narrow ? 30 : 26;
-    cam.aspect = width / height;
+    cam.aspect = frame.w / frame.h;
     // Nearly eye level and head-on; the live HTML screen follows the projected corners.
-    cam.position.set(0, narrow ? 5.0 : 4.9, narrow ? 15.6 : 15.6);
+    cam.position.set(0, narrow ? 5.0 : 4.9, 15.6);
     cam.lookAt(0, 1.85, 0.9);
+    // Lens shift: frame the shot for the layout slot as before, then widen the film to the whole
+    // canvas around it, so the desk and its reflections run edge to edge without moving the laptop.
+    cam.setViewOffset(frame.w, frame.h, -frame.x, -frame.y, width, height);
     cam.updateProjectionMatrix();
     scene.updateMatrixWorld(true);
     cam.updateMatrixWorld();
@@ -391,20 +438,29 @@ function Stage({ onLayout }: { onLayout: (layout: ScreenLayout) => void }) {
       return [(p.x + 1) * (width / 2), (1 - p.y) * (height / 2)] as [number, number];
     });
     const panelHeight = panelWidth * 0.625;
-    // The desk's back edge (against the wall), behind the lid: a horizontal line on screen, since
-    // the camera has no roll. The CSS desk surface starts there, under the transparent canvas.
-    const back = new THREE.Vector3(0, 0, DESK_BACK_Z).project(cam);
+    // The strip's ends and edges in canvas pixels (the camera has no roll, so it is a level line),
+    // and the same for its reflection, mirrored in the desk plane.
+    const toPx = (x: number, y: number, z: number) => {
+      const v = new THREE.Vector3(x, y, z).project(cam);
+      return [(v.x + 1) * (width / 2), (1 - v.y) * (height / 2)];
+    };
+    const ledBox = (y: number) => {
+      const [left, top] = toPx(-LED_SPAN / 2, y + 0.018, LED_Z);
+      const [right, bottom] = toPx(LED_SPAN / 2, y - 0.018, LED_Z);
+      return { left, top: Math.min(top, bottom), width: right - left, height: Math.max(1.5, Math.abs(bottom - top)) };
+    };
     onLayout({
-      desk: (1 - back.y) * (height / 2),
+      led: ledBox(LED_Y),
+      ledReflection: ledBox(-LED_Y),
       compact: panelWidth < 500,
       style: { width: panelWidth, height: panelHeight, transform: homography(panelWidth, panelHeight, px), transformOrigin: "0 0" },
     });
     invalidate();
-  }, [camera, width, height, scene, panelWidth, invalidate, onLayout]);
+  }, [camera, width, height, scene, panelWidth, narrow, frame.x, frame.y, frame.w, frame.h, invalidate, onLayout]);
 
   return (
     <>
-      <ambientLight intensity={0.35} />
+      <ambientLight intensity={0.15} />
       {/* Studio softboxes: a large overhead key, a front fill and neutral side strips that draw the
           edge highlights along the machined body; a faint rose wash from behind ties it to the set. */}
       <Environment resolution={256} frames={1}>
@@ -414,40 +470,69 @@ function Stage({ onLayout }: { onLayout: (layout: ScreenLayout) => void }) {
         <Lightformer form="rect" position={[8, 2.5, 2]} rotation={[0, -Math.PI / 2, 0]} scale={[3, 7, 1]} intensity={2} />
         <Lightformer form="rect" position={[0, 3, -8]} scale={[16, 6, 1]} color="#f08aa0" intensity={0.8} />
       </Environment>
-      <directionalLight position={[-3, 9, 7]} intensity={1.6} />
-      {/* red key light spilling onto the desk from the keyboards */}
-      <pointLight position={[0, 1.2, 2.6]} color={GLOW} intensity={0.35} distance={4} decay={2} />
-      {/* Ground shadows: laptop base, the lid's cast shadow falling back from the hinge, desk keyboard,
-          mouse. */}
-      <GroundShadow w={6.4} d={4.4} strength={1.35} spread={spread} />
-      <GroundShadow w={6.2} d={1.4} z={-2.7} round={0.3} strength={0.55} spread={spread} />
-      <GroundShadow w={4.62} d={1.72} z={3.55} strength={1.3} spread={spread} />
-      {width >= 520 && <GroundShadow w={0.74} d={1.26} x={4.1} z={2.5} ellipse strength={1.25} spread={0.6} />}
+      {/* Key light, and the only shadow caster: soft PCF shadows of the laptop, the lid and the props
+          fall on the desk; the AO pass adds the contact darkening where things touch down. */}
+      <directionalLight
+        position={[-9, 9, 4]}
+        intensity={4.5}
+        castShadow
+        shadow-mapSize={[2048, 2048]}
+        shadow-camera-left={-9}
+        shadow-camera-right={9}
+        shadow-camera-top={9}
+        shadow-camera-bottom={-9}
+        shadow-camera-near={1}
+        shadow-camera-far={30}
+        shadow-bias={-0.0004}
+        shadow-normalBias={0.02}
+        shadow-radius={6}
+      />
+      {/* red key and LED light spilling onto the desk in front of the laptop */}
+      <pointLight position={[0, 0.3, 2.9]} color={GLOW} intensity={1.6} distance={4} decay={2} />
+      <Desk />
       <Laptop screenRef={screenRef} />
+      <LedStrip />
       <DeskKeyboard />
       {/* The mouse is a desktop-only prop; on narrow stages it would fall off the edge. */}
-      {width >= 520 && <Mouse />}
+      {!narrow && <Mouse />}
+      {/* Post-processing, run only when the static scene renders (mount, resize): N8AO ambient
+          occlusion for contact shadows, bloom for the LEDs and backlit keys, ACES tone mapping and
+          SMAA anti-aliasing (much lighter than multisampling the half-float composer targets). */}
+      <EffectComposer multisampling={0}>
+        <N8AO halfRes aoRadius={1.4} distanceFalloff={0.8} intensity={3} quality="performance" />
+        <Bloom mipmapBlur luminanceThreshold={1.3} luminanceSmoothing={0.2} intensity={1.1} radius={0.6} />
+        <ToneMapping mode={ToneMappingMode.ACES_FILMIC} />
+        <SMAA />
+      </EffectComposer>
     </>
   );
 }
 
-export default function AgentWorkflowScene({ children }: { children: ReactNode }) {
+export default function AgentWorkflowScene({ children, frame, animate }: { children: ReactNode; frame: SceneFrame; animate: boolean }) {
   const [screen, setScreen] = useState<ScreenLayout | null>(null);
   const onLayout = useCallback((l: ScreenLayout) => setScreen(l), []);
   return (
     <>
-      {screen && <div className="ca-laptop-desk" style={{ top: screen.desk }} aria-hidden="true" />}
       <Canvas
         camera={{ fov: 27, near: 0.1, far: 80 }}
         frameloop="demand"
         resize={{ scroll: false, debounce: 120 }}
-        // Rendered only on mount and resize (frameloop "demand"), so full device density costs nothing
-        // while scrolling and keeps every edge and key legend crisp.
-        dpr={[1, 2]}
-        gl={{ alpha: true, antialias: true, powerPreference: "low-power" }}
+        // The canvas spans the banner and runs a post-processing chain, so density is capped at 1.5x;
+        // the composer's MSAA does the anti-aliasing (the default framebuffer needs none).
+        dpr={[1, 1.5]}
+        shadows="percentage"
+        gl={{ alpha: true, antialias: false, powerPreference: "high-performance" }}
       >
-        <Stage onLayout={onLayout} />
+        <Stage onLayout={onLayout} frame={frame} />
       </Canvas>
+      {screen && (
+        <>
+          {/* The LED strip's chasing light and double blink, on a compositor-cheap CSS layer; it
+              only runs while the banner is on screen and motion is allowed. */}
+          <div className={`ca-laptop-led${animate ? " is-running" : ""}`} style={screen.led} aria-hidden="true" />
+          <div className={`ca-laptop-led is-reflection${animate ? " is-running" : ""}`} style={screen.ledReflection} aria-hidden="true" />
+        </>
+      )}
       {screen && (
         <div className={`ca-laptop-screen-content ca-laptop-screen-overlay${screen.compact ? " is-compact" : ""}`} style={screen.style}>
           {children}

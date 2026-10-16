@@ -1,8 +1,10 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { useEffect, useRef, useState, type FormEvent } from "react";
+import { useEffect, useLayoutEffect, useRef, useState, type FormEvent } from "react";
+import { createPortal } from "react-dom";
 import { useSite } from "./SiteContext";
+import type { SceneFrame } from "./AgentWorkflowScene";
 
 const LaptopScene = dynamic(() => import("./AgentWorkflowScene"), { ssr: false });
 type Message = { id: number; role: "user" | "bot"; text: string };
@@ -105,6 +107,33 @@ export function AgentWorkflow() {
   const host = useRef<HTMLDivElement>(null);
   const [visible, setVisible] = useState(false);
   const [ready, setReady] = useState(false);
+  const slot = useRef<HTMLDivElement>(null);
+  const [banner, setBanner] = useState<HTMLElement | null>(null);
+  const [frame, setFrame] = useState<SceneFrame | null>(null);
+  // The 3D scene is portalled into the banner and covers all of it (so the desk can run edge to
+  // edge); this slot keeps the laptop's place in the layout, and its offset inside the banner tells
+  // the camera where to put the laptop. It only moves on resize or when the reveal animation ends.
+  useLayoutEffect(() => {
+    const el = slot.current;
+    const host = el?.closest<HTMLElement>(".ca-what-banner");
+    if (!el || !host) return;
+    setBanner(host);
+    const measure = () => {
+      const b = host.getBoundingClientRect();
+      const r = el.getBoundingClientRect();
+      const next = { x: Math.round(r.left - b.left), y: Math.round(r.top - b.top), w: Math.round(r.width), h: Math.round(r.height) };
+      setFrame(prev => prev && prev.x === next.x && prev.y === next.y && prev.w === next.w && prev.h === next.h ? prev : next);
+    };
+    measure();
+    const observer = new ResizeObserver(measure);
+    observer.observe(host);
+    observer.observe(el);
+    host.addEventListener("animationend", measure);
+    return () => {
+      observer.disconnect();
+      host.removeEventListener("animationend", measure);
+    };
+  }, []);
   useEffect(() => {
     const el = host.current;
     if (!el) return;
@@ -126,8 +155,13 @@ export function AgentWorkflow() {
     };
   }, []);
   return <div className="ca-agent-workflow" ref={host}>
-    <div className="ca-laptop-stage" role="group" aria-label="Laptop 3D với màn hình chat GeoAgent tương tác">
-      {ready && theme === "corporate" && <LaptopScene><DemoChat visible={visible} paused={paused} /></LaptopScene>}
+    <div className="ca-laptop-stage" ref={slot}>
+      {ready && theme === "corporate" && banner && frame && createPortal(
+        <div className="ca-laptop-scene" role="group" aria-label="Laptop 3D với màn hình chat GeoAgent tương tác">
+          <LaptopScene frame={frame} animate={visible && !paused}><DemoChat visible={visible} paused={paused} /></LaptopScene>
+        </div>,
+        banner,
+      )}
     </div>
   </div>;
 }

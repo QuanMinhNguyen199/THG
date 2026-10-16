@@ -1,4 +1,23 @@
 /* Four-tier section: view switch and the "inside GEO Core" stage. */
+@media (min-width: 1024px) {
+  .architecture-scroll .architecture {
+    width: min(1440px, 92%);
+    grid-template-columns: minmax(0, 7fr) minmax(0, 3fr);
+    gap: clamp(24px, 3vw, 48px);
+  }
+  .architecture-scroll .architecture-art {
+    min-width: 0;
+    height: min(76svh, 760px);
+  }
+  .architecture-scroll .architecture-copy { min-width: 0; }
+  .architecture-scroll .architecture h2 { font-size: clamp(28px, 2.8vw, 42px); }
+  .architecture-scroll .layer-layout { grid-template-columns: 100px minmax(0, 1fr); gap: 16px; }
+  .architecture-scroll .tabs button { font-size: 13px; }
+  .architecture-scroll .tabs button span { margin-right: 8px; }
+  .architecture-scroll .intro { margin-top: 20px; }
+  .architecture-scroll #layer-panel h3 { font-size: 17px; }
+}
+
 .layers-mode {
   position: absolute;
   top: 4px;
