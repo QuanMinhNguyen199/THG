@@ -18,26 +18,27 @@
    the stage sticks to the viewport, and scroll position picks the step (CorporateShowcase StepFlow). */
 .ca-three-steps { margin-top: 40px; padding-top: 32px; border-top: 1px solid var(--ca-line); }
 .ca-what .ca-kicker { margin: 0 !important; font-size: clamp(20px, 2vw, 26px); line-height: 1.4; font-weight: 600; }
-.ca-what .ca-flow { height: 220svh; margin-top: 24px; }
+.ca-what .ca-flow { height: 175svh; }
 .ca-what .ca-flow-stage {
-  position: sticky; top: clamp(80px, 14svh, 128px); width: 100%; height: auto;
+  position: sticky; top: clamp(72px, calc(50svh - 250px), 220px); width: 100%; height: auto;
   grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
   align-items: start; gap: 40px;
 }
 /* Panels stack and cross-fade (opacity + slide) as the step changes. */
-.ca-what .ca-flow-view { min-height: 360px; padding: 24px; }
-.ca-what .ca-panel { inset: 24px; }
+.ca-what .ca-flow-head { grid-column: 1 / -1; margin-bottom: -12px; }
+/* Panels share one grid cell, so the card is exactly as tall as the tallest step: no dead space. */
+.ca-what .ca-flow-view { display: grid; min-height: 0; padding: 24px; }
+.ca-what .ca-panel { position: relative; inset: auto; grid-area: 1 / 1; }
 .ca-what .ca-flow-steps button { padding: 16px 20px; }
 .ca-what .ca-step-title { font-size: 18px; line-height: 1.4; }
 .ca-what .ca-step-body { font-size: 13px; line-height: 1.7; }
 .ca-what .ca-flow-steps svg { width: 36px; height: 36px; }
 @media (max-width: 860px) {
-  .ca-what .ca-flow { height: 210svh; }
-  .ca-what .ca-flow-stage { grid-template-columns: 1fr; align-content: start; top: 72px; gap: 18px; }
+  .ca-what .ca-flow { height: 170svh; }
+  .ca-what .ca-flow-stage { grid-template-columns: 1fr; align-content: start; top: clamp(64px, calc(50svh - 290px), 160px); gap: 18px; }
   .ca-what .ca-flow-steps button { padding: 12px 6px; }
   .ca-what .ca-step-title { font-size: 13px; }
   .ca-what .ca-flow-steps svg { width: 28px; height: 28px; }
-  .ca-what .ca-flow-view { min-height: 380px; padding: 18px; }
-  .ca-what .ca-panel { inset: 18px; }
+  .ca-what .ca-flow-view { padding: 18px; }
   .ca-three-steps { margin-top: 28px; padding-top: 24px; }
 }

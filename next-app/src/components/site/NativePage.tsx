@@ -11,6 +11,7 @@ import { ContactList } from "./Contacts";
 import { Logo } from "./Logo";
 import { useSite } from "./SiteContext";
 import { Waves } from "./Waves";
+import { useStickyHeader } from "./useStickyHeader";
 
 const NAV = [
   { href: "#na-hero", label: "GeoAgent" },
@@ -386,6 +387,7 @@ const CASES = [
 
 export function NativePage() {
   const { theme, paused, togglePaused } = useSite();
+  const bar = useStickyHeader<HTMLElement>("#na-hero", theme === "native");
   const [casesRef, casesIn] = useReveal<HTMLUListElement>(0.3);
   // Entrance states (hidden until revealed) apply only while motion runs, so nothing stays hidden
   // without JS, with reduced motion or with the pause control.
@@ -399,7 +401,7 @@ export function NativePage() {
       <a className="skip" href="#na-main">
         Đến nội dung
       </a>
-      <header className="na-header">
+      <header className="na-header" ref={bar}>
         <a href="#na-hero" className="na-brand" aria-label="THEHEGEO trang chủ">
           <Logo className="brand-logo" />
         </a>

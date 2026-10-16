@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { Logo } from "./Logo";
 import { useSite } from "./SiteContext";
+import { useStickyHeader } from "./useStickyHeader";
 
 const links = [
   { href: "#geoagents", label: "GEOagents" },
@@ -14,6 +15,7 @@ const links = [
 export function Header() {
   const [open, setOpen] = useState(false);
   const { theme, setTheme } = useSite();
+  const bar = useStickyHeader<HTMLElement>("#geoagents", theme === "tech" || theme === "industrial");
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => e.key === "Escape" && setOpen(false);
@@ -22,7 +24,7 @@ export function Header() {
   }, []);
 
   return (
-    <header>
+    <header ref={bar}>
       <a href="#" className="brand" aria-label="THEHEGEO trang chủ">
         <Logo className="brand-logo" />
       </a>

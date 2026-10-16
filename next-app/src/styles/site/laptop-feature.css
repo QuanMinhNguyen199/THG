@@ -4,19 +4,20 @@
   position: relative;
   isolation: isolate;
   overflow: hidden;
-  /* Night desk: a dark wall lit by a brand-red wash behind the laptop, deep crimson to the left. */
+  /* Concept 2's brand red (#c1152b, --ca-red): deepening to the left behind the copy, with a
+     brighter key light over the laptop. */
   background:
-    radial-gradient(ellipse 42% 58% at 66% 34%, #c1152b8c 0%, #7a0c1d40 45%, transparent 75%),
+    radial-gradient(ellipse 50% 72% at 72% 26%, #e04a608a 0%, #c1152b45 50%, transparent 78%),
     radial-gradient(ellipse 60% 80% at 0% 100%, #5b0b1a99 0%, transparent 70%),
-    linear-gradient(180deg, #1c050b 0%, #2a0811 55%, #12030a 100%);
+    linear-gradient(115deg, #6a0b1c 0%, #9c1227 46%, #c1152b 100%);
 }
 .ca-what-banner::before {
   content: ""; position: absolute; z-index: -1; bottom: 0; left: 0; right: 0;
-  height: 30%; background: linear-gradient(180deg, transparent, #07010399);
+  height: 30%; background: linear-gradient(180deg, transparent, #2c122955);
 }
 .ca-what-banner::after {
   content: ""; position: absolute; z-index: -1; right: -5%; top: -15%; width: 19%; height: 120%;
-  background: linear-gradient(90deg, transparent, #ff6b7d1f, transparent); filter: blur(24px); transform: skewX(-12deg);
+  background: linear-gradient(90deg, transparent, #ffd5e15c, transparent); filter: blur(24px); transform: skewX(-12deg);
   pointer-events: none;
   animation: ca-studio-light 18s ease-in-out infinite alternate;
   animation-play-state: paused;
@@ -26,8 +27,57 @@
   from { transform: translate3d(-22%, 2%, 0) skewX(-12deg); opacity: 0.45; }
   to { transform: translate3d(14%, -2%, 0) skewX(-8deg); opacity: 0.85; }
 }
+/* Ambient light: soft red glows that breathe and drift behind the laptop. Transform/opacity only,
+   so it composites without repainting, and it runs only while the banner is on screen. */
+.ca-what-ambient { position: absolute; inset: 0; z-index: -1; overflow: hidden; pointer-events: none; }
+.ca-what-ambient i {
+  position: absolute; border-radius: 50%; will-change: transform, opacity;
+  animation-play-state: paused; animation-timing-function: ease-in-out; animation-iteration-count: infinite; animation-direction: alternate;
+}
+.ca-what-ambient i:nth-child(1) {
+  left: 38%; top: -18%; width: 58%; height: 105%;
+  background: radial-gradient(closest-side, #ffbbca66, #e85f7b30 55%, transparent);
+  animation-name: ca-glow-breathe; animation-duration: 7s;
+}
+.ca-what-ambient i:nth-child(2) {
+  left: -14%; top: 35%; width: 50%; height: 90%;
+  background: radial-gradient(closest-side, #e6678445, transparent);
+  animation-name: ca-glow-drift; animation-duration: 13s;
+}
+.ca-what-ambient i:nth-child(3) {
+  right: -8%; top: -30%; width: 34%; height: 80%;
+  background: radial-gradient(closest-side, #ffe4ed60, transparent);
+  animation-name: ca-glow-drift-b; animation-duration: 11s;
+}
+[data-theme=corporate] .ca-what-banner[data-in-view] .ca-what-ambient i { animation-play-state: running; }
+.ca-what-light-sheets { position: absolute; inset: 0; z-index: -1; overflow: hidden; pointer-events: none; }
+.ca-what-light-sheets i {
+  position: absolute; top: -35%; right: 18%; width: 20%; height: 175%;
+  background: linear-gradient(90deg, transparent 0%, #fff0f72b 48%, #fff4fa12 60%, transparent 100%);
+  border-left: 1px solid #ffe3ee38;
+  transform: rotate(-24deg);
+  animation: ca-light-sheet 14s ease-in-out infinite alternate paused;
+}
+.ca-what-light-sheets i:nth-child(2) { right: -10%; width: 14%; animation-duration: 19s; animation-delay: -7s; }
+[data-theme=corporate] .ca-what-banner[data-in-view] .ca-what-light-sheets i { animation-play-state: running; }
+@keyframes ca-light-sheet {
+  from { transform: translate3d(22%, -2%, 0) rotate(-24deg); opacity: 0.4; }
+  to { transform: translate3d(-95%, 7%, 0) rotate(-17deg); opacity: 0.95; }
+}
+@keyframes ca-glow-breathe {
+  from { transform: translate3d(-3%, 0, 0) scale(0.9); opacity: 0.65; }
+  to { transform: translate3d(3%, 4%, 0) scale(1.12); opacity: 1; }
+}
+@keyframes ca-glow-drift {
+  from { transform: translate3d(0, 0, 0) scale(1); opacity: 0.6; }
+  to { transform: translate3d(28%, -18%, 0) scale(1.2); opacity: 1; }
+}
+@keyframes ca-glow-drift-b {
+  from { transform: translate3d(0, 0, 0); opacity: 0.4; }
+  to { transform: translate3d(-40%, 30%, 0); opacity: 1; }
+}
 @media (prefers-reduced-motion: reduce) {
-  .ca-what-banner::after { animation: none; }
+  .ca-what-banner::after, .ca-what-ambient i, .ca-what-light-sheets i { animation: none; }
 }
 .ca-what .ca-what-banner .ca-what-head {
   width: min(1440px, 90%); grid-template-columns: minmax(260px, 0.7fr) minmax(0, 1.7fr);
@@ -42,6 +92,20 @@
 .ca-what-points > span { flex: 1; display: flex; flex-direction: column; align-items: flex-start; gap: 13px; max-width: 105px; color: #fff; font-size: 10px; font-weight: 600; line-height: 1.5; }
 .ca-what-points svg { width: 45px; height: 45px; padding: 10px; border: 1px solid #ffffff6b; border-radius: 50%; fill: none; stroke: #ffffff; stroke-width: 1.6; stroke-linejoin: round; stroke-linecap: round; }
 .ca-what-banner .ca-laptop-stage { height: 560px; }
+/* The desk the laptop stands on: it runs the full width of the banner (clipped by its overflow)
+   from the back edge projected by the 3D camera (inline `top`) down to the bottom, under the
+   transparent canvas, so the baked ground shadows fall on it. A lit back edge, a soft sheen under
+   the laptop and a darker near edge give it depth. */
+.ca-laptop-desk {
+  position: absolute; z-index: 0; left: -100vw; right: -100vw; bottom: -100vh;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 22vw 34vh at 50% 0%, #ff9fb024 0%, transparent 70%),
+    linear-gradient(180deg, #5a0d1c 0%, #3c0814 14%, #24040c 42%, #160207 100%);
+  border-top: 1px solid #ff8fa333;
+  box-shadow: 0 -18px 40px -12px #12020766;
+}
+.ca-laptop-stage > div:has(> canvas) { z-index: 1; }
 .ca-what-head .ca-laptop-caption { color: #fce9ed; font-size: 11px; }
 .ca-what .ca-three-steps { margin: 42px auto 0; border-top: 0; padding-top: 0; }
 @media (max-width: 1000px) {

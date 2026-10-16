@@ -13,6 +13,7 @@ import { Plexus } from "./Plexus";
 import { asset } from "@/lib/asset";
 import { useSite } from "./SiteContext";
 import { AgentWorkflow } from "./AgentWorkflow";
+import { useStickyHeader } from "./useStickyHeader";
 
 const NAV = [
   { href: "#ca-hero", label: "GeoAgent" },
@@ -82,6 +83,7 @@ function useOnView(ref: React.RefObject<HTMLElement | null>, run: () => void, th
 export function CorporatePage() {
   const { theme, paused, togglePaused, pausedRef } = useSite();
   const active = theme === "corporate";
+  const bar = useStickyHeader<HTMLElement>("#ca-hero", active);
   const tagline = useRef<HTMLParagraphElement>(null);
   const steps = useRef<HTMLDivElement>(null);
   const cards = useRef<HTMLDivElement>(null);
@@ -178,7 +180,7 @@ export function CorporatePage() {
       <a className="skip" href="#ca-main">
         Đến nội dung
       </a>
-      <header className="ca-header">
+      <header className="ca-header" ref={bar}>
         <a href="#ca-hero" className="ca-brand" aria-label="THEHEGEO trang chủ">
           <Logo className="brand-logo" />
         </a>
@@ -223,6 +225,8 @@ export function CorporatePage() {
 
         <section className="ca-what" id="ca-what">
           <div className="ca-what-banner">
+          <div className="ca-what-ambient" aria-hidden="true"><i /><i /><i /></div>
+          <div className="ca-what-light-sheets" aria-hidden="true"><i /><i /></div>
           <div className="ca-wrap ca-what-head" data-reveal>
             <div className="ca-what-copy">
             <h2>
@@ -244,10 +248,8 @@ export function CorporatePage() {
           </div>
           </div>
           <div className="ca-wrap ca-three-steps" ref={steps}>
-          <h3 className="ca-kicker" data-reveal>
-            GEO Agent làm việc qua ba bước
-          </h3>
-          <StepFlow icons={STEP_ICONS} />
+          {/* The heading rides inside the pinned stage, so it stays with the steps while they change. */}
+          <StepFlow icons={STEP_ICONS} title={<h3 className="ca-kicker">GEO Agent làm việc qua ba bước</h3>} />
           </div>
         </section>
 

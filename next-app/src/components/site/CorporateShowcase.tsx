@@ -139,7 +139,7 @@ const STEP_COPY = [
  * Compact, user-selected steps stay alongside the introduction.
  * Each step shows the same sample document one stage further along.
  */
-export function StepFlow({ icons }: { icons: ReactNode[] }) {
+export function StepFlow({ icons, title }: { icons: ReactNode[]; title?: ReactNode }) {
   const scene = useRef<HTMLDivElement>(null);
   const [step, setStep] = useState(0);
   const { pausedRef } = useSite();
@@ -182,6 +182,7 @@ export function StepFlow({ icons }: { icons: ReactNode[] }) {
   return (
     <div className="ca-flow" ref={scene}>
       <div className="ca-flow-stage">
+        {title && <div className="ca-flow-head">{title}</div>}
         <ol className="ca-flow-steps">
           {STEP_COPY.map((s, i) => (
             <li key={s.title} className={`ca-step${step === i ? " is-active" : ""}`}>

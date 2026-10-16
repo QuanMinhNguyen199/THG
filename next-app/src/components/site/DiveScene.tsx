@@ -104,7 +104,7 @@ export default function DiveScene({ active, progress, still, visible, colors }: 
   return <Canvas
     className="dive-canvas"
     frameloop="demand"
-    dpr={[1, 1.25]}
+    dpr={[1, 1.5]}
     camera={{ position: [0, 0, OUTER_DISTANCE], fov: 48, near: 0.05, far: 60 }}
     gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}
     aria-hidden

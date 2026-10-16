@@ -20,7 +20,7 @@ function texture(width: number, height: number, draw: (c: CanvasRenderingContext
   canvas.width = width; canvas.height = height;
   draw(canvas.getContext("2d")!);
   const map = new THREE.CanvasTexture(canvas);
-  map.colorSpace = THREE.SRGBColorSpace; map.anisotropy = 4;
+  map.colorSpace = THREE.SRGBColorSpace; map.anisotropy = 8;
   return map;
 }
 

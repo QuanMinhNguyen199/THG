@@ -33,8 +33,9 @@ export function Waves({ className, ribbons }: { className?: string; ribbons: Rib
       if (r.width === w && r.height === h) return;
       w = r.width;
       h = r.height;
-      // Soft hairlines read the same at 1x; higher density only multiplies the per-frame cost.
-      const dpr = 1;
+      // Hairlines alias visibly at 1x on high-density screens; 1.5x smooths them while keeping the
+      // fill cost well below full 2x/3x density.
+      const dpr = Math.min(devicePixelRatio || 1, 1.5);
       el.width = w * dpr;
       el.height = h * dpr;
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
