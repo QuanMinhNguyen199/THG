@@ -1,0 +1,126 @@
+/* Four-tier section, third view: the organisation as a lit circuit board (FlowDiagram.tsx). Units
+   are plates with thickness, branches are conduits plugged into sockets, and the board is tilted in
+   perspective. The picked unit's lineage lights up; signals run down it in two waves and each LED
+   flashes as one arrives. Colours are the concept's tokens, so Industrial follows. */
+.architecture-art.is-flow #globe { display: none; }
+.flow-stage {
+  position: absolute; inset: 52px 0 50px;
+  display: flex; flex-direction: column; gap: 14px;
+}
+.flow-hint { margin: 0; font-size: 13px; color: var(--muted); }
+/* The board: two stacked SVGs (static board, live lights) tilted back in perspective, leaning a
+   little toward the pointer. */
+.flow-board {
+  --tilt-x: 0deg; --tilt-y: 0deg;
+  position: relative; flex: 1 1 auto; min-height: 0;
+  transform: perspective(1500px) rotateX(calc(22deg + var(--tilt-x))) rotateY(var(--tilt-y));
+  transform-origin: 50% 62%;
+  transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.flow-svg { position: absolute; inset: 0; display: block; width: 100%; height: 100%; overflow: visible; }
+/* Hinted glyphs drift apart under a 3D transform in Chrome; unhinted outlines keep text in place. */
+.flow-svg text { text-rendering: geometricPrecision; }
+.flow-svg.is-live { pointer-events: none; will-change: transform; }
+
+.flow-grid-line { fill: none; stroke: color-mix(in srgb, var(--white) 7%, transparent); stroke-width: 1; }
+
+.flow-col { font-family: var(--font-body), sans-serif; font-size: 13px; fill: var(--muted); }
+.flow-col.is-picked { fill: var(--red); }
+
+.flow-title { font-family: var(--font-body), sans-serif; font-size: 17px; font-weight: 600; fill: var(--muted); transition: fill 0.25s; }
+.flow-title.is-small { font-size: 15px; font-weight: 500; }
+.flow-title.is-root { font-family: var(--font-display), sans-serif; font-size: 34px; letter-spacing: -0.02em; }
+.flow-role { font-size: 12px; fill: var(--muted); opacity: 0.75; }
+
+/* Plates: a face over a darker edge offset downward (the thickness), with one cast shadow. */
+.flow-plate-top { stop-color: color-mix(in srgb, var(--white) 9%, var(--bg)); }
+.flow-plate-bottom { stop-color: color-mix(in srgb, var(--white) 3%, var(--bg)); }
+.flow-plate-face { stroke: color-mix(in srgb, var(--white) 14%, transparent); stroke-width: 1; }
+.flow-plate-edge { fill: color-mix(in srgb, var(--white) 14%, var(--bg)); stroke: color-mix(in srgb, var(--white) 8%, transparent); stroke-width: 1; }
+.flow-plate.is-lit .flow-plate-face { stroke: color-mix(in srgb, var(--red) 70%, transparent); }
+.flow-plate.is-lit .flow-plate-edge { fill: color-mix(in srgb, var(--red) 30%, #000); stroke: color-mix(in srgb, var(--red) 40%, transparent); }
+
+.flow-unit { cursor: pointer; outline: none; }
+.flow-hit { fill: transparent; stroke: transparent; transition: fill 0.25s, stroke 0.25s; }
+.flow-unit:hover .flow-title, .flow-unit.is-lit .flow-title { fill: var(--white); }
+.flow-unit.is-picked .flow-hit { fill: color-mix(in srgb, var(--red) 16%, transparent); stroke: var(--red); stroke-width: 1.5; }
+.flow-unit:focus-visible .flow-hit { stroke: var(--white); stroke-dasharray: 3 3; }
+.flow-socket { fill: var(--bg); stroke: color-mix(in srgb, var(--white) 26%, transparent); stroke-width: 1.4; }
+.flow-unit.is-lit .flow-socket { stroke: var(--red); }
+
+/* Conduits: a dark casing with a lighter core read as a tube; lit ones draw outward from the pick. */
+.flow-conduit-case { fill: none; stroke: color-mix(in srgb, var(--white) 9%, var(--bg)); stroke-width: 6; stroke-linecap: round; }
+.flow-conduit-core { fill: none; stroke: color-mix(in srgb, var(--white) 16%, transparent); stroke-width: 1.4; stroke-linecap: round; }
+.flow-trace-body, .flow-trace-hl {
+  fill: none; stroke-linecap: round; stroke-dasharray: 1; stroke-dashoffset: 1;
+  animation: flow-draw 0.5s cubic-bezier(0.22, 1, 0.36, 1) var(--d, 0ms) forwards;
+}
+.flow-trace-body { stroke: var(--red); stroke-width: 4; }
+.flow-trace-hl { stroke: #ff9aa6; stroke-width: 1; opacity: 0.8; transform: translateY(-1px); }
+@keyframes flow-draw { to { stroke-dashoffset: 0; } }
+
+/* Signals: one short light per branch per wave (the gap is longer than the path), crossing in the
+   first quarter of the cycle; inline delays chain the hops tier by tier, two waves half a cycle
+   apart. The wide red halo under the bright core stands in for bloom on moving light. */
+.flow-pulse, .flow-pulse-halo {
+  fill: none; stroke-linecap: round;
+  stroke-dasharray: 0.16 3; stroke-dashoffset: 0.16;
+  animation-name: flow-run; animation-timing-function: cubic-bezier(0.5, 0, 0.5, 1);
+  animation-iteration-count: infinite; animation-fill-mode: backwards; animation-play-state: paused;
+}
+.flow-pulse { stroke: #fff0f2; stroke-width: 2.6; }
+.flow-pulse-halo { stroke: var(--red); stroke-width: 12; opacity: 0.45; }
+@keyframes flow-run {
+  0% { stroke-dashoffset: 0.16; }
+  25%, 100% { stroke-dashoffset: -1; }
+}
+/* LEDs on lit plates and their input sockets flash as each wave arrives (twice per cycle). */
+.flow-led {
+  fill: var(--red);
+  animation-name: flow-led; animation-timing-function: ease-out; animation-iteration-count: infinite;
+  animation-fill-mode: backwards; animation-play-state: paused;
+}
+@keyframes flow-led {
+  0%, 50% { fill: #fff0f2; filter: drop-shadow(0 0 6px var(--red)); }
+  12%, 46%, 62%, 100% { fill: var(--red); filter: none; }
+}
+.flow-stage.is-running .flow-pulse, .flow-stage.is-running .flow-pulse-halo, .flow-stage.is-running .flow-led { animation-play-state: running; }
+
+/* Detail strip: what GEO Agent does for the picked unit, its route, and two illustrative figures. */
+.flow-detail {
+  display: grid; grid-template-columns: minmax(0, 1fr) auto; column-gap: 32px; align-items: start;
+  padding-top: 14px; border-top: 1px solid var(--line);
+}
+.flow-detail p { margin: 0; }
+.flow-detail-name { font-size: 15px; color: var(--white); }
+.flow-detail-name span { margin-left: 8px; font-size: 13px; color: var(--muted); }
+.flow-detail-agent { margin-top: 6px !important; font-size: 13px; line-height: 1.6; color: var(--white); opacity: 0.86; max-width: 62ch; }
+.flow-detail-route { margin-top: 4px !important; font-size: 12px; line-height: 1.6; color: var(--muted); max-width: 70ch; }
+.flow-detail-work { display: flex; gap: 28px; margin: 0; }
+.flow-detail-work dt { font-size: 12px; color: var(--muted); }
+.flow-detail-work dd { margin: 2px 0 0; font-family: var(--font-display), sans-serif; font-size: 26px; line-height: 1.1; color: var(--white); font-variant-numeric: tabular-nums; }
+.flow-detail-note { grid-column: 1 / -1; margin-top: 8px !important; font-size: 11px; color: var(--muted); opacity: 0.7; }
+
+.flow-chips { display: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  .flow-board { transform: perspective(1500px) rotateX(22deg); transition: none; }
+  .flow-trace-body, .flow-trace-hl { animation: none; stroke-dashoffset: 0; }
+  .flow-svg.is-live { display: none; }
+}
+
+@media (max-width: 720px) {
+  .flow-stage { inset: 58px 0 30px; gap: 8px; }
+  .flow-detail-note { margin-top: 2px !important; }
+  .flow-hint, .flow-board { display: none; }
+  .flow-chips { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 2px; }
+  .flow-chips button {
+    flex: none; padding: 7px 11px; border: 1px solid var(--line); border-radius: 6px;
+    background: none; font-size: 12px; color: var(--muted);
+  }
+  .flow-chips button[aria-pressed=true] { border-color: var(--red); color: var(--white); background: color-mix(in srgb, var(--red) 14%, transparent); }
+  .flow-detail { grid-template-columns: 1fr; row-gap: 10px; padding-top: 10px; }
+  .flow-detail-agent { font-size: 12px; }
+  .flow-detail-route { display: none; }
+  .flow-detail-work dd { font-size: 20px; }
+}

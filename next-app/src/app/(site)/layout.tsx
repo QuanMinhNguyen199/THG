@@ -9,6 +9,7 @@ import "@/styles/site/industrial.css";
 import "@/styles/site/hero.css";
 import "@/styles/site/header.css";
 import "@/styles/site/layers.css";
+import "@/styles/site/layers-flow.css";
 import "@/styles/site/to-top.css";
 import "@/styles/site/corporate-page.css";
 import "@/styles/site/corporate-showcase.css";

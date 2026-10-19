@@ -6,6 +6,7 @@ import { useCallback, useEffect, useRef, useState, type KeyboardEvent } from "re
 import { createTowerState, drawTower } from "./art";
 import type { StageColors } from "./DiveScene";
 import { layers } from "./content";
+import { FlowDiagram } from "./FlowDiagram";
 import { Lines } from "./Sections";
 import { useSite } from "./SiteContext";
 import { useArtCanvas } from "./useArtCanvas";
@@ -14,7 +15,7 @@ import { useArtCanvas } from "./useArtCanvas";
 const DiveScene = dynamic(() => import("./DiveScene"), { ssr: false });
 const STAGE_FALLBACK: StageColors = { ink: "#8a8a8f", accent: "#c1152b", node: "#cbd5df", pulse: "#ffffff" };
 
-type ArtMode = "tower" | "dive";
+type ArtMode = "tower" | "dive" | "flow";
 const MODE_KEY = "geo-layers-mode";
 const FLOORS = layers.length;
 export function Architecture() {
@@ -48,13 +49,13 @@ export function Architecture() {
     });
   }, [theme, mode]);
 
-  // Restore the chosen view (?layers=dive wins, then the saved choice).
+  // Restore the chosen view (?layers=dive|flow wins, then the saved choice).
   useEffect(() => {
     let saved: string | null = null;
     try {
       saved = new URLSearchParams(location.search).get("layers") ?? localStorage.getItem(MODE_KEY);
     } catch {}
-    if (saved === "dive") setMode("dive");
+    if (saved === "dive" || saved === "flow") setMode(saved);
   }, []);
   const chooseMode = (next: ArtMode) => {
     setMode(next);
@@ -62,7 +63,7 @@ export function Architecture() {
       localStorage.setItem(MODE_KEY, next);
     } catch {}
     const url = new URL(location.href);
-    if (next === "dive") url.searchParams.set("layers", "dive");
+    if (next !== "tower") url.searchParams.set("layers", next);
     else url.searchParams.delete("layers");
     history.replaceState(null, "", url);
   };
@@ -178,7 +179,7 @@ export function Architecture() {
       <div ref={stage} className="architecture wrap">
         <div
           ref={art}
-          className={`architecture-art${mode === "dive" ? " is-dive" : ""}`}
+          className={`architecture-art${mode === "dive" ? " is-dive" : mode === "flow" ? " is-flow" : ""}`}
           data-floor={`${String(active + 1).padStart(2, "0")} / ${layer.floor}`}
         >
           <div className="layers-mode" role="group" aria-label="Kiểu minh họa">
@@ -187,6 +188,9 @@ export function Architecture() {
             </button>
             <button type="button" aria-pressed={mode === "dive"} onClick={() => chooseMode("dive")}>
               GEO Core
+            </button>
+            <button type="button" aria-pressed={mode === "flow"} onClick={() => chooseMode("flow")}>
+              Luồng xử lý
             </button>
           </div>
           {/* The tower canvas stays mounted (hidden) so switching back is instant. */}
@@ -200,8 +204,9 @@ export function Architecture() {
               <DiveScene active={active} progress={coreProgress} still={paused} visible={inView} colors={stageColors} />
             </div>
           )}
+          {mode === "flow" && <FlowDiagram active={active} onSelect={goTo} running={inView && !paused} />}
           <div className="art-caption">
-            <span>{mode === "dive" ? "GEO CORE / AI NATIVE" : "GEO CORE"}</span>
+            <span>{mode === "dive" ? "GEO CORE / AI NATIVE" : mode === "flow" ? "GEO AGENT / LUỒNG XỬ LÝ" : "GEO CORE"}</span>
             <span>HUMAN × INTELLIGENCE</span>
           </div>
         </div>
