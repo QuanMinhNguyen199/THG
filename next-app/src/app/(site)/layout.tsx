@@ -11,14 +11,8 @@ import "@/styles/site/header.css";
 import "@/styles/site/layers.css";
 import "@/styles/site/layers-flow.css";
 import "@/styles/site/to-top.css";
-import "@/styles/site/corporate-page.css";
-import "@/styles/site/corporate-showcase.css";
-import "@/styles/site/native-page.css";
 import "@/styles/site/contacts.css";
 import "@/styles/site/typography.css";
-import "@/styles/site/agent-workflow.css";
-import "@/styles/site/laptop-chat.css";
-import "@/styles/site/laptop-feature.css";
 import "@/styles/site/sticky-header.css";
 
 // The site CSS refers to these variables instead of hard-coded family names.
@@ -35,9 +29,9 @@ export const metadata: Metadata = {
 
 export const viewport: Viewport = { themeColor: "#0A0A0A" };
 
-// Runs before first paint so a saved or shared concept never flashes the default one.
-// Old concept names from shared links still resolve.
-const themeInit = `(()=>{const t=['tech','corporate','industrial','native'],l={charcoal:'tech',ruby:'corporate',navy:'industrial'},p=v=>t.includes(v)?v:l[v];let s='tech';try{s=p(new URLSearchParams(location.search).get('theme'))||p(localStorage.getItem('geo-theme'))||s}catch{}document.documentElement.dataset.theme=s})()`;
+// Runs before first paint so the theme never flashes: it follows the system colour scheme
+// (dark: Dark Tech, light: Industrial).
+const themeInit = `document.documentElement.dataset.theme=matchMedia('(prefers-color-scheme: light)').matches?'industrial':'tech'`;
 
 export default function SiteLayout({ children }: { children: React.ReactNode }) {
   return (

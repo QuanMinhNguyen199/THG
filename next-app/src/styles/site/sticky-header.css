@@ -1,10 +1,8 @@
-/* Sticky top navigation (after thealienware.com): the bar is fixed for every concept. Over the
+/* Sticky top navigation (after thealienware.com): the bar is fixed for both themes. Over the
    hero it is transparent; once the hero scrolls out from under it (`data-solid`, set by
    useStickyHeader) it becomes a white bar with a soft shadow and tightens its height. */
 
-.shared-page > header,
-.ca-header,
-.na-header {
+.shared-page > header{
   position: fixed;
   top: 0;
   left: 0;
@@ -14,15 +12,15 @@
   transition: height 0.3s cubic-bezier(0.22, 1, 0.36, 1), background-color 0.3s, color 0.3s, box-shadow 0.3s, border-color 0.3s;
 }
 
-/* Concept 1 floats white type over the film; the faint divider marks the bar, as in the reference. */
-[data-theme=tech] .shared-page > header {
+/* Dark Tech floats white type over the film; the faint divider marks the bar, as in the reference. */
+[data-theme=tech] .shared-page > header{
   background: transparent;
   border-bottom: 1px solid #ffffff1f;
 }
 
 /* Industrial's hero is the same dark film: over it the bar is transparent with white type, and it
    turns back into its designed white bar (navy-and-red logo) once the hero has scrolled away. */
-[data-theme=industrial] .shared-page > header:not([data-solid]) {
+[data-theme=industrial] .shared-page > header:not([data-solid]){
   --white: #ffffff;
   --line: #ffffff1f;
   --logo-ink: #ffffff;
@@ -30,55 +28,45 @@
   color: #ffffff;
   border-bottom: 1px solid #ffffff1f;
 }
-[data-theme=industrial] .shared-page > header:not([data-solid]) .brand-logo {
+[data-theme=industrial] .shared-page > header:not([data-solid]) .brand-logo{
   filter: drop-shadow(0 1px 6px rgba(0, 0, 0, 0.55));
 }
 
-/* Solid state, shared by all concepts. */
-.shared-page > header[data-solid],
-.ca-header[data-solid],
-.na-header[data-solid] {
+/* Solid state, shared by both themes. */
+.shared-page > header[data-solid]{
   height: 64px;
   background: #ffffff;
   border-bottom-color: transparent;
   box-shadow: 0 6px 24px #1723371a;
 }
 
-/* Concept 1 flips from white-on-film to dark-on-white. */
-[data-theme=tech] .shared-page > header[data-solid] {
+/* Dark Tech flips from white-on-film to dark-on-white. */
+[data-theme=tech] .shared-page > header[data-solid]{
   color: #172337;
   --logo-ink: #172337;
 }
-[data-theme=tech] .shared-page > header[data-solid] .brand-logo {
+[data-theme=tech] .shared-page > header[data-solid] .brand-logo{
   filter: none;
 }
-[data-theme=tech] .shared-page > header[data-solid] #menu span {
+[data-theme=tech] .shared-page > header[data-solid] #menu span{
   background: #172337;
 }
-.shared-page > header[data-solid] nav a:hover {
+.shared-page > header[data-solid] nav a:hover{
   color: var(--red);
 }
 
 /* The mobile dropdown hangs from the bar, whatever its current height. */
-@media (max-width: 720px) {
+@media (max-width: 720px){
   .shared-page > header nav {
     top: 100%;
   }
   .shared-page > header[data-solid] {
     height: 56px;
   }
-  /* Concepts 2 and 4 wrap their nav onto a second row on phones; keep that row while solid. */
-  .ca-header[data-solid],
-  .na-header[data-solid] {
-    height: auto;
-    padding-bottom: 4px;
-  }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .shared-page > header,
-  .ca-header,
-  .na-header {
+  .shared-page > header{
     transition: none;
   }
 }

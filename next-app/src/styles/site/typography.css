@@ -1,9 +1,25 @@
 /* One variable family across GEOagents, Corporate and Agent Native. */
-:root {
+:root{
   --font-display: var(--font-body);
   --font-mono: var(--font-body);
 }
 
-input, textarea, select {
+input, textarea, select{
   font-family: inherit;
+}
+
+/* Site-wide anti-aliasing. Text: greyscale smoothing and kerning/ligatures; SVG: geometric (not
+   crisp-edged) rendering; images scale smoothly. Elements turned in 3D get a transparent 1px outline,
+   which makes Chrome and Firefox smooth their edges instead of leaving stair-stepped borders. */
+html{
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  font-kerning: normal;
+}
+svg{ shape-rendering: geometricPrecision; }
+img, video, canvas{ image-rendering: auto; }
+.document, .blueprint span, .blueprint i,
+.tdn-face, .tdn-back, .tdn-inside, .tdn-pop, .tdn-panel, .flow-board{
+  outline: 1px solid transparent;
 }

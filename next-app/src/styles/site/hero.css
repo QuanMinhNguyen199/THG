@@ -2,7 +2,7 @@
    The stage is dark in every concept so white type stays legible over the footage; concepts only
    change the primary button colour and shape. Loaded last so it settles the older hero rules. */
 
-[data-theme] .hero {
+[data-theme] .hero{
   --white: #ffffff;
   --muted: rgba(255, 255, 255, 0.78);
   --hero-cta: #c1152b;
@@ -10,12 +10,12 @@
   background: #050505;
   color: #ffffff;
 }
-[data-theme=industrial] .hero {
-  --hero-cta: #b63545;
-  --hero-cta-hover: #922a38;
+[data-theme=industrial] .hero{
+  --hero-cta: #c1152b;
+  --hero-cta-hover: #9a1023;
 }
 
-.hero-video {
+.hero-video{
   position: absolute;
   inset: 0;
   width: 100%;
@@ -25,7 +25,7 @@
 }
 
 /* Darken toward the copy (bottom and left) and leave the centre of the film bright. */
-[data-theme] .hero-shade {
+[data-theme] .hero-shade{
   background:
     linear-gradient(0deg, rgba(0, 0, 0, 0.82) 0%, rgba(0, 0, 0, 0.38) 38%, rgba(0, 0, 0, 0) 68%),
     linear-gradient(90deg, rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0) 58%),
@@ -33,7 +33,7 @@
   pointer-events: none;
 }
 
-[data-theme] .hero-copy {
+[data-theme] .hero-copy{
   position: absolute;
   left: 7%;
   right: 7%;
@@ -44,21 +44,21 @@
   text-align: left;
   z-index: 2;
 }
-[data-theme] .hero h1 {
+[data-theme] .hero h1{
   color: #ffffff;
   font-size: clamp(56px, 6vw, 92px);
   font-weight: 600;
   letter-spacing: -0.045em;
   margin: 0 0 18px;
 }
-[data-theme] .hero-subtitle {
+[data-theme] .hero-subtitle{
   font-size: clamp(13px, 1.1vw, 16px);
   font-weight: 500;
   letter-spacing: 0.16em;
   color: #ffffff;
   margin: 0 0 14px;
 }
-[data-theme] .hero-description {
+[data-theme] .hero-description{
   color: var(--muted);
   font-size: 14px;
   line-height: 1.8;
@@ -66,47 +66,47 @@
   margin: 0;
 }
 
-.hero-actions {
+.hero-actions{
   display: flex;
   flex-wrap: wrap;
   gap: 12px;
   margin-top: 30px;
 }
-[data-theme] .hero .button {
+[data-theme] .hero .button{
   margin-top: 0;
   background: var(--hero-cta);
   border-color: var(--hero-cta);
   color: #ffffff;
 }
 [data-theme] .hero .button:hover,
-[data-theme] .hero .button:focus-visible {
+[data-theme] .hero .button:focus-visible{
   background: var(--hero-cta-hover);
   border-color: var(--hero-cta-hover);
   color: #ffffff;
 }
-[data-theme] .hero .button-ghost {
+[data-theme] .hero .button-ghost{
   background: rgba(255, 255, 255, 0.04);
   border-color: rgba(255, 255, 255, 0.55);
   backdrop-filter: blur(4px);
 }
 [data-theme] .hero .button-ghost:hover,
-[data-theme] .hero .button-ghost:focus-visible {
+[data-theme] .hero .button-ghost:focus-visible{
   background: rgba(255, 255, 255, 0.14);
   border-color: #ffffff;
   box-shadow: none;
 }
 
-[data-theme] .hero-bottom {
+[data-theme] .hero-bottom{
   z-index: 2;
   left: 7%;
   right: 7%;
   bottom: 40px;
   color: rgba(255, 255, 255, 0.78);
 }
-.hero-bottom > span {
+.hero-bottom > span{
   gap: 14px;
 }
-.hero-toggle {
+.hero-toggle{
   display: grid;
   place-items: center;
   width: 40px;
@@ -118,28 +118,28 @@
   padding: 0;
   transition: background 0.2s, border-color 0.2s;
 }
-.hero-toggle:hover {
+.hero-toggle:hover{
   background: rgba(255, 255, 255, 0.16);
   border-color: #ffffff;
 }
 .hero-toggle svg,
-.hero-cursor-ring svg {
+.hero-cursor-ring svg{
   width: 16px;
   height: 16px;
   fill: currentColor;
 }
-.hero-side {
+.hero-side{
   display: none;
 }
 
 /* Custom cursor over the bare stage (fine pointers only; set from JS on mouse movement). */
-.hero.has-cursor {
+.hero.has-cursor{
   cursor: none;
 }
-.hero.has-cursor :is(a, button) {
+.hero.has-cursor :is(a, button){
   cursor: pointer;
 }
-.hero-cursor {
+.hero-cursor{
   position: absolute;
   left: 0;
   top: 0;
@@ -152,10 +152,10 @@
   transition: opacity 0.2s;
   will-change: transform;
 }
-.hero-cursor.is-visible {
+.hero-cursor.is-visible{
   opacity: 1;
 }
-.hero-cursor-ring {
+.hero-cursor-ring{
   display: grid;
   place-items: center;
   width: 76px;
@@ -167,11 +167,11 @@
   backdrop-filter: blur(6px);
   color: #ffffff;
 }
-.hero-cursor-ring svg {
+.hero-cursor-ring svg{
   width: 20px;
   height: 20px;
 }
-.hero-cursor-label {
+.hero-cursor-label{
   margin-top: -38px;
   font-size: 11px;
   font-weight: 600;
@@ -181,10 +181,10 @@
   text-shadow: 0 1px 8px rgba(0, 0, 0, 0.5);
 }
 
-.hero.is-video-feedback .hero-cursor {
+.hero.is-video-feedback .hero-cursor{
   opacity: 0;
 }
-.hero-click-feedback {
+.hero-click-feedback{
   position: absolute;
   z-index: 4;
   display: grid;
@@ -199,12 +199,12 @@
   transform: translate(-50%, -50%);
   pointer-events: none;
 }
-.hero-click-feedback svg {
+.hero-click-feedback svg{
   width: 28px;
   height: 28px;
   fill: currentColor;
 }
-.hero-feedback-ring {
+.hero-feedback-ring{
   position: absolute;
   inset: -8px;
   border: 1px solid rgba(255, 255, 255, 0.55);
@@ -212,16 +212,16 @@
   pointer-events: none;
 }
 
-.hero-status {
+.hero-status{
   display: inline-flex;
   align-items: center;
   gap: 10px;
 }
-[data-theme=tech] .hero-status {
+[data-theme=tech] .hero-status{
   display: none;
 }
 /* Keep video control available when reached by keyboard without the visible bottom-left cluster. */
-[data-theme=tech] .hero-toggle:not(:focus-visible) {
+[data-theme=tech] .hero-toggle:not(:focus-visible){
   position: absolute;
   min-width: 0;
   min-height: 0;
@@ -235,38 +235,37 @@
 }
 
 /* Dark Tech's header floats over the film: a faint shadow keeps the red "GEO" off red footage. */
-[data-theme=tech] .brand-logo {
+[data-theme=tech] .brand-logo{
   filter: drop-shadow(0 1px 6px rgba(0, 0, 0, 0.55));
 }
 
-/* Corporate's header sits on white, as in its own concept, instead of over the film. */
-[data-theme=corporate] header {
+/* Corporate's header sits on white, as in its own concept{
   background: #ffffff;
   border-bottom-color: #e5e5e5;
 }
 
 @media (max-width: 720px) {
-  [data-theme] .hero-copy {
+  [data-theme] .hero-copy{
     left: 6%;
     right: 6%;
     bottom: 150px;
   }
-  [data-theme] .hero h1 {
+  [data-theme] .hero h1{
     font-size: clamp(48px, 13vw, 72px);
   }
-  [data-theme] .hero-description {
+  [data-theme] .hero-description{
     font-size: 13px;
   }
-  .hero-actions .button {
+  .hero-actions .button{
     flex: 1 1 auto;
     justify-content: center;
   }
-  [data-theme] .hero-bottom {
+  [data-theme] .hero-bottom{
     left: 6%;
     right: 6%;
     bottom: 86px;
   }
-  .hero-bottom > a {
+  .hero-bottom > a{
     display: none;
   }
 }

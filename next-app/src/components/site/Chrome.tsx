@@ -1,33 +1,16 @@
 "use client";
 
-// Page-level fixtures that sit outside the sections: concept switcher, scroll light band, back-to-top sphere.
+// Page-level fixtures that sit outside the sections: theme announcement, scroll light band, back-to-top sphere.
 import { useEffect, useRef, useState } from "react";
-import { themes } from "./content";
 import { useSite } from "./SiteContext";
 
+/** Announces theme changes (Dark Tech / Industrial) to screen readers. */
 export function ThemeDock() {
-  const { theme, setTheme, announcement } = useSite();
-  const sharedTheme = useRef<"tech" | "industrial">("tech");
-  useEffect(() => {
-    if (theme === "tech" || theme === "industrial") sharedTheme.current = theme;
-  }, [theme]);
+  const { announcement } = useSite();
   return (
-    <>
-      <div className="theme-dock" role="group" aria-label="Chọn concept giao diện">
-        {themes.filter((t) => t.id !== "industrial").map((t) => (
-          <button key={t.id} data-concept={t.id}
-            aria-pressed={theme === t.id || (t.id === "tech" && theme === "industrial")}
-            title={t.id === "tech" ? "GEOagents — chọn Theme trên thanh điều hướng" : t.title}
-            onClick={() => setTheme(t.id === "tech" ? sharedTheme.current : t.id)}>
-            <i className="swatch" aria-hidden="true" />
-            {t.id === "tech" ? "GEOagents" : t.label}
-          </button>
-        ))}
-      </div>
-      <span className="sr-only" id="theme-announcement" aria-live="polite">
-        {announcement}
-      </span>
-    </>
+    <span className="sr-only" id="theme-announcement" aria-live="polite">
+      {announcement}
+    </span>
   );
 }
 

@@ -3,60 +3,59 @@
 /* Interactive Dark Tech — a perspective grid behind the page, tilted gently by the cursor.
    Scroll drift moves the plane with transform (compositor only); animating background-position
    repainted this large masked layer every frame and caused scroll jank. */
-.bg-grid{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;perspective:900px;perspective-origin:50% 40%;display:none}
-.bg-grid:before,.bg-grid:after{content:'';position:absolute;left:-60%;right:-60%;height:110%;background-image:linear-gradient(var(--grid-line) 1px,transparent 1px),linear-gradient(90deg,var(--grid-line) 1px,transparent 1px);background-size:72px 72px;will-change:transform}
-.bg-grid:before{top:52%;transform-origin:50% 0;transform:rotateX(70deg) rotateZ(calc(var(--tilt-x,0)*2.5deg)) translateY(calc(var(--tilt-y,0)*-16px + var(--grid-shift,0)*1px));-webkit-mask-image:linear-gradient(180deg,transparent,#000 25%,#000 60%,transparent);mask-image:linear-gradient(180deg,transparent,#000 25%,#000 60%,transparent)}
-.bg-grid:after{bottom:52%;opacity:.45;transform-origin:50% 100%;transform:rotateX(-70deg) rotateZ(calc(var(--tilt-x,0)*-2.5deg));-webkit-mask-image:linear-gradient(0deg,transparent,#000 30%,transparent 85%);mask-image:linear-gradient(0deg,transparent,#000 30%,transparent 85%)}
-[data-theme=tech]{--grid-line:color-mix(in srgb,#c1152b 14%,transparent);--glow:color-mix(in srgb,var(--red) 60%,transparent);--glow-soft:color-mix(in srgb,var(--red) 22%,transparent)}
-[data-theme=tech] .bg-grid{display:block}
-[data-theme=tech] main,[data-theme=tech] footer{position:relative;z-index:1}
-[data-theme=tech] .hero{background:transparent}
-[data-theme=tech] .control{background:color-mix(in srgb,var(--surface) 80%,transparent)}
-[data-theme=tech] h1{color:var(--red)}
-[data-theme=tech] .button{transition:background .35s,border-color .35s,box-shadow .45s,transform .35s}
-[data-theme=tech] .button:hover,[data-theme=tech] .button:focus-visible{box-shadow:0 0 18px var(--glow),0 0 60px var(--glow-soft);transform:translateY(-1px)}
-[data-theme=tech] nav a{transition:color .3s,text-shadow .3s}
-[data-theme=tech] nav a:hover,[data-theme=tech] nav a:focus-visible{text-shadow:0 0 14px var(--glow)}
-[data-theme=tech] nav a:after{box-shadow:0 0 10px var(--red)}
-[data-theme=tech] .tabs button{transition:color .3s,text-shadow .3s}
-[data-theme=tech] .tabs button:hover,[data-theme=tech] .tabs button[aria-selected=true]{text-shadow:0 0 16px var(--glow)}
-[data-theme=tech] .tabs button[aria-selected=true]:after{box-shadow:0 0 12px var(--red)}
-[data-theme=tech] .pillars article{isolation:isolate}
-[data-theme=tech] .pillars article:before{content:'';position:absolute;inset:-24px -16px;z-index:-1;pointer-events:none;opacity:0;transition:opacity .45s;background:radial-gradient(260px circle at var(--px,50%) var(--py,30%),var(--glow-soft),transparent 70%)}
-[data-theme=tech] .pillars article:hover:before{opacity:1}
-[data-theme=tech] .pillars svg{transition:filter .4s,transform .4s}
-[data-theme=tech] .pillars article:hover svg{filter:drop-shadow(0 0 10px var(--glow));transform:translateY(-3px)}
-[data-theme=tech] .project-visual:after{content:'';position:absolute;inset:0;pointer-events:none;opacity:0;transition:opacity .45s;background:radial-gradient(340px circle at var(--px,50%) var(--py,50%),var(--glow-soft),transparent 70%);box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--red) 45%,transparent)}
-[data-theme=tech] .project:hover .project-visual:after,[data-theme=tech] .project:focus-visible .project-visual:after{opacity:1}
-[data-theme=tech] .project:hover .project-arrow{text-shadow:0 0 16px var(--glow)}
-[data-theme=tech] .metrics strong{transition:text-shadow .45s}
-[data-theme=tech] .metrics>div:hover strong{text-shadow:0 0 26px var(--glow-soft)}
-[data-theme=tech] .theme-dock button[aria-pressed=true]{box-shadow:0 0 14px var(--glow-soft)}
+.bg-grid {position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;perspective:900px;perspective-origin:50% 40%;display:none}
+.bg-grid:before,.bg-grid:after {content:'';position:absolute;left:-60%;right:-60%;height:110%;background-image:linear-gradient(var(--grid-line) 1px,transparent 1px),linear-gradient(90deg,var(--grid-line) 1px,transparent 1px);background-size:72px 72px;will-change:transform}
+.bg-grid:before {top:52%;transform-origin:50% 0;transform:rotateX(70deg) rotateZ(calc(var(--tilt-x,0)*2.5deg)) translateY(calc(var(--tilt-y,0)*-16px + var(--grid-shift,0)*1px));-webkit-mask-image:linear-gradient(180deg,transparent,#000 25%,#000 60%,transparent);mask-image:linear-gradient(180deg,transparent,#000 25%,#000 60%,transparent)}
+.bg-grid:after {bottom:52%;opacity:.45;transform-origin:50% 100%;transform:rotateX(-70deg) rotateZ(calc(var(--tilt-x,0)*-2.5deg));-webkit-mask-image:linear-gradient(0deg,transparent,#000 30%,transparent 85%);mask-image:linear-gradient(0deg,transparent,#000 30%,transparent 85%)}
+[data-theme=tech] {--grid-line:color-mix(in srgb,#c1152b 14%,transparent);--glow:color-mix(in srgb,var(--red) 60%,transparent);--glow-soft:color-mix(in srgb,var(--red) 22%,transparent)}
+[data-theme=tech] .bg-grid {display:block}
+[data-theme=tech] main,[data-theme=tech] footer {position:relative;z-index:1}
+[data-theme=tech] .hero {background:transparent}
+[data-theme=tech] .control {background:color-mix(in srgb,var(--surface) 80%,transparent)}
+[data-theme=tech] h1 {color:var(--red)}
+[data-theme=tech] .button {transition:background .35s,border-color .35s,box-shadow .45s,transform .35s}
+[data-theme=tech] .button:hover,[data-theme=tech] .button:focus-visible {box-shadow:0 0 18px var(--glow),0 0 60px var(--glow-soft);transform:translateY(-1px)}
+[data-theme=tech] nav a {transition:color .3s,text-shadow .3s}
+[data-theme=tech] nav a:hover,[data-theme=tech] nav a:focus-visible {text-shadow:0 0 14px var(--glow)}
+[data-theme=tech] nav a:after {box-shadow:0 0 10px var(--red)}
+[data-theme=tech] .tabs button {transition:color .3s,text-shadow .3s}
+[data-theme=tech] .tabs button:hover,[data-theme=tech] .tabs button[aria-selected=true] {text-shadow:0 0 16px var(--glow)}
+[data-theme=tech] .tabs button[aria-selected=true]:after {box-shadow:0 0 12px var(--red)}
+[data-theme=tech] .pillars article {isolation:isolate}
+[data-theme=tech] .pillars article:before {content:'';position:absolute;inset:-24px -16px;z-index:-1;pointer-events:none;opacity:0;transition:opacity .45s;background:radial-gradient(260px circle at var(--px,50%) var(--py,30%),var(--glow-soft),transparent 70%)}
+[data-theme=tech] .pillars article:hover:before {opacity:1}
+[data-theme=tech] .pillars svg {transition:filter .4s,transform .4s}
+[data-theme=tech] .pillars article:hover svg {filter:drop-shadow(0 0 10px var(--glow));transform:translateY(-3px)}
+[data-theme=tech] .project-visual:after {content:'';position:absolute;inset:0;pointer-events:none;opacity:0;transition:opacity .45s;background:radial-gradient(340px circle at var(--px,50%) var(--py,50%),var(--glow-soft),transparent 70%);box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--red) 45%,transparent)}
+[data-theme=tech] .project:hover .project-visual:after,[data-theme=tech] .project:focus-visible .project-visual:after {opacity:1}
+[data-theme=tech] .project:hover .project-arrow {text-shadow:0 0 16px var(--glow)}
+[data-theme=tech] .metrics strong {transition:text-shadow .45s}
+[data-theme=tech] .metrics>div:hover strong {text-shadow:0 0 26px var(--glow-soft)}
+[data-theme=tech] .theme-dock button[aria-pressed=true] {box-shadow:0 0 14px var(--glow-soft)}
 
-/* Corporate Motion Canvas — dark headings, red reserved for actions, crisp micro-interactions. */
-[data-theme=corporate] h1,[data-theme=corporate] .architecture h2,[data-theme=corporate] .section-heading h2{color:var(--white)}
+/* Corporate Motion Canvas — dark headings, red reserved for actions {color:var(--white)}
 /* Split word spans inherit color, so only the authored accent spans stay red. */
-.architecture h2 span[style],.section-heading h2 span[style]{color:inherit}
-[data-theme=corporate] .button{background:var(--red);border-color:var(--red);color:#fff;border-radius:999px;transition:background .25s,box-shadow .3s,transform .3s cubic-bezier(.22,1,.36,1)}
-[data-theme=corporate] .button:hover,[data-theme=corporate] .button:focus-visible{background:#9e1023;border-color:#9e1023;transform:translateY(-2px);box-shadow:0 12px 26px -12px color-mix(in srgb,var(--red) 70%,transparent)}
-[data-theme=corporate] .button:active{transform:translateY(0) scale(.97);transition-duration:.08s}
-[data-theme=corporate] .button svg,[data-theme=corporate] .button span{transition:transform .35s cubic-bezier(.34,1.56,.64,1)}
-[data-theme=corporate] .button:hover svg,[data-theme=corporate] .button:hover span{transform:translateX(4px)}
-[data-theme=corporate] .project-visual{border-radius:10px;transition:background .5s,transform .5s cubic-bezier(.22,1,.36,1),box-shadow .5s}
-[data-theme=corporate] .project:hover .project-visual,[data-theme=corporate] .project:focus-visible .project-visual{transform:translateY(-4px);box-shadow:0 26px 44px -26px #0f172a4d}
-[data-theme=corporate] .tabs button[aria-selected=true]:after{animation:tab-in .45s cubic-bezier(.22,1,.36,1)}
+.architecture h2 span[style],.section-heading h2 span[style] {color:inherit}
+
+
+
+
+
+
+
+
 @keyframes tab-in{from{transform:scaleY(0)}to{transform:scaleY(1)}}
-[data-theme=corporate] .pillars svg{transition:transform .4s cubic-bezier(.34,1.56,.64,1)}
-[data-theme=corporate] .pillars article:hover svg{transform:translateY(-4px)}
+
+
 
 /* Industrial High-End Dark — soft red ambient light around cards and the star logo. */
-[data-theme=industrial]{--ambient:color-mix(in srgb,var(--red) 24%,transparent);--ambient-strong:color-mix(in srgb,var(--red) 38%,transparent)}
-[data-theme=industrial] h1{color:var(--accent-text)}
-[data-theme=industrial] .pillars article{padding:32px 28px 28px;background:linear-gradient(180deg,#b81428,#a91226);border:1px solid var(--line);border-top:2px solid var(--red);box-shadow:0 30px 70px -36px var(--ambient),0 0 46px -22px var(--ambient);transition:box-shadow .5s}
-[data-theme=industrial] .pillars article:hover{box-shadow:0 30px 80px -28px var(--ambient-strong),0 0 64px -18px var(--ambient-strong)}
-[data-theme=industrial] .project-visual{box-shadow:0 0 0 1px var(--line),0 34px 80px -40px var(--ambient-strong);transition:background .5s,box-shadow .5s}
-[data-theme=industrial] .project:hover .project-visual{box-shadow:0 0 0 1px color-mix(in srgb,var(--red) 40%,transparent),0 34px 90px -30px var(--ambient-strong)}
-[data-theme=industrial] .metrics{box-shadow:0 30px 70px -40px var(--ambient)}
-[data-theme=industrial] .hero-video,[data-theme=industrial] .hero-copy{will-change:translate}
+[data-theme=industrial] {--ambient:color-mix(in srgb,var(--red) 24%,transparent);--ambient-strong:color-mix(in srgb,var(--red) 38%,transparent)}
+[data-theme=industrial] h1 {color:var(--accent-text)}
+[data-theme=industrial] .pillars article {padding:32px 28px 28px;background:linear-gradient(180deg,#b81428,#a91226);border:1px solid var(--line);border-top:2px solid var(--red);box-shadow:0 30px 70px -36px var(--ambient),0 0 46px -22px var(--ambient);transition:box-shadow .5s}
+[data-theme=industrial] .pillars article:hover {box-shadow:0 30px 80px -28px var(--ambient-strong),0 0 64px -18px var(--ambient-strong)}
+[data-theme=industrial] .project-visual {box-shadow:0 0 0 1px var(--line),0 34px 80px -40px var(--ambient-strong);transition:background .5s,box-shadow .5s}
+[data-theme=industrial] .project:hover .project-visual {box-shadow:0 0 0 1px color-mix(in srgb,var(--red) 40%,transparent),0 34px 90px -30px var(--ambient-strong)}
+[data-theme=industrial] .metrics {box-shadow:0 30px 70px -40px var(--ambient)}
+[data-theme=industrial] .hero-video,[data-theme=industrial] .hero-copy {will-change:translate}
 
-@media(max-width:720px){[data-theme=industrial] .pillars article{padding:24px 18px;margin-bottom:16px}}
+@media(max-width:720px) {[data-theme=industrial] .pillars article {padding:24px 18px;margin-bottom:16px}}

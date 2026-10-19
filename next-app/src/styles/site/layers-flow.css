@@ -1,22 +1,25 @@
-/* Four-tier section, third view: the organisation as a lit circuit board (FlowDiagram.tsx). Units
-   are plates with thickness, branches are conduits plugged into sockets, and the board is tilted in
-   perspective. The picked unit's lineage lights up; signals run down it in two waves and each LED
-   flashes as one arrives. Colours are the concept's tokens, so Industrial follows. */
-.architecture-art.is-flow #globe { display: none; }
+/* Four-tier section: the organisation as a lit circuit board (FlowDiagram.tsx). Units are plates
+   with thickness, branches are conduits plugged into sockets. The picked unit's lineage lights up;
+   signals run down it in two waves and each LED flashes as one arrives. Colours are the theme's
+   tokens, so Dark Tech and Industrial both follow. */
+
 .flow-stage {
   position: absolute; inset: 52px 0 50px;
   display: flex; flex-direction: column; gap: 14px;
 }
 .flow-hint { margin: 0; font-size: 13px; color: var(--muted); }
-/* The board: two stacked SVGs (static board, live lights) tilted back in perspective, leaning a
-   little toward the pointer. */
+/* The board: two stacked SVGs (static board, live lights). */
+.flow-board-wrap { position: relative; flex: 1 1 auto; min-height: 0; }
+/* The board rests flat: text on a layer tilted through perspective is resampled from its raster and
+   reads soft, so depth at rest comes from the plates' thickness and shadows instead. It leans in 3D
+   only while the pointer moves over it, and settles back flat (sharp) when the pointer leaves. */
 .flow-board {
   --tilt-x: 0deg; --tilt-y: 0deg;
-  position: relative; flex: 1 1 auto; min-height: 0;
-  transform: perspective(1500px) rotateX(calc(22deg + var(--tilt-x))) rotateY(var(--tilt-y));
-  transform-origin: 50% 62%;
+  position: absolute; inset: 0;
+  transform: none; transform-origin: 50% 62%;
   transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
 }
+.flow-board.is-leaning { transform: perspective(1500px) rotateX(var(--tilt-x)) rotateY(var(--tilt-y)); }
 .flow-svg { position: absolute; inset: 0; display: block; width: 100%; height: 100%; overflow: visible; }
 /* Hinted glyphs drift apart under a 3D transform in Chrome; unhinted outlines keep text in place. */
 .flow-svg text { text-rendering: geometricPrecision; }
@@ -43,7 +46,15 @@
 .flow-unit { cursor: pointer; outline: none; }
 .flow-hit { fill: transparent; stroke: transparent; transition: fill 0.25s, stroke 0.25s; }
 .flow-unit:hover .flow-title, .flow-unit.is-lit .flow-title { fill: var(--white); }
-.flow-unit.is-picked .flow-hit { fill: color-mix(in srgb, var(--red) 16%, transparent); stroke: var(--red); stroke-width: 1.5; }
+/* The focused piece turns solid brand red; its type and status bar go white. */
+.flow-unit.is-picked .flow-hit { fill: var(--red); stroke: var(--red); stroke-width: 1.5; }
+.flow-unit.is-picked .flow-title, .flow-unit.is-picked .flow-index { fill: #fff; }
+.flow-unit.is-picked .flow-role { fill: #fff; opacity: 0.82; }
+.flow-led.is-picked { fill: #fff !important; animation-name: flow-led-on-red; }
+@keyframes flow-led-on-red {
+  0%, 50% { fill: #fff; filter: drop-shadow(0 0 6px #fff); }
+  12%, 46%, 62%, 100% { fill: #fff; filter: none; }
+}
 .flow-unit:focus-visible .flow-hit { stroke: var(--white); stroke-dasharray: 3 3; }
 .flow-socket { fill: var(--bg); stroke: color-mix(in srgb, var(--white) 26%, transparent); stroke-width: 1.4; }
 .flow-unit.is-lit .flow-socket { stroke: var(--red); }
@@ -104,23 +115,82 @@
 .flow-chips { display: none; }
 
 @media (prefers-reduced-motion: reduce) {
-  .flow-board { transform: perspective(1500px) rotateX(22deg); transition: none; }
+  .flow-board, .flow-board.is-leaning { transform: none; transition: none; }
   .flow-trace-body, .flow-trace-hl { animation: none; stroke-dashoffset: 0; }
   .flow-svg.is-live { display: none; }
 }
 
+.flow-path { display: none; }
+
 @media (max-width: 720px) {
-  .flow-stage { inset: 58px 0 30px; gap: 8px; }
-  .flow-detail-note { margin-top: 2px !important; }
-  .flow-hint, .flow-board { display: none; }
-  .flow-chips { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 2px; }
+  /* Flow mode gives the art more of the pinned screen; the long tier copy steps aside. */
+  .architecture-scroll .architecture-art.is-flow { height: 48svh; min-height: 400px; max-height: none; }
+  .architecture-scroll:has(.is-flow) .intro,
+  .architecture-scroll:has(.is-flow) #layer-panel p { display: none; }
+  .architecture-scroll:has(.is-flow) .layer-layout,
+  .architecture-scroll:has(.is-flow) #layer-panel { min-height: 0; }
+
+  .flow-stage { inset: 54px 0 26px; gap: 10px; }
+  .flow-hint, .flow-board-wrap, .flow-detail-route { display: none; }
+  .flow-chips { display: flex; gap: 6px; overflow-x: auto; padding: 2px 0; scrollbar-width: none; flex: none; }
+  .flow-chips::-webkit-scrollbar { display: none; }
   .flow-chips button {
-    flex: none; padding: 7px 11px; border: 1px solid var(--line); border-radius: 6px;
-    background: none; font-size: 12px; color: var(--muted);
+    flex: none; padding: 8px 12px; border: 1px solid var(--line); border-radius: 8px;
+    background: color-mix(in srgb, var(--white) 4%, var(--bg)); font-size: 12px; color: var(--muted);
+    box-shadow: 0 3px 0 color-mix(in srgb, var(--white) 10%, var(--bg));
   }
-  .flow-chips button[aria-pressed=true] { border-color: var(--red); color: var(--white); background: color-mix(in srgb, var(--red) 14%, transparent); }
-  .flow-detail { grid-template-columns: 1fr; row-gap: 10px; padding-top: 10px; }
+  .flow-chips button[aria-pressed=true] {
+    border-color: var(--red); color: #fff; background: var(--red);
+    box-shadow: 0 3px 0 color-mix(in srgb, var(--red) 45%, #000);
+  }
+
+  /* Lineage path: a red conduit down the left, a socket LED per tier, a signal running top to bottom. */
+  .flow-path {
+    --cycle: 2s;
+    position: relative; display: grid; gap: 2px; margin: 0; padding: 4px 0 4px 26px; list-style: none; flex: none;
+  }
+  .flow-path::before {
+    content: ""; position: absolute; left: 8px; top: 14px; bottom: 14px; width: 4px; border-radius: 2px;
+    background: linear-gradient(var(--red), color-mix(in srgb, var(--red) 55%, transparent));
+    box-shadow: 0 0 10px color-mix(in srgb, var(--red) 55%, transparent);
+  }
+  .flow-path::after {
+    content: ""; position: absolute; left: 6px; top: 8px; width: 8px; height: 22px; border-radius: 4px;
+    background: #fff0f2; box-shadow: 0 0 10px 3px var(--red);
+    animation: flow-path-run var(--cycle) cubic-bezier(0.5, 0, 0.5, 1) 0.5s infinite backwards paused;
+  }
+  .flow-stage.is-running .flow-path::after { animation-play-state: running; }
+  @keyframes flow-path-run {
+    0% { top: 8px; opacity: 1; }
+    92% { opacity: 1; }
+    100% { top: calc(100% - 30px); opacity: 0; }
+  }
+  .flow-path li { position: relative; display: grid; grid-template-columns: 78px minmax(0, 1fr); gap: 10px; align-items: baseline; padding: 7px 10px; border-radius: 8px; }
+  .flow-path li::before {
+    content: ""; position: absolute; left: -22px; top: 50%; width: 8px; height: 8px; margin-top: -4px; border-radius: 50%;
+    background: var(--bg); border: 2px solid var(--red);
+    animation: flow-path-led var(--cycle) ease-out var(--led-delay) infinite backwards paused;
+  }
+  .flow-stage.is-running .flow-path li::before { animation-play-state: running; }
+  @keyframes flow-path-led {
+    0% { background: #fff0f2; box-shadow: 0 0 8px 2px var(--red); }
+    20%, 100% { background: var(--bg); box-shadow: none; }
+  }
+  .flow-path li.is-picked { background: var(--red); box-shadow: none; }
+  .flow-path li.is-picked .flow-path-tier, .flow-path li.is-picked .flow-path-units { color: #fff; }
+  .flow-path li.is-picked::before { border-color: #fff; }
+  .flow-path-tier { font-size: 11px; color: var(--muted); }
+  .flow-path-units { font-size: 13px; color: var(--white); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+  .flow-detail { grid-template-columns: minmax(0, 1fr) auto; column-gap: 16px; row-gap: 4px; padding-top: 10px; }
+  .flow-detail-name { font-size: 14px; }
   .flow-detail-agent { font-size: 12px; }
-  .flow-detail-route { display: none; }
-  .flow-detail-work dd { font-size: 20px; }
+  .flow-detail-work { gap: 16px; }
+  .flow-detail-work dt { font-size: 10px; }
+  .flow-detail-work dd { font-size: 18px; }
+  .flow-detail-note { display: none; }
+}
+@media (max-width: 720px) and (prefers-reduced-motion: reduce) {
+  .flow-path::after { display: none; }
+  .flow-path li::before { animation: none; }
 }

@@ -1,25 +1,15 @@
 "use client";
 
 import { animate } from "animejs";
-import dynamic from "next/dynamic";
 import { useCallback, useEffect, useRef, useState, type KeyboardEvent } from "react";
-import { createTowerState, drawTower } from "./art";
-import type { StageColors } from "./DiveScene";
 import { layers } from "./content";
 import { FlowDiagram } from "./FlowDiagram";
 import { Lines } from "./Sections";
 import { useSite } from "./SiteContext";
-import { useArtCanvas } from "./useArtCanvas";
 
-// The AI network view is WebGL; it only loads when a visitor picks it.
-const DiveScene = dynamic(() => import("./DiveScene"), { ssr: false });
-const STAGE_FALLBACK: StageColors = { ink: "#8a8a8f", accent: "#c1152b", node: "#cbd5df", pulse: "#ffffff" };
-
-type ArtMode = "tower" | "dive" | "flow";
-const MODE_KEY = "geo-layers-mode";
 const FLOORS = layers.length;
 export function Architecture() {
-  const { theme, paused, pausedRef, accentRef, inkRef } = useSite();
+  const { paused, pausedRef } = useSite();
   const [active, setActive] = useState(0);
   const activeRef = useRef(0);
   const direction = useRef(1);
@@ -27,48 +17,9 @@ export function Architecture() {
   const stage = useRef<HTMLDivElement>(null);
   const panel = useRef<HTMLDivElement>(null);
   const tabs = useRef<(HTMLButtonElement | null)[]>([]);
-  const canvas = useRef<HTMLCanvasElement>(null);
-  const tower = useRef(createTowerState(FLOORS));
-  const coreProgress = useRef(0);
-  const [mode, setMode] = useState<ArtMode>("tower");
   const [inView, setInView] = useState(false);
-  const art = useRef<HTMLDivElement>(null);
-  const [stageColors, setStageColors] = useState<StageColors>(STAGE_FALLBACK);
 
-  // The dive stage takes its palette from the concept (CSS tokens on the art panel).
-  useEffect(() => {
-    const el = art.current;
-    if (!el || mode !== "dive") return;
-    const cs = getComputedStyle(el);
-    const read = (name: string, fallback: string) => cs.getPropertyValue(name).trim() || fallback;
-    setStageColors({
-      ink: read("--stage-ink", STAGE_FALLBACK.ink),
-      accent: read("--stage-accent", STAGE_FALLBACK.accent),
-      node: read("--stage-node", STAGE_FALLBACK.node),
-      pulse: read("--stage-pulse", STAGE_FALLBACK.pulse),
-    });
-  }, [theme, mode]);
-
-  // Restore the chosen view (?layers=dive|flow wins, then the saved choice).
-  useEffect(() => {
-    let saved: string | null = null;
-    try {
-      saved = new URLSearchParams(location.search).get("layers") ?? localStorage.getItem(MODE_KEY);
-    } catch {}
-    if (saved === "dive" || saved === "flow") setMode(saved);
-  }, []);
-  const chooseMode = (next: ArtMode) => {
-    setMode(next);
-    try {
-      localStorage.setItem(MODE_KEY, next);
-    } catch {}
-    const url = new URL(location.href);
-    if (next !== "tower") url.searchParams.set("layers", next);
-    else url.searchParams.delete("layers");
-    history.replaceState(null, "", url);
-  };
-
-  // The WebGL view renders frames only while the section is on screen.
+  // The diagram's signals run only while the section is on screen.
   useEffect(() => {
     const el = scene.current;
     if (!el) return;
@@ -76,20 +27,6 @@ export function Architecture() {
     io.observe(el);
     return () => io.disconnect();
   }, []);
-
-  useArtCanvas(
-    canvas,
-    (surface, time) => {
-      const state = tower.current;
-      state.ink = inkRef.current;
-      state.active = activeRef.current;
-      drawTower(surface, time, (alpha = "") => accentRef.current + alpha, state, pausedRef.current);
-    },
-    () => {
-      const s = tower.current;
-      return `${activeRef.current}:${s.angle.toFixed(4)}:${s.emphasis.map((e) => e.toFixed(3)).join()}:${accentRef.current}:${inkRef.current}`;
-    },
-  );
 
   const select = useCallback((i: number) => {
     if (i === activeRef.current) return;
@@ -125,9 +62,11 @@ export function Architecture() {
       const g = geometry();
       if (!g || g.slot <= 0) return;
       const progress = Math.min(FLOORS - 1, Math.max(0, (scrollY - g.top) / g.slot));
-      coreProgress.current = progress;
-      // A narrow deadband prevents panel flicker when a trackpad hovers at a boundary.
-      if (Math.abs(progress - activeRef.current) > 0.56) select(Math.round(progress));
+      // A deadband prevents panel flicker when a trackpad hovers at a boundary.
+      // On touch screens the band is wider, so a tier holds a little past its midpoint before the next
+      // one takes over (a delay against momentum scrolling).
+      const band = matchMedia("(max-width: 720px)").matches ? 0.68 : 0.56;
+      if (Math.abs(progress - activeRef.current) > band) select(Math.round(progress));
       const bar = scene.current?.querySelector<HTMLElement>(".floor-progress i");
       bar?.style.setProperty("transform", `scaleX(${(progress + 1) / FLOORS})`);
     };
@@ -175,38 +114,12 @@ export function Architecture() {
   const layer = layers[active];
 
   return (
-    <section ref={scene} className={`architecture-scroll${mode === "dive" ? " is-core-view" : ""}`} id="architecture" aria-label="Khám phá bốn tầng tổ chức">
+    <section ref={scene} className="architecture-scroll" id="architecture" aria-label="Khám phá bốn tầng tổ chức">
       <div ref={stage} className="architecture wrap">
-        <div
-          ref={art}
-          className={`architecture-art${mode === "dive" ? " is-dive" : mode === "flow" ? " is-flow" : ""}`}
-          data-floor={`${String(active + 1).padStart(2, "0")} / ${layer.floor}`}
-        >
-          <div className="layers-mode" role="group" aria-label="Kiểu minh họa">
-            <button type="button" aria-pressed={mode === "tower"} onClick={() => chooseMode("tower")}>
-              Tháp 4 tầng
-            </button>
-            <button type="button" aria-pressed={mode === "dive"} onClick={() => chooseMode("dive")}>
-              GEO Core
-            </button>
-            <button type="button" aria-pressed={mode === "flow"} onClick={() => chooseMode("flow")}>
-              Luồng xử lý
-            </button>
-          </div>
-          {/* The tower canvas stays mounted (hidden) so switching back is instant. */}
-          <canvas ref={canvas} id="globe" aria-label="Tháp bốn tầng tổ chức xoay quanh lõi GEO" />
-          {mode === "dive" && (
-            <div
-              className="dive-stage"
-              role="img"
-              aria-label={`Minh họa GEO Core, tầng ${active + 1} trên 4: ${layer.tab}`}
-            >
-              <DiveScene active={active} progress={coreProgress} still={paused} visible={inView} colors={stageColors} />
-            </div>
-          )}
-          {mode === "flow" && <FlowDiagram active={active} onSelect={goTo} running={inView && !paused} />}
+        <div className="architecture-art is-flow" data-floor={`${String(active + 1).padStart(2, "0")} / ${layer.floor}`}>
+          <FlowDiagram active={active} onSelect={goTo} running={inView && !paused} />
           <div className="art-caption">
-            <span>{mode === "dive" ? "GEO CORE / AI NATIVE" : mode === "flow" ? "GEO AGENT / LUỒNG XỬ LÝ" : "GEO CORE"}</span>
+            <span>GEO AGENT / LUỒNG XỬ LÝ</span>
             <span>HUMAN × INTELLIGENCE</span>
           </div>
         </div>

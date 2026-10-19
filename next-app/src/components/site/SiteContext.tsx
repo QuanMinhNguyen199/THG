@@ -37,6 +37,9 @@ export function useSite() {
 
 const isTheme = (value: string | undefined): value is Theme => themes.some((t) => t.id === value);
 
+/** The theme follows the system colour scheme: dark shows Dark Tech, light shows Industrial. */
+const systemVariant = (): Theme => (matchMedia("(prefers-color-scheme: light)").matches ? "industrial" : "tech");
+
 /**
  * Canvas code appends a two-digit alpha to the accent ("#c1152b" + "40"), so it needs #rrggbb.
  * The production CSS minifier shortens colours (#ffffff becomes #fff), so expand them here.
@@ -81,12 +84,12 @@ export function SiteProvider({ children }: { children: ReactNode }) {
       toHex6(styles.getPropertyValue("--canvas-accent")) ?? toHex6(styles.getPropertyValue("--red")) ?? accentRef.current;
     inkRef.current = styles.getPropertyValue("--floor-ink").trim() || inkRef.current;
     document.querySelector('meta[name="theme-color"]')?.setAttribute("content", styles.getPropertyValue("--bg").trim());
-    try {
-      localStorage.setItem("geo-theme", theme);
-    } catch {}
+    // The theme is never stored or put in the URL: it always follows the system.
     const url = new URL(location.href);
-    url.searchParams.set("theme", theme);
-    history.replaceState(null, "", url);
+    if (url.searchParams.has("theme")) {
+      url.searchParams.delete("theme");
+      history.replaceState(null, "", url);
+    }
   }, []);
 
   useEffect(() => {
@@ -106,10 +109,6 @@ export function SiteProvider({ children }: { children: ReactNode }) {
   }, [theme, applyTheme]);
 
   const setTheme = useCallback((next: Theme) => {
-    // Corporate and Agent Native have their own pages; switching between pages starts at the top.
-    const page = (t?: string) => (t === "corporate" || t === "native" ? t : "shared");
-    const current = document.documentElement.dataset.theme;
-    if (page(current) !== page(next)) scrollTo({ top: 0, behavior: "instant" });
     setThemeState(next);
     if (!pausedRef.current) {
       animate(".hero-copy", { opacity: [0.65, 1], y: [10, 0], duration: 450, ease: "outExpo" });
@@ -117,6 +116,14 @@ export function SiteProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const togglePaused = useCallback(() => setPaused((p) => !p), []);
+
+  // Follow system scheme changes live.
+  useEffect(() => {
+    const mq = matchMedia("(prefers-color-scheme: light)");
+    const onChange = () => setThemeState(systemVariant());
+    mq.addEventListener("change", onChange);
+    return () => mq.removeEventListener("change", onChange);
+  }, []);
 
   const value = useMemo(
     () => ({ theme, setTheme, paused, togglePaused, pausedRef, accentRef, inkRef, announcement }),

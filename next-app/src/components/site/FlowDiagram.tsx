@@ -105,7 +105,7 @@ export function FlowDiagram({ active, onSelect, running }: { active: number; onS
       choose(col, i);
     }
   };
-  // The board leans a few degrees toward the pointer (one style write per frame at most).
+  // The board rests flat (sharp) and leans in 3D toward the pointer while it moves over it.
   const onMove = (e: PointerEvent<HTMLDivElement>) => {
     const el = board.current;
     if (!el || e.pointerType !== "mouse") return;
@@ -114,11 +114,14 @@ export function FlowDiagram({ active, onSelect, running }: { active: number; onS
     const ny = ((e.clientY - r.top) / r.height) * 2 - 1;
     cancelAnimationFrame(tilt.current);
     tilt.current = requestAnimationFrame(() => {
-      el.style.setProperty("--tilt-x", `${(-ny * 2.5).toFixed(2)}deg`);
+      el.classList.add("is-leaning");
+      el.style.setProperty("--tilt-x", `${(8 - ny * 3).toFixed(2)}deg`);
       el.style.setProperty("--tilt-y", `${(nx * 4).toFixed(2)}deg`);
     });
   };
   const onLeave = () => {
+    cancelAnimationFrame(tilt.current);
+    board.current?.classList.remove("is-leaning");
     board.current?.style.removeProperty("--tilt-x");
     board.current?.style.removeProperty("--tilt-y");
   };
@@ -140,6 +143,7 @@ export function FlowDiagram({ active, onSelect, running }: { active: number; onS
     <div className={`flow-stage${running ? " is-running" : ""}`}>
       <p className="flow-hint">Chọn một đơn vị để xem việc đi từ đâu đến đâu.</p>
 
+      <div className="flow-board-wrap">
       <div className="flow-board" ref={board} onPointerMove={onMove} onPointerLeave={onLeave}>
         <svg className="flow-svg is-static" viewBox="0 0 1000 440" role="group" aria-label="Sơ đồ bốn tầng tổ chức">
           <defs>
@@ -271,7 +275,7 @@ export function FlowDiagram({ active, onSelect, running }: { active: number; onS
                 const cy = g.centers[i];
                 return (
                   <g key={`l${u.title}`}>
-                    <rect className="flow-led" x={g.x + 7} y={cy - g.h * 0.3} width={3} height={g.h * 0.6} rx={1.5} style={timing(START + col * HOP)} />
+                    <rect className={`flow-led${col === pick.col && i === pick.i ? " is-picked" : ""}`} x={g.x + 7} y={cy - g.h * 0.3} width={3} height={g.h * 0.6} rx={1.5} style={timing(START + col * HOP)} />
                     {col > 0 && <circle className="flow-led" cx={g.x - 4} cy={cy} r={2.6} style={timing(START + col * HOP)} />}
                   </g>
                 );
@@ -281,7 +285,10 @@ export function FlowDiagram({ active, onSelect, running }: { active: number; onS
         </svg>
       </div>
 
-      {/* Narrow screens: the picked tier's units as a row of choices, then the same detail. */}
+      </div>
+
+      {/* Narrow screens: the picked tier's units as a row of choices, then the lineage as a vertical
+          path (one row per tier) with the same running signal and LEDs, then the detail. */}
       <div className="flow-chips" role="group" aria-label={`Đơn vị tầng ${layers[pick.col].tab}`}>
         {UNITS[pick.col].map((u, i) => (
           <button key={u.title} type="button" aria-pressed={i === pick.i} onClick={() => choose(pick.col, i)}>
@@ -289,6 +296,17 @@ export function FlowDiagram({ active, onSelect, running }: { active: number; onS
           </button>
         ))}
       </div>
+      <ol key={`m${traceKey}`} className="flow-path" aria-label="Đường đi của việc qua bốn tầng">
+        {UNITS.map((units, col) => {
+          const ids = col < pick.col ? [...up[col]] : col > pick.col ? [...down[col]] : [pick.i];
+          return (
+            <li key={col} className={col === pick.col ? "is-picked" : undefined} style={{ "--led-delay": `${START + col * HOP}s`, "--cycle": `${CYCLE}s` } as CSSProperties}>
+              <span className="flow-path-tier">{layers[col].tab}</span>
+              <span className="flow-path-units">{ids.map((i) => units[i].title).join(", ")}</span>
+            </li>
+          );
+        })}
+      </ol>
 
       <div className="flow-detail" aria-live="polite">
         <div className="flow-detail-main">

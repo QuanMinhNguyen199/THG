@@ -10,7 +10,7 @@ const REVEAL = ".metrics,.architecture-copy,.section-heading,.pillars article,.p
 
 export function ConceptEffects() {
   const { theme, paused } = useSite();
-  useEntranceReveal(theme === "corporate", paused);
+  useEntranceReveal(false, paused);
   useTechPointer(theme === "tech" && !paused);
   useIndustrialParallax(theme === "industrial" && !paused);
   return null;
