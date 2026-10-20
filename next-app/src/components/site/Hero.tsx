@@ -204,12 +204,10 @@ export function Hero() {
       <div className="hero-copy">
         <h1>
           GEO<span>agents</span>
-          <i>®</i>
         </h1>
         <p className="hero-subtitle">WORKFORCE FOR MISSION-CRITICAL OPERATIONS</p>
         <p className="hero-description">
-          Không chỉ là công cụ hỏi đáp. Đây là đội ngũ AI đồng hành cùng tổ chức — từ quản trị, quản lý đến
-          thực thi. Dữ liệu thuộc về bạn. Quyết định nằm trong tay bạn.
+          Đội ngũ AI đồng hành cùng tổ chức. Dữ liệu và quyết định vẫn thuộc về bạn.
         </p>
         <div className="hero-actions">
           <a className="button" href="#architecture">

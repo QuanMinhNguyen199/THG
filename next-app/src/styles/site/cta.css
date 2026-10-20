@@ -43,7 +43,7 @@
   border: 0.3cqw solid #c1152b; color: #c1152b; font: 5cqw var(--font-display), sans-serif; transform: rotate(10deg);
 }
 
-/* AI TĐN360 card: the case paper flies out, lies down flat like a card on a desk, opens, and its
+/* AI TDN360 card: the case paper flies out, lies down flat like a card on a desk, opens, and its
    information stands up off it in three rows (Applications.tsx). Motion is scripted (FLIP + Web
    Animations); this sets the 3D stage. Each piece sits in a slot glued at its row line and is hinged
    at its base; it stands by exactly the card's tilt, so it faces the viewer square on. */
@@ -164,6 +164,7 @@
   width: calc(100% - 6px); height: calc(100% - 6px); margin: 0 auto;
 }
 .tdn-note { padding: 12px 16px; font-size: 13px; line-height: 1.5; color: #5d5055; }
+.tdn-about-note { display: none; }
 .tdn-actions { display: flex; gap: 10px; align-items: center; padding: 12px; }
 .tdn-actions button { padding: 11px 16px; border-radius: 6px; font-size: 13px; font-weight: 600; white-space: nowrap; }
 .tdn-primary { background: var(--red); color: #fff; box-shadow: 0 4px 0 #7d0d1c; }
@@ -187,10 +188,11 @@
   .tdn-sheet small { font-size: 9px; }
   .at-title { bottom: 54%; left: 5%; width: 90%; height: 150px; }
   .tdn-title h2 { font-size: 36px; }
-  .at-about { bottom: 24%; left: 4%; width: 92%; height: 104px; }
+  .at-about { bottom: 22%; left: 4%; width: 92%; height: 124px; }
   .tdn-about { padding: 12px 14px; }
   .tdn-lead { font-size: 13px; line-height: 1.55; }
   .at-note { display: none; }
+  .tdn-about-note { display: block; margin: 6px 0 0; font-size: 11.5px; line-height: 1.45; color: #5d5055; }
   .at-seal { bottom: 5%; left: 6%; width: 60px; height: 60px; }
   .tdn-seal { font-size: 13px; }
   .at-actions { bottom: 5%; left: auto; right: 5%; width: 210px; height: 58px; }

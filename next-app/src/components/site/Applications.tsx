@@ -64,22 +64,17 @@ function Piece({ at, className, children, label }: { at: string; className: stri
   );
 }
 
-/** Ends running animations on an element, keeping their final values as its own inline style. */
-function settle(els: Element[]) {
-  for (const el of els)
-    for (const a of el.getAnimations()) {
-      try {
-        a.commitStyles();
-      } catch {}
-      a.cancel();
-    }
-}
-
 export function Applications() {
   const dialog = useRef<HTMLDialogElement>(null);
   const book = useRef<HTMLDivElement>(null);
   const doc = useRef<HTMLDivElement>(null);
   const busy = useRef(false);
+
+  // showModal() focuses the dialog itself only when the dialog carries the autofocus attribute
+  // (React's autoFocus prop does not write it); otherwise Safari jumps to the first button inside.
+  useEffect(() => {
+    dialog.current?.setAttribute("autofocus", "");
+  }, []);
 
   // Keep the case paper in the closed card's proportions.
   useEffect(() => {
@@ -137,6 +132,8 @@ export function Applications() {
     if (!d || busy.current || d.open) return;
     busy.current = true;
     d.showModal();
+    d.focus({ preventScroll: true });
+    d.scrollTop = 0;
     const { el, cover, faces, pops, casts } = parts();
     const g = geometry();
     d.classList.add("is-open");
@@ -164,12 +161,18 @@ export function Applications() {
       n.animate([{ opacity: 0, transform: `rotateX(0deg) ${HI}` }, { opacity: 1, transform: `rotateX(-6deg) ${HI}`, offset: 0.1 }, { opacity: 1, transform: g.rise }], { duration: 520, delay, easing: POP, fill: "forwards" });
       casts[i].animate([{ opacity: 0, transform: "skewX(var(--sun-skew)) scaleY(0.05)" }, { opacity: 1, transform: "skewX(var(--sun-skew)) scaleY(1)" }], { duration: 520, delay, easing: EASE, fill: "forwards" });
     });
-    await Promise.all([el, cover, ...pops, ...casts].flatMap((n) => n.getAnimations().map((a) => a.finished)));
+    await Promise.all([el, cover, ...pops, ...casts].flatMap((n) => n.getAnimations().map((a) => a.finished.catch(() => {}))));
     // Hand the final poses to plain styles, so the browser re-rasterises everything at full size
-    // (a held animation can keep the layers at the small scale they started from).
-    settle([el, cover, ...pops, ...casts]);
+    // (a held animation can keep the layers at the small scale they started from). The poses are
+    // written out rather than read back with commitStyles(): Safari can commit a piece's starting
+    // keyframe instead of its end, which left the middle sheet invisible and flat on iPhone.
+    const ended = (n: Element) => n.getAnimations().forEach((a) => a.cancel());
+    [el, cover, ...pops, ...casts].forEach(ended);
+    el.style.transform = g.spread;
+    cover.style.transform = g.cover;
+    pops.forEach((n) => Object.assign(n.style, { transform: g.rise, opacity: "1" }));
+    casts.forEach((n) => Object.assign(n.style, { transform: "skewX(var(--sun-skew)) scaleY(1)", opacity: "1" }));
     busy.current = false;
-    el.querySelector<HTMLElement>(".tdn-close")?.focus({ preventScroll: true });
   };
 
   const close = async (after?: () => void) => {
@@ -249,14 +252,18 @@ export function Applications() {
                 <h3>{tax.name}</h3>
                 <p>{tax.company}</p>
               </div>
-              <span className="project-arrow">↗</span>
+              <span className="project-arrow" aria-hidden="true">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                  <path d="M5 19 19 5M5 5h14v14" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              </span>
             </div>
             <p className="project-desc">{tax.summary}</p>
           </button>
         </div>
       </section>
 
-      <dialog ref={dialog} className="tdn-dialog" aria-labelledby="tdn-title" onCancel={onCancel} onClick={onBackdrop}>
+      <dialog ref={dialog} className="tdn-dialog" tabIndex={-1} autoFocus aria-labelledby="tdn-title" onCancel={onCancel} onClick={onBackdrop}>
         <div className="tdn-book" ref={book}>
           <div className="tdn-ground" aria-hidden="true" />
           <div className="tdn-page tdn-inside" />
@@ -287,6 +294,8 @@ export function Applications() {
             </Piece>
             <Piece at="at-about" className="tdn-panel tdn-about" label>
               <p className="tdn-lead">{tax.description}</p>
+              {/* phones have no room for the separate note piece: it closes the description instead */}
+              <p className="tdn-about-note">AI đối chiếu và chỉ ra chênh lệch. Cán bộ thuế xem xét và kết luận.</p>
               <p className="tdn-checks-sr">Đối chiếu theo mã số thuế: {CHECKS.join(", ")}.</p>
             </Piece>
             <Piece at="at-seal" className="tdn-seal">

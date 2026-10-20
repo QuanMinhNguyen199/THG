@@ -54,10 +54,88 @@ nav a:after {
   font-weight: 600;
   transition: border-color 0.2s, background-color 0.2s;
 }
-.contact-link span {
-  padding-left: 0;
-  font-size: 14px;
+.contact-arrow {
+  width: 14px;
+  height: 14px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
 }
+
+/* Language picker: a globe button with the current code, opening a short list below it. */
+.lang {
+  position: relative;
+}
+.lang-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 36px;
+  padding: 0 2px;
+  background: none;
+  color: inherit;
+  font: inherit;
+  letter-spacing: inherit;
+}
+.lang-button svg {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.lang-globe { width: 17px; height: 17px; }
+.lang-chevron { width: 12px; height: 12px; transition: transform 0.2s; }
+.lang-button[aria-expanded=true] .lang-chevron { transform: rotate(180deg); }
+.lang-list {
+  position: absolute;
+  top: calc(100% + 12px);
+  right: 0;
+  z-index: 60;
+  min-width: 190px;
+  margin: 0;
+  padding: 6px;
+  list-style: none;
+  border-radius: 10px;
+  /* Takes the bar's tone, like the mobile menu: dark over the hero, white once the bar is solid. */
+  background: #0b0b0cf2;
+  color: #ffffff;
+  border: 1px solid #ffffff1f;
+  box-shadow: 0 14px 30px #0000004d;
+  letter-spacing: 0;
+}
+.shared-page > header[data-solid] .lang-list {
+  background: #ffffff;
+  color: #172337;
+  border-color: #17233714;
+  box-shadow: 0 14px 30px #1723372e;
+}
+.lang-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 40px;
+  padding: 0 12px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+}
+.lang-item svg {
+  width: 16px;
+  height: 16px;
+  fill: none;
+  stroke: var(--red);
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.lang-item.is-current { background: color-mix(in srgb, currentColor 8%, transparent); }
+a.lang-item:hover, a.lang-item:focus-visible { background: color-mix(in srgb, currentColor 8%, transparent); }
+.lang-item.is-soon { opacity: 0.55; cursor: default; }
+.lang-item small { font-size: 11px; font-weight: 500; }
 .contact-link:hover,
 .contact-link:focus-visible {
   border-color: currentColor;
@@ -115,5 +193,7 @@ nav a:after {
 
 @media (max-width: 380px) {
   .shared-page .brand { width: 120px; }
-  .shared-page .language { display: none; }
+  /* Very narrow phones keep the globe alone. */
+  .shared-page .language.lang { display: block; }
+  .shared-page .lang-code, .shared-page .lang-chevron { display: none; }
 }

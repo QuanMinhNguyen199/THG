@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { LanguagePicker } from "./LanguagePicker";
 import { Logo } from "./Logo";
 import { useStickyHeader } from "./useStickyHeader";
 
@@ -35,9 +36,13 @@ export function Header() {
         ))}
       </nav>
       <div className="nav-actions">
-        <span className="language">VI</span>
+        <LanguagePicker />
         <a className="contact-link" href="#applications">
-          Khám phá <span>↗</span>
+          Khám phá
+          {/* an SVG, not the ↗ character: iOS draws that character as a blue emoji tile */}
+          <svg className="contact-arrow" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M7 17 17 7M8 7h9v9" />
+          </svg>
         </a>
         <button
           id="menu"
