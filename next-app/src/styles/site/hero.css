@@ -239,7 +239,8 @@
   filter: drop-shadow(0 1px 6px rgba(0, 0, 0, 0.55));
 }
 
-/* Corporate's header sits on white, as in its own concept{
+/* Corporate's header sits on white, as in its own concept. */
+[data-theme=corporate] header{
   background: #ffffff;
   border-bottom-color: #e5e5e5;
 }

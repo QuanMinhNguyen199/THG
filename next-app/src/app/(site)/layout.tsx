@@ -14,6 +14,7 @@ import "@/styles/site/to-top.css";
 import "@/styles/site/contacts.css";
 import "@/styles/site/typography.css";
 import "@/styles/site/sticky-header.css";
+import "@/styles/site/mobile.css";
 
 // The site CSS refers to these variables instead of hard-coded family names.
 const body = Manrope({

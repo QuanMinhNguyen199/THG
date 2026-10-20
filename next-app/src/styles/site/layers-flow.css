@@ -29,6 +29,7 @@
 
 .flow-col { font-family: var(--font-body), sans-serif; font-size: 13px; fill: var(--muted); }
 .flow-col.is-picked { fill: var(--red); }
+.flow-col-product { font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; font-size: 11px; fill: var(--white); }
 
 .flow-title { font-family: var(--font-body), sans-serif; font-size: 17px; font-weight: 600; fill: var(--muted); transition: fill 0.25s; }
 .flow-title.is-small { font-size: 15px; font-weight: 500; }
@@ -52,8 +53,8 @@
 .flow-unit.is-picked .flow-role { fill: #fff; opacity: 0.82; }
 .flow-led.is-picked { fill: #fff !important; animation-name: flow-led-on-red; }
 @keyframes flow-led-on-red {
-  0%, 50% { fill: #fff; filter: drop-shadow(0 0 6px #fff); }
-  12%, 46%, 62%, 100% { fill: #fff; filter: none; }
+  0%, 33.3%, 66.6% { fill: #fff; filter: drop-shadow(0 0 6px #fff); }
+  10%, 30%, 43%, 63%, 76%, 100% { fill: #fff; filter: none; }
 }
 .flow-unit:focus-visible .flow-hit { stroke: var(--white); stroke-dasharray: 3 3; }
 .flow-socket { fill: var(--bg); stroke: color-mix(in srgb, var(--white) 26%, transparent); stroke-width: 1.4; }
@@ -80,6 +81,17 @@
   animation-iteration-count: infinite; animation-fill-mode: backwards; animation-play-state: paused;
 }
 .flow-pulse { stroke: #fff0f2; stroke-width: 2.6; }
+/* Background traffic on resting conduits: thinner than the lineage's signals, and always on the
+   move (it crosses over the whole cycle instead of hopping in its first quarter). */
+.flow-pulse.is-idle {
+  stroke: color-mix(in srgb, var(--red) 75%, var(--white)); stroke-width: 1.8; opacity: 0.85;
+  stroke-dasharray: 0.12 3; stroke-dashoffset: 0.12;
+  animation-name: flow-drift; animation-timing-function: linear;
+}
+@keyframes flow-drift {
+  from { stroke-dashoffset: 0.12; }
+  to { stroke-dashoffset: -1; }
+}
 .flow-pulse-halo { stroke: var(--red); stroke-width: 12; opacity: 0.45; }
 @keyframes flow-run {
   0% { stroke-dashoffset: 0.16; }
@@ -92,8 +104,8 @@
   animation-fill-mode: backwards; animation-play-state: paused;
 }
 @keyframes flow-led {
-  0%, 50% { fill: #fff0f2; filter: drop-shadow(0 0 6px var(--red)); }
-  12%, 46%, 62%, 100% { fill: var(--red); filter: none; }
+  0%, 33.3%, 66.6% { fill: #fff0f2; filter: drop-shadow(0 0 6px var(--red)); }
+  10%, 30%, 43%, 63%, 76%, 100% { fill: var(--red); filter: none; }
 }
 .flow-stage.is-running .flow-pulse, .flow-stage.is-running .flow-pulse-halo, .flow-stage.is-running .flow-led { animation-play-state: running; }
 
@@ -120,22 +132,133 @@
   .flow-svg.is-live { display: none; }
 }
 
-.flow-path { display: none; }
+.s3, .flow-more { display: none; }
 
 @media (max-width: 720px) {
-  /* Flow mode gives the art more of the pinned screen; the long tier copy steps aside. */
-  .architecture-scroll .architecture-art.is-flow { height: 48svh; min-height: 400px; max-height: none; }
+  /* The pinned scene fits one screen: heading, the 3D stack (it takes what is left), unit chips,
+     the folded detail. The stack's floors replace the tab list, so the tabs and their copy step aside. */
+  .architecture-scroll .architecture { justify-content: flex-start; gap: 8px; padding: 68px 0 14px; }
+  .architecture-scroll .architecture-copy { order: -1; flex: none; }
+  .architecture-scroll .architecture h2 { font-size: 22px; line-height: 1.25; }
+  .architecture-scroll .architecture h2 br { display: none; }
   .architecture-scroll:has(.is-flow) .intro,
-  .architecture-scroll:has(.is-flow) #layer-panel p { display: none; }
-  .architecture-scroll:has(.is-flow) .layer-layout,
-  .architecture-scroll:has(.is-flow) #layer-panel { min-height: 0; }
+  .architecture-scroll:has(.is-flow) .layer-layout { display: none; }
+  .architecture-scroll .scroll-cue { margin-top: 6px; }
+  .architecture-scroll .architecture-art.is-flow { flex: 1 1 auto; height: auto; min-height: 0; max-height: none; }
+  .architecture-art.is-flow::after { top: 0; }
+  .architecture-art.is-flow .art-caption { display: none; }
 
-  .flow-stage { inset: 54px 0 26px; gap: 10px; }
-  .flow-hint, .flow-board-wrap, .flow-detail-route { display: none; }
-  .flow-chips { display: flex; gap: 6px; overflow-x: auto; padding: 2px 0; scrollbar-width: none; flex: none; }
+  .flow-stage { inset: 22px 0 0; gap: 10px; }
+  .flow-hint, .flow-board-wrap, .flow-detail { display: none; }
+
+  /* The stack: solid decks seen from above at a shallow turn (angles match FlowStack3D.tsx). */
+  .s3 { position: relative; display: block; flex: 1 1 auto; min-height: 220px; }
+  .s3-scene { position: absolute; inset: 14px 31% 0 0; display: grid; place-items: center; perspective: 3200px; }
+  .s3-world { position: relative; transform-style: preserve-3d; transform: translateY(var(--centre)) rotateX(62deg) rotateZ(-14deg); }
+
+  /* Faces: the two sides that face the viewer, hinged on an edge of their parent. A deck's sides
+     hang down (its slab); a block's sides stand up (its body). */
+  .s3-face { position: absolute; display: block; }
+  /* Anti-aliasing: many phone GPUs draw the edge of a 3D-transformed surface with no smoothing, so
+     each surface carries a 1px feather of its own colour. The surface's edge then fades out inside
+     its own texture, which is filtered smoothly, instead of ending on a hard, stair-stepped line. */
+  .s3-deck > .s3-face.is-front { left: 0; right: 0; top: 100%; height: var(--slab); transform-origin: top; transform: rotateX(-90deg); }
+  .s3-deck > .s3-face.is-left { top: 0; bottom: 0; right: 100%; width: var(--slab); transform-origin: right; transform: rotateY(-90deg); }
+  .s3-block > .s3-face.is-front { left: 0; right: 0; top: 100%; height: var(--h); transform-origin: top; transform: rotateX(90deg); }
+  .s3-block > .s3-face.is-left { top: 0; bottom: 0; right: 100%; width: var(--h); transform-origin: right; transform: rotateY(90deg); }
+
+  .s3-deck {
+    --top: color-mix(in srgb, var(--white) 9%, var(--bg));
+    --side: color-mix(in srgb, var(--white) 17%, var(--bg));
+    --edge: color-mix(in srgb, var(--white) 16%, transparent);
+    position: absolute; inset: 0; display: flex; gap: 4px; padding: 4px 5px; transform-style: preserve-3d;
+    border-radius: 3px; background: var(--top);
+    /* No hairline borders on tilted surfaces: a 1px line foreshortened in 3D samples as a broken,
+       dashed line. Edges read from the light top against darker sides, plus a soft inner rim. */
+    box-shadow: 0 0 1px var(--top), inset 0 0 6px var(--edge);
+    transition: transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .s3-deck > .s3-face { background: var(--side); box-shadow: 0 0 1px var(--side); }
+  /* The deck's name, printed along its front edge. */
+  .s3-deck > .s3-face.is-front { display: flex; align-items: center; padding-left: 10px; }
+  .s3-deck > .s3-face.is-front span {
+    font-size: 9.5px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; white-space: nowrap;
+    color: color-mix(in srgb, var(--white) 72%, transparent);
+  }
+  .s3-deck.is-active > .s3-face.is-front span { color: #fff; }
+  .s3-deck > .s3-face.is-left { filter: brightness(0.8); }
+  .s3-deck.is-active {
+    --top: color-mix(in srgb, var(--red) 14%, var(--bg));
+    --side: color-mix(in srgb, var(--red) 55%, #000);
+    --edge: color-mix(in srgb, var(--red) 80%, transparent);
+  }
+
+  @property --h { syntax: "<length>"; inherits: true; initial-value: 0px; }
+  .s3-block {
+    --cap: color-mix(in srgb, var(--white) 20%, var(--bg));
+    --body: color-mix(in srgb, var(--white) 30%, var(--bg));
+    position: relative; flex: 1 1 0; min-width: 0; padding: 0; border: 0; background: none;
+    transform-style: preserve-3d; transition: --h 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .s3-top {
+    --rim: color-mix(in srgb, var(--white) 22%, transparent);
+    position: absolute; inset: 0; display: block; border-radius: 2px; background: var(--cap);
+    transform: translateZ(var(--h)); box-shadow: 0 0 1px var(--cap), inset 0 0 4px var(--rim);
+  }
+  .s3-block > .s3-face { background: var(--body); box-shadow: 0 0 1px var(--body); }
+  .s3-block > .s3-face.is-left { filter: brightness(0.72); }
+  /* Graphite modules; red only on the top face as a signal (deep on the lineage, lit on the pick). */
+  .s3-block.is-lit { --cap: color-mix(in srgb, var(--red) 62%, #000); }
+  .s3-block.is-lit .s3-top { --rim: color-mix(in srgb, #fff 18%, transparent); }
+  .s3-block.is-picked { --cap: var(--red); --body: color-mix(in srgb, var(--red) 50%, #000); }
+  .s3-block.is-picked .s3-top { --rim: color-mix(in srgb, #fff 70%, transparent); box-shadow: 0 0 1px var(--cap), inset 0 0 5px var(--rim), 0 0 16px var(--red); }
+  .s3-block:focus-visible { outline: none; }
+  .s3-block:focus-visible .s3-top { outline: 2px solid var(--white); outline-offset: 2px; }
+
+  /* WebGL drawing (FlowStackGL.ts): the canvas sits under the CSS stack, which keeps its layout,
+     taps and focus rings but paints no surfaces of its own. */
+  .s3-gl { position: absolute; inset: 0; pointer-events: none; }
+  .s3.is-gl .s3-deck, .s3.is-gl .s3-face, .s3.is-gl .s3-top { background: transparent !important; box-shadow: none !important; filter: none !important; }
+  .s3.is-gl .s3-face span { color: transparent !important; }
+
+  /* Flat overlay: lit lineage between decks, its signal, and the leader to the label. */
+  .s3-lines { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; }
+  .s3-lines.is-live { will-change: transform; }
+  /* Every cable is the lineage's red; resting ones are thinner and fainter, so the picked lineage
+     still reads first. */
+  .s3-cable { fill: none; stroke: var(--red); stroke-width: 1.1; stroke-linecap: round; opacity: 0.55; }
+  .s3-cable.is-trunk { stroke-width: 0.9; opacity: 0.4; }
+  .s3-beam { fill: none; stroke: var(--red); stroke-width: 1.8; opacity: 0.85; }
+  .s3-lines .flow-pulse { stroke-width: 2.2; }
+  .s3-lines .flow-pulse-halo { stroke-width: 8; }
+  /* Resting cables: the same red light and speed, with a narrower halo: a wide halo on every cable
+     is the costliest stroke to repaint on a phone. */
+  .s3-lines .flow-pulse-halo.is-rest { stroke-width: 4.5; opacity: 0.55; }
+  .s3-leader { fill: none; stroke: color-mix(in srgb, var(--white) 55%, transparent); stroke-width: 1; stroke-dasharray: 2 3; }
+
+  /* Flat column: tier names in a plain stack; the picked tier opens into the unit label. */
+  .s3-column { position: absolute; inset: 0 0 0 70%; display: flex; flex-direction: column; justify-content: center; gap: 8px; }
+  .s3-tier { display: block; width: 100%; min-height: 28px; padding: 4px 0; background: none; text-align: left; font-size: 12px; color: var(--muted); }
+  .s3-tier span { font-size: 10px; margin-right: 4px; opacity: 0.8; }
+  .s3-row.is-active .s3-tier { color: var(--red); }
+  .s3-label {
+    margin-top: 2px; padding: 8px 10px; border-radius: 8px;
+    border: 1px solid color-mix(in srgb, var(--red) 60%, transparent);
+    background: color-mix(in srgb, var(--bg) 88%, transparent);
+    box-shadow: 0 6px 18px color-mix(in srgb, #000 30%, transparent);
+  }
+  .s3-label strong { display: block; font-size: 13px; line-height: 1.3; font-weight: 600; color: var(--white); }
+  /* Narrow column: one figure per line, the number leading its label. */
+  .s3-label dl { display: grid; gap: 4px; margin: 6px 0 0; }
+  .s3-label dl > div { display: flex; align-items: baseline; gap: 5px; }
+  .s3-label dd { order: -1; margin: 0; font-family: var(--font-display), sans-serif; font-size: 17px; line-height: 1; color: var(--white); font-variant-numeric: tabular-nums; }
+  .s3-label dt { font-size: 9.5px; line-height: 1.25; color: var(--muted); }
+  .s3-label small { display: block; margin-top: 6px; font-size: 9px; color: var(--muted); opacity: 0.75; }
+
+  .flow-chips { display: flex; gap: 6px; overflow-x: auto; padding: 2px 0 4px; scrollbar-width: none; flex: none; }
   .flow-chips::-webkit-scrollbar { display: none; }
   .flow-chips button {
-    flex: none; padding: 8px 12px; border: 1px solid var(--line); border-radius: 8px;
+    flex: none; min-height: 36px; padding: 8px 12px; border: 1px solid var(--line); border-radius: 8px;
     background: color-mix(in srgb, var(--white) 4%, var(--bg)); font-size: 12px; color: var(--muted);
     box-shadow: 0 3px 0 color-mix(in srgb, var(--white) 10%, var(--bg));
   }
@@ -144,53 +267,22 @@
     box-shadow: 0 3px 0 color-mix(in srgb, var(--red) 45%, #000);
   }
 
-  /* Lineage path: a red conduit down the left, a socket LED per tier, a signal running top to bottom. */
-  .flow-path {
-    --cycle: 2s;
-    position: relative; display: grid; gap: 2px; margin: 0; padding: 4px 0 4px 26px; list-style: none; flex: none;
-  }
-  .flow-path::before {
-    content: ""; position: absolute; left: 8px; top: 14px; bottom: 14px; width: 4px; border-radius: 2px;
-    background: linear-gradient(var(--red), color-mix(in srgb, var(--red) 55%, transparent));
-    box-shadow: 0 0 10px color-mix(in srgb, var(--red) 55%, transparent);
-  }
-  .flow-path::after {
-    content: ""; position: absolute; left: 6px; top: 8px; width: 8px; height: 22px; border-radius: 4px;
-    background: #fff0f2; box-shadow: 0 0 10px 3px var(--red);
-    animation: flow-path-run var(--cycle) cubic-bezier(0.5, 0, 0.5, 1) 0.5s infinite backwards paused;
-  }
-  .flow-stage.is-running .flow-path::after { animation-play-state: running; }
-  @keyframes flow-path-run {
-    0% { top: 8px; opacity: 1; }
-    92% { opacity: 1; }
-    100% { top: calc(100% - 30px); opacity: 0; }
-  }
-  .flow-path li { position: relative; display: grid; grid-template-columns: 78px minmax(0, 1fr); gap: 10px; align-items: baseline; padding: 7px 10px; border-radius: 8px; }
-  .flow-path li::before {
-    content: ""; position: absolute; left: -22px; top: 50%; width: 8px; height: 8px; margin-top: -4px; border-radius: 50%;
-    background: var(--bg); border: 2px solid var(--red);
-    animation: flow-path-led var(--cycle) ease-out var(--led-delay) infinite backwards paused;
-  }
-  .flow-stage.is-running .flow-path li::before { animation-play-state: running; }
-  @keyframes flow-path-led {
-    0% { background: #fff0f2; box-shadow: 0 0 8px 2px var(--red); }
-    20%, 100% { background: var(--bg); box-shadow: none; }
-  }
-  .flow-path li.is-picked { background: var(--red); box-shadow: none; }
-  .flow-path li.is-picked .flow-path-tier, .flow-path li.is-picked .flow-path-units { color: #fff; }
-  .flow-path li.is-picked::before { border-color: #fff; }
-  .flow-path-tier { font-size: 11px; color: var(--muted); }
-  .flow-path-units { font-size: 13px; color: var(--white); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  /* The back-to-top sphere would sit on the unit chips while the scene is pinned, and the page's
+     scroll-light band would sweep across the stack as each tier scrolls in. */
+  html:has(.architecture-scroll.is-pinned) .to-top { opacity: 0; pointer-events: none; }
+  html:has(.architecture-scroll.is-pinned) .scroll-light { visibility: hidden; }
 
-  .flow-detail { grid-template-columns: minmax(0, 1fr) auto; column-gap: 16px; row-gap: 4px; padding-top: 10px; }
-  .flow-detail-name { font-size: 14px; }
-  .flow-detail-agent { font-size: 12px; }
-  .flow-detail-work { gap: 16px; }
-  .flow-detail-work dt { font-size: 10px; }
-  .flow-detail-work dd { font-size: 18px; }
-  .flow-detail-note { display: none; }
+  /* Secondary detail, folded by default. */
+  .flow-more { display: block; flex: none; border-top: 1px solid var(--line); padding-top: 8px; font-size: 12px; }
+  .flow-more summary { cursor: pointer; color: var(--white); list-style: none; display: flex; justify-content: space-between; min-height: 28px; align-items: center; }
+  .flow-more summary::-webkit-details-marker { display: none; }
+  .flow-more summary::after { content: "+"; color: var(--red); font-size: 16px; }
+  .flow-more[open] summary::after { content: "−"; }
+  .flow-more p { margin: 4px 0 0; line-height: 1.6; color: var(--white); opacity: 0.86; }
+  .flow-more p span { color: var(--muted); }
+  .flow-more .flow-more-route { color: var(--muted); }
 }
 @media (max-width: 720px) and (prefers-reduced-motion: reduce) {
-  .flow-path::after { display: none; }
-  .flow-path li::before { animation: none; }
+  .s3-deck, .s3-block { transition: none; }
+  .s3-lines .flow-pulse, .s3-lines .flow-pulse-halo { display: none; }
 }

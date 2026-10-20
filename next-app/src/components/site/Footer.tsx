@@ -6,7 +6,7 @@ import { ContactList } from "./Contacts";
 import { useSite } from "./SiteContext";
 
 export function Footer() {
-  const { paused, togglePaused } = useSite();
+  const { paused } = useSite();
   const clip = useRef<HTMLDivElement>(null);
   const word = useRef<HTMLDivElement>(null);
 
@@ -70,10 +70,7 @@ export function Footer() {
       <div className="wrap footer-bottom">
         <span>© 2026 THEHEGEO</span>
         <span>HUMAN-LED. AI-POWERED.</span>
-        <button id="motion" aria-pressed={paused} onClick={togglePaused}>
-          {paused ? "Bật chuyển động " : "Tạm dừng chuyển động "}
-          <span>{paused ? "▷" : "Ⅱ"}</span>
-        </button>
+        <a className="mobile-top-link" href="#geoagents">Về đầu trang ↑</a>
       </div>
       <div ref={clip} className="footer-word-clip" aria-hidden="true">
         <div ref={word} className="footer-word">

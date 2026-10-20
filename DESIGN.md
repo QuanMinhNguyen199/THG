@@ -37,3 +37,19 @@ The Corporate laptop set now uses a brighter wine-red and rose backdrop with vis
 
 On desktop at 1024px and above, the shared four-tier architecture section allocates 70% of its column space to the tower or GEO Core visual and 30% to the standard copy. The scene uses a wider container and taller canvas; the text column has compact vertical tabs and responsive headings. Phones retain the stacked layout and native scroll behavior.
 
+
+Mobile refinement (2026-10-20): mobile.css sets a 64px header, a 156px vector logo, 44px touch targets and readable body copy. At 720px and below the architecture uses natural document flow and explicit tier selection; desktop retains scroll-driven tiers. Flat tier labels follow their deck positions, detail and two-column metrics sit below the model, and only selected lineage signals animate. Graphite materials, restrained rim light and lighter contact shadows separate selection from related nodes. The mobile preview toggle and floating back-to-top are hidden on phones; a footer return link and visible hero video control remain available. The hero mobile rules are no longer swallowed by an unterminated comment.
+
+Mobile follow-up: logo reduced to 140px. Architecture stack capped at 360px, unit choices occupy one horizontally scrollable row, and the summary keeps the selected unit and metrics visible. A native disclosure holds processing details and routing, collapsed initially; its open state persists when selecting another unit.
+
+Layer detail revision: removed illustrative metrics and disclosure; the selected unit now shows its title and a short plain-language explanation directly. Governance uses one red focal block between two graphite supporting blocks. WebGL now renders through an HDR selective-red bloom ShaderPass and OutputPass, with a local red spill light and tinted reflections; the CSS fallback has directional highlights and local glow. Verified both render paths in software WebGL, not physical-phone GPU performance.
+
+Render refinement: mobile tier captions use 14px text and stronger theme-specific contrast; selected labels use readable foreground text with the brand-red underline. SVG signal cores have a restrained white bloom and red halo independent of WebGL. The CSS deck and block highlights share an upper-left key; lower decks have faint ambient shading. WebGL adds three soft indirect-shadow footprints while retaining key-light shadow maps, with reduced fill and rim intensity.
+
+Mobile visual direction: thin architectural floors replace keycap-like blocks. Slabs are 3px and modules 2–5px, with matte graphite surfaces in both themes, sharp restrained edges, red perimeters and a red front edge on the active floor. The camera, readable bilingual GEO labels, unit selection and concise copy remain. Mobile signals use one wave per route, two subdued trunks and no per-path blur filters. WebGL keeps anti-aliasing and output colour conversion but removes the bloom pass; explicit perimeter geometry carries selection.
+
+Thin-floor preview measurement: production iframe 390×844, DPR 2, Chromium software rendering, parent architecture still active. requestAnimationFrame samples: Governance 58.8 FPS, Management 60, Operations 60, Service 56, switching 60. These are local comparison measurements, not physical device GPU benchmarks.
+
+Selected thin modules now fill their top face with brand red in both CSS and WebGL. Related modules retain graphite faces with red outlines; matte material, thin geometry and signal performance settings are unchanged.
+
+Industrial overrides the graphite palette with silver-gray decks and pale module tops, darker edges and restrained shadows in both CSS and WebGL; selected tops remain brand red. WebGL uses supported MSAA up to 4 samples in the composer and a render pixel ratio of 1.5–2 for thin diagonal edges, including DPR 1 desktop previews. The output canvas does not duplicate multisampling; no extra blur or bloom pass is added.

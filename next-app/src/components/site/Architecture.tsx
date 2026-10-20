@@ -50,15 +50,23 @@ export function Architecture() {
 
   /** Tabs navigate with the browser's interruptible smooth scroll; wheel/touch stay native. */
   const goTo = useCallback((i: number) => {
+    if (matchMedia("(max-width: 720px)").matches) {
+      select(i);
+      return;
+    }
     const g = geometry();
     if (!g || g.slot <= 0) return;
     scrollTo({ top: g.top + g.slot * i, behavior: pausedRef.current ? "instant" : "smooth" });
-  }, [geometry, pausedRef]);
+  }, [geometry, pausedRef, select]);
 
   useEffect(() => {
     let frame = 0;
     const update = () => {
       frame = 0;
+      if (matchMedia("(max-width: 720px)").matches) {
+        scene.current?.classList.remove("is-pinned");
+        return;
+      }
       const g = geometry();
       if (!g || g.slot <= 0) return;
       const progress = Math.min(FLOORS - 1, Math.max(0, (scrollY - g.top) / g.slot));
@@ -67,6 +75,8 @@ export function Architecture() {
       // one takes over (a delay against momentum scrolling).
       const band = matchMedia("(max-width: 720px)").matches ? 0.68 : 0.56;
       if (Math.abs(progress - activeRef.current) > band) select(Math.round(progress));
+      // Lets narrow screens move page fixtures (back-to-top) out of the pinned scene's way.
+      scene.current?.classList.toggle("is-pinned", g.pinned);
       const bar = scene.current?.querySelector<HTMLElement>(".floor-progress i");
       bar?.style.setProperty("transform", `scaleX(${(progress + 1) / FLOORS})`);
     };
@@ -125,7 +135,7 @@ export function Architecture() {
         </div>
         <div className="architecture-copy">
           <h2>
-            Một hệ thống.
+            Một hệ thống.{" "}
             <br />
             <span>4 tầng tổ chức.</span>
           </h2>
@@ -167,7 +177,7 @@ export function Architecture() {
             <span className="floor-progress">
               <i />
             </span>
-            <span id="floor-status">0{active + 1} / 04 — Cuộn để chuyển tầng</span>
+            <span id="floor-status">0{active + 1} / 04 — <span className="floor-cue-desktop">Cuộn để chuyển tầng</span><span className="floor-cue-mobile">Chạm tên tầng để khám phá</span></span>
           </div>
         </div>
       </div>

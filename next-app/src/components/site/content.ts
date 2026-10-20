@@ -15,11 +15,12 @@ export const metrics = [
   { to: 2, pad: 2, label: "Cấp độ kiểm soát" },
 ];
 
+// `product` names each tier's block in the four-tier diagrams.
 export const layers = [
-  { tab: "Quản trị", floor: "QUẢN TRỊ", title: ["Định hướng chiến lược.", "Giữ vững mục tiêu."], body: "Kết nối thông tin để hỗ trợ quản trị và định hướng tổ chức. Con người giữ quyền quyết định và chịu trách nhiệm cuối cùng." },
-  { tab: "Quản lý", floor: "QUẢN LÝ", title: ["Kết nối nguồn lực.", "Đồng bộ vận hành."], body: "Hỗ trợ người quản lý tổng hợp thông tin, theo dõi công việc và phối hợp giữa các bộ phận trong cùng một hệ thống." },
-  { tab: "Thực thi", floor: "THỰC THI", title: ["Biến quyết định", "thành hành động."], body: "GEO Agent được thiết kế xuyên suốt để hỗ trợ từng tầng, giải quyết đúng điểm nghẽn và đưa mọi hoạt động trở lại nhịp vận hành." },
-  { tab: "Dịch vụ", floor: "DỊCH VỤ", title: ["Hỗ trợ đúng lúc.", "Phục vụ đúng nhu cầu."], body: "Kết nối tri thức tổ chức với nhu cầu tra cứu và hỗ trợ. Cung cấp thông tin trong phạm vi dữ liệu và quyền truy cập được cho phép." },
+  { tab: "Quản trị", product: "GEO Governance", floor: "QUẢN TRỊ", title: ["Định hướng chiến lược.", "Giữ vững mục tiêu."], body: "Kết nối thông tin để hỗ trợ quản trị và định hướng tổ chức. Con người giữ quyền quyết định và chịu trách nhiệm cuối cùng." },
+  { tab: "Quản lý", product: "GEO Management", floor: "QUẢN LÝ", title: ["Kết nối nguồn lực.", "Đồng bộ vận hành."], body: "Hỗ trợ người quản lý tổng hợp thông tin, theo dõi công việc và phối hợp giữa các bộ phận trong cùng một hệ thống." },
+  { tab: "Thực thi", product: "GEO Operations", floor: "THỰC THI", title: ["Biến quyết định", "thành hành động."], body: "GEO Agent được thiết kế xuyên suốt để hỗ trợ từng tầng, giải quyết đúng điểm nghẽn và đưa mọi hoạt động trở lại nhịp vận hành." },
+  { tab: "Dịch vụ", product: "GEO Service", floor: "DỊCH VỤ", title: ["Hỗ trợ đúng lúc.", "Phục vụ đúng nhu cầu."], body: "Kết nối tri thức tổ chức với nhu cầu tra cứu và hỗ trợ. Cung cấp thông tin trong phạm vi dữ liệu và quyền truy cập được cho phép." },
 ];
 
 export type ProjectId = "tax";

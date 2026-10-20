@@ -55,17 +55,75 @@
   color: var(--red);
 }
 
-/* The mobile dropdown hangs from the bar, whatever its current height. */
+/* A thicker white marker stays visible against the moving hero image. */
+.shared-page > header nav a::after {
+  height: 3px;
+  bottom: 0;
+  border-radius: 2px;
+  background: #fff;
+  box-shadow: 0 1px 3px #0009;
+  transition: transform 0.18s ease-out;
+}
+.shared-page > header nav a:focus-visible::after {
+  transform: scaleX(1);
+}
+.shared-page > header[data-solid] nav a::after {
+  background: var(--red);
+  box-shadow: none;
+}
+
+/* The mobile dropdown hangs from the bar, whatever its current height, and takes the bar's own
+   tone: dark with white type over the hero, white with the bar's navy type once the bar is solid. */
 @media (max-width: 720px){
   .shared-page > header nav {
     top: 100%;
+    background: #0b0b0cf2;
+    color: #ffffff;
+    border-top: 1px solid #ffffff1a;
+    border-bottom: 1px solid #ffffff1a;
   }
+  .shared-page > header[data-solid] nav {
+    background: #ffffff;
+    color: #172337;
+    border-top: 1px solid #17233714;
+    border-bottom: 0;
+    box-shadow: 0 14px 24px #1723371a;
+  }
+  .shared-page > header nav a { color: inherit; }
+
+  /* Menu button: three 2px bars that fold into a cross while the menu is open. */
+  .shared-page > header #menu {
+    position: relative;
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    color: inherit;
+  }
+  .shared-page > header #menu span {
+    position: absolute;
+    left: 5px;
+    right: 5px;
+    height: 2px;
+    margin: 0;
+    border-radius: 2px;
+    background: currentColor;
+    transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.2s;
+  }
+  .shared-page > header #menu span:nth-child(1) { top: 9px; }
+  .shared-page > header #menu span:nth-child(2) { top: 15px; }
+  .shared-page > header #menu span:nth-child(3) { top: 21px; }
+  .shared-page > header #menu[aria-expanded=true] span:nth-child(1) { transform: translateY(6px) rotate(45deg); }
+  .shared-page > header #menu[aria-expanded=true] span:nth-child(2) { opacity: 0; }
+  .shared-page > header #menu[aria-expanded=true] span:nth-child(3) { transform: translateY(-6px) rotate(-45deg); }
   .shared-page > header[data-solid] {
     height: 56px;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .shared-page > header nav a::after {
+    transition: none;
+  }
   .shared-page > header{
     transition: none;
   }

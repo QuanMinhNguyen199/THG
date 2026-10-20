@@ -1,0 +1,126 @@
+/* Phone composition. Desktop retains its scroll-driven architecture scene. */
+:root { --stack-deck: #24282c; --stack-side: #41474d; --stack-cap: #2c3137; --stack-body: #202429; --stack-edge: #8a929b; }
+[data-theme=industrial] { --stack-deck: #d5dbe1; --stack-side: #89949f; --stack-cap: #edf0f3; --stack-body: #aab4be; --stack-edge: #647382; }
+.floor-cue-mobile { display: none; }
+.mobile-top-link { display: none; }
+@media (max-width: 720px) {
+  .shared-page { --mobile-gutter: 20px; }
+  .shared-page .wrap { width: calc(100% - 40px); }
+  .shared-page :is(section, footer)[id] { scroll-margin-top: 80px; }
+  .shared-page :is(a, button, summary):focus-visible { outline: 2px solid var(--accent-text); outline-offset: 4px; }
+  .shared-page > header, .shared-page > header[data-solid] { height: 64px; padding-inline: 20px; gap: 16px; }
+  .shared-page .brand { width: 140px; flex: 0 0 140px; min-height: 44px; display: flex; align-items: center; }
+  .shared-page .brand .brand-logo { width: 100%; height: auto; }
+  .shared-page > header[data-solid] { box-shadow: 0 3px 12px #1723370d; }
+  .shared-page > header #menu { width: 44px; height: 44px; }
+  .shared-page > header #menu span { left: 10px; right: 10px; }
+  .shared-page > header #menu span:nth-child(1) { top: 15px; }
+  .shared-page > header #menu span:nth-child(2) { top: 21px; }
+  .shared-page > header #menu span:nth-child(3) { top: 27px; }
+  .shared-page > header nav { padding: 16px 20px 24px; max-height: calc(100dvh - 64px); overflow-y: auto; }
+  .shared-page > header nav a { min-height: 48px; display: flex; align-items: center; }
+  .mp-toggle { display: none; }
+  .to-top { display: none; }
+  .shared-page .mobile-top-link { display: inline-flex; align-items: center; min-height: 44px; text-decoration: underline; text-underline-offset: 4px; }
+
+  [data-theme] .shared-page .hero { display: flex; flex-direction: column; justify-content: flex-end; min-height: 100svh; height: auto; max-height: none; padding: 112px 20px max(28px, env(safe-area-inset-bottom)); }
+  [data-theme] .shared-page .hero-copy { position: relative; inset: auto; width: 100%; max-width: none; margin: 0; padding: 0; }
+  [data-theme] .shared-page .hero h1 { font-size: clamp(42px, 12vw, 68px); letter-spacing: -0.035em; line-height: 1.1; }
+  [data-theme] .shared-page .hero-subtitle { font-size: 12px; line-height: 1.6; letter-spacing: 0.09em; }
+  [data-theme] .shared-page .hero-description { font-size: 15px; line-height: 1.7; }
+  [data-theme] .shared-page .hero-shade { background: linear-gradient(0deg, #000e 0%, #0009 48%, #0003 100%); }
+  .shared-page .hero-actions { gap: 10px; margin-top: 24px; }
+  .shared-page .hero-actions .button { width: 100%; min-height: 48px; padding: 14px 18px; font-size: 14px; }
+  [data-theme] .shared-page .hero-bottom { bottom: 24px; left: 20px; right: 20px; }
+  [data-theme] .shared-page .hero-toggle:not(:focus-visible) { position: static; width: 44px; height: 44px; clip-path: none; border: 1px solid #ffffff80; }
+  .shared-page .hero-bottom > a { display: none; }
+  .shared-page .button { min-height: 48px; font-size: 14px; }
+  .shared-page .section-heading h2 { font-size: clamp(28px, 8vw, 36px); line-height: 1.2; }
+  .shared-page .section-heading > p, .shared-page .projects.is-single .project-desc { font-size: 15px; line-height: 1.75; }
+  .shared-page .project-info p { font-size: 14px; }
+  .shared-page .applications, .shared-page .careers { padding-block: 56px; }
+  .shared-page .metrics { padding-block: 40px; gap: 28px 16px; }
+  .shared-page .metrics strong { font-size: 40px; }
+  .shared-page .metrics > div > span { font-size: 12px; line-height: 1.6; }
+  .shared-page .careers-apply { padding: 20px; gap: 20px; }
+  .shared-page .careers-apply .button { width: 100%; justify-content: center; }
+  .shared-page .projects.is-single .document { box-shadow: 10px 16px 24px #0003; }
+  .shared-page .cta { padding-block: 56px; }
+  [data-theme=industrial] .shared-page .cta-inner { padding: 32px 20px; box-shadow: none; }
+  .shared-page .cta .cta-button { font-size: 13px; letter-spacing: 0; white-space: normal; }
+  .shared-page .contact-list > * { min-height: 44px; font-size: 14px; overflow-wrap: anywhere; }
+  .shared-page .footer-bottom { font-size: 12px; letter-spacing: 0; padding-bottom: 24px; gap: 12px; }
+  .shared-page .footer-bottom button { min-height: 44px; font-size: 12px; }
+  .shared-page .footer-contacts { margin-top: 28px; }
+
+  /* A readable, natural-height section; selecting a tier never scrolls the phone away. */
+  .shared-page .architecture-scroll { height: auto; }
+  .shared-page .architecture-scroll .architecture { position: relative; height: auto; min-height: 0; padding: 48px 0; gap: 16px; }
+  .shared-page .architecture-scroll .architecture h2 { font-size: 27px; line-height: 1.25; }
+  .shared-page .architecture-scroll .architecture-art.is-flow { flex: none; height: auto; }
+  .architecture-art.is-flow::after { display: none; }
+  .shared-page .scroll-cue { font-size: 12px; line-height: 1.5; margin-top: 12px; }
+  .floor-cue-desktop { display: none; }
+  .floor-cue-mobile { display: inline; }
+  .shared-page .floor-progress { display: none; }
+  .flow-stage { position: relative; inset: auto; gap: 16px; }
+  .s3 { flex: none; height: clamp(320px, 88vw, 360px); min-height: 0; }
+  .s3-scene { inset: 0 40% 0 0; }
+  .s3-column { inset: 0 0 0 62%; display: block; }
+  .s3-row { position: absolute; width: 100%; transform: translateY(-50%); }
+  .s3-tier { min-height: 44px; font-size: 14px; line-height: 1.3; padding: 8px 0 8px 4px; border-radius: 6px; }
+  .s3-tier span { font-size: 11px; }
+  .s3-tier-product { display: block; font-size: clamp(11px, 2.8vw, 12px); font-weight: 700; line-height: 1.4; text-transform: uppercase; color: var(--white); white-space: nowrap; }
+  .s3-tier .s3-tier-caption { display: block; margin: 4px 0 0; font-size: 14px; opacity: 1; }
+  .s3-tier-caption > span { opacity: 1; font-size: 12px; }
+  .s3-row.is-active .s3-tier-product { color: inherit; }
+  .s3-row.is-active .s3-tier { color: var(--white); font-weight: 700; background: color-mix(in srgb, var(--red) 8%, var(--bg)); box-shadow: inset 0 -2px var(--red); }
+  .s3-face.is-front span { visibility: hidden; }
+  /* Thin graphite architecture. Selection is a perimeter, not a coloured solid. */
+  .s3-deck, .s3-deck.is-active { --top: var(--stack-deck); --side: var(--stack-side); --edge: var(--stack-edge); gap: 7px; padding: 7px; border-radius: 1px; }
+  .s3-deck.is-active { --side: var(--red); --edge: var(--red); }
+  .s3-block, .s3-block.is-lit, .s3-block.is-picked { --cap: var(--stack-cap); --body: var(--stack-body); }
+  .s3-block.is-picked { --cap: var(--red); }
+  .s3:not(.is-gl) .s3-top { border-radius: 1px; background: linear-gradient(135deg, #ffffff0d, transparent 55%), var(--cap); box-shadow: inset 0 0 0 1px #8a929b55, 0 2px 3px #0004; }
+  .s3:not(.is-gl) .s3-block.is-lit .s3-top { box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--red) 60%, transparent), 0 2px 3px #0004; }
+  .s3:not(.is-gl) .s3-block.is-picked .s3-top { box-shadow: inset 0 0 0 1px var(--red), inset 0 -2px var(--red), 0 2px 3px #0004; }
+  .s3:not(.is-gl) .s3-deck { background: linear-gradient(135deg, #ffffff0a, transparent 55%), var(--top); box-shadow: inset 0 1px 1px #8a929b80, 0 3px 6px #0003; }
+  .s3:not(.is-gl) .s3-deck.is-active { box-shadow: inset 0 1px 1px #8a929b80, 0 3px 6px #0003; }
+  .s3:not(.is-gl) .s3-deck:not(:first-child)::after { content: ""; position: absolute; inset: 3% -1% -8% 3%; pointer-events: none; background: radial-gradient(ellipse at 53% 45%, #00000020, transparent 74%); transform: translateZ(0.25px); }
+  .s3:not(.is-gl) :is(.s3-deck, .s3-block) > .s3-face.is-left { filter: brightness(1.08); }
+  .s3:not(.is-gl) :is(.s3-deck, .s3-block) > .s3-face.is-front { filter: brightness(0.82); }
+  .s3-cable { opacity: 0.15; stroke: var(--muted); }
+  .s3-cable.is-trunk { opacity: 0.08; }
+  .s3-beam { stroke-width: 1; opacity: 0.7; }
+  .s3-lines .flow-pulse { stroke: #fff; stroke-width: 1.6; filter: none; }
+  .s3-lines .flow-pulse-halo { stroke-width: 3.5; opacity: 0.2; filter: none; }
+  [data-theme=industrial] .s3-lines .flow-pulse { stroke: var(--red); }
+  [data-theme=industrial] .s3:not(.is-gl) .s3-top { box-shadow: inset 0 0 0 1px #64738255, 0 2px 3px #1723371f; }
+  [data-theme=industrial] .s3:not(.is-gl) .s3-block.is-lit .s3-top { box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--red) 60%, transparent), 0 2px 3px #1723371f; }
+  [data-theme=industrial] .s3:not(.is-gl) .s3-block.is-picked .s3-top { box-shadow: inset 0 0 0 1px var(--red), inset 0 -2px var(--red), 0 2px 3px #1723371f; }
+  [data-theme=industrial] .s3-cable { opacity: 0.24; }
+  .flow-chips { flex-wrap: nowrap; overflow-x: auto; padding: 2px 0 6px; gap: 8px; scrollbar-width: none; }
+  .flow-chips button { min-height: 44px; font-size: 13px; box-shadow: none; }
+  .flow-chips button[aria-pressed=true] { box-shadow: none; }
+  .flow-detail { display: grid; grid-template-columns: 1fr; gap: 12px; padding-top: 16px; }
+  .flow-detail-main > .flow-detail-agent { display: block; margin-top: 8px !important; }
+  .flow-detail-main > .flow-detail-route { display: none; }
+  .flow-detail .flow-more { display: block; padding-top: 4px; }
+  .flow-more summary { min-height: 44px; gap: 12px; font-size: 13px; }
+  .flow-more p { font-size: 14px; line-height: 1.7; margin: 8px 0 0; }
+  .flow-more-open, .flow-more[open] .flow-more-closed { display: none; }
+  .flow-more[open] .flow-more-open { display: inline; }
+  .flow-detail-name { font-size: 18px; }
+  .flow-detail-name span { display: block; margin: 4px 0 0; font-size: 14px; }
+  .flow-detail-agent, .flow-detail-route { font-size: 14px; line-height: 1.7; }
+  .flow-detail-agent { opacity: 1; }
+  .flow-detail-work { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .flow-detail-work dt { font-size: 13px; }
+  .flow-detail-work dd { font-size: 28px; margin-top: 6px; }
+  .flow-detail-note { font-size: 12px; opacity: 1; margin-top: 0 !important; }
+  [data-theme=tech] .shared-page { --accent-text: var(--logo-accent); }
+  [data-theme=tech] .flow-stage { --muted: #bcbcbc; }
+  [data-theme=industrial] .flow-stage { --muted: #4b4b4b; }
+  [data-theme=industrial] .shared-page .metrics { --accent-text: var(--logo-accent); }
+  .scroll-light { display: none; }
+}

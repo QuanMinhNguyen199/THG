@@ -6,10 +6,13 @@
 .scroll-light:before{content:'';position:absolute;left:0;right:0;top:0;height:28vh;transform:translateY(calc(var(--light-y,-15vh) - 50%));will-change:transform;background:linear-gradient(180deg,transparent,color-mix(in srgb,var(--red) 5%,transparent),transparent)}
 .scroll-light i{position:absolute;top:0;left:0;width:2px;height:100%;background:linear-gradient(180deg,transparent,var(--red),transparent);transform:scaleY(var(--page-progress,0));transform-origin:top;opacity:.6}
 [data-theme=tech]{--footer-word:#222}[data-theme=industrial]{--footer-word:#222}
-/* Only the top half of the wordmark sits above the page edge; it rises in once the end is reached. */
+/* Only the top half of the wordmark sits above the page edge (all of it on phones, below the back-to-top
+   sphere); it rises in once the end is reached. */
 .footer-word-clip{font-size:17.6vw;height:.54em;overflow:hidden;margin-top:0}
 .footer-word,footer:hover .footer-word{font-size:1em;margin-top:0;color:var(--footer-word,#222);text-shadow:none;transition:none;will-change:transform}
 .footer-bottom{padding-bottom:22px}
+/* Touch screens scroll by swiping: no scrollbars, on the page or on any scrolling row (unit chips, menu). */
+@media (max-width:720px),(pointer:coarse){html,html *{scrollbar-width:none}html::-webkit-scrollbar,html *::-webkit-scrollbar{display:none}}
 .hero-bottom{bottom:90px}.floor-progress i{transition:transform .8s cubic-bezier(.22,1,.36,1)}
-@media(max-width:720px){.brand{width:175px}.hero-bottom{bottom:86px}.footer-word-clip{font-size:17.4vw;margin-bottom:76px}}
+@media(max-width:720px){.brand{width:175px}.hero-bottom{bottom:86px}.footer-word-clip{font-size:17.4vw;height:.86em;margin-bottom:14px}}
 @media(prefers-reduced-motion:reduce){.footer-word{will-change:auto}.floor-progress i{transition:none}}

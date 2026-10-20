@@ -12,13 +12,15 @@
 
 import { useEffect, useId, useRef, useState, type CSSProperties, type KeyboardEvent, type PointerEvent } from "react";
 import { layers } from "./content";
+import { FlowStack3D } from "./FlowStack3D";
+import { HOP, START, WAVES, idleTiming, litTiming, seedOf, timing } from "./flowSignals";
 
 type Unit = { title: string; role: string; work: [string, string][]; agent: string };
 
 // Illustrative structure and figures for a typical agency, until the client's own are confirmed.
 const UNITS: Unit[][] = [
   [
-    { title: "Quản trị", role: "Lãnh đạo cơ quan", work: [["Việc đã giao", "38"], ["Chờ phê duyệt", "5"]], agent: "tóm tắt báo cáo của ba đơn vị trước giao ban sáng thứ Hai." },
+    { title: "Quản trị", role: "Định hướng, phê duyệt", work: [["Việc đã giao", "38"], ["Chờ phê duyệt", "5"]], agent: "tổng hợp báo cáo để lãnh đạo nắm tình hình và phê duyệt công việc." },
   ],
   [
     { title: "Văn phòng", role: "Tổng hợp, điều phối", work: [["Đang xử lý", "12"], ["Sắp đến hạn", "2"]], agent: "bóc tách nhiệm vụ từ công văn đến và đề xuất người phụ trách." },
@@ -30,7 +32,7 @@ const UNITS: Unit[][] = [
     { title: "Thẩm định", role: "Kiểm tra căn cứ", work: [["Hồ sơ", "8"], ["Cần bổ sung", "3"]], agent: "đối chiếu căn cứ pháp lý và đánh dấu chỗ còn thiếu." },
     { title: "Triển khai", role: "Thực hiện nhiệm vụ", work: [["Đang làm", "11"], ["Trễ hạn", "1"]], agent: "chia nhiệm vụ thành đầu việc, gắn hạn cho từng người." },
     { title: "Theo dõi hạn", role: "Đôn đốc", work: [["Hạn trong tuần", "7"], ["Đã nhắc", "15"]], agent: "gửi nhắc việc và ghi lại phản hồi của người phụ trách." },
-    { title: "Báo cáo", role: "Tổng hợp kết quả", work: [["Báo cáo tuần", "3"], ["Chỉ tiêu theo dõi", "24"]], agent: "gom số liệu từ các đầu việc thành báo cáo KPI/OKR." },
+    { title: "Báo cáo", role: "Tổng hợp kết quả", work: [["Báo cáo tuần", "3"], ["Chỉ tiêu theo dõi", "24"]], agent: "tổng hợp tiến độ và kết quả công việc thành báo cáo." },
   ],
   [
     { title: "Tra cứu nội bộ", role: "Trong phạm vi được phép", work: [["Lượt hỏi hôm nay", "42"], ["Cần chuyên viên", "2"]], agent: "trả lời từ kho văn bản theo quyền truy cập của người hỏi." },
@@ -56,12 +58,6 @@ const GEO = [
 type Pick = { col: number; i: number };
 const middle = (col: number) => Math.floor((UNITS[col].length - 1) / 2);
 
-// Signal timing (seconds): wait for the trace to draw, then one quick hop per tier. Two waves run
-// half a cycle apart, so the lineage always carries traffic.
-const START = 0.5;
-const HOP = 0.5;
-const CYCLE = HOP * 4;
-const timing = (delay: number): CSSProperties => ({ animationDelay: `${delay}s`, animationDuration: `${CYCLE}s` });
 
 /** Units above that hand work down to the pick, and units below that it passes work on to. */
 function lineage({ col, i }: Pick) {
@@ -88,7 +84,17 @@ export function FlowDiagram({ active, onSelect, running }: { active: number; onS
   const tilt = useRef(0);
   // Scrolling or a tab moves to another tier: start from its middle unit. A unit picked on the
   // diagram keeps its place when the section scrolls to that unit's tier.
+  // A unit picked on another tier scrolls the section through the tiers in between; hold the pick
+  // until that scroll arrives instead of resetting at each tier it passes.
+  const pending = useRef<Pick | null>(null);
   useEffect(() => {
+    const target = pending.current;
+    if (target) {
+      if (target.col !== active) return;
+      pending.current = null;
+      setPick(target);
+      return;
+    }
     setPick((p) => (p.col === active ? p : { col: active, i: middle(active) }));
   }, [active]);
   useEffect(() => () => cancelAnimationFrame(tilt.current), []);
@@ -97,6 +103,10 @@ export function FlowDiagram({ active, onSelect, running }: { active: number; onS
   const inLine = (c: number, i: number) => up[c].has(i) || down[c].has(i);
   const choose = (col: number, i: number) => {
     setPick({ col, i });
+    const target = col !== active ? { col, i } : null;
+    pending.current = target;
+    // If the user takes over the scroll, the held pick lapses.
+    if (target) setTimeout(() => pending.current === target && (pending.current = null), 1600);
     if (col !== active) onSelect(col);
   };
   const onKey = (e: KeyboardEvent, col: number, i: number) => {
@@ -135,7 +145,7 @@ export function FlowDiagram({ active, onSelect, running }: { active: number; onS
       const above = up[c].has(a) && up[c + 1].has(b);
       const below = down[c].has(a) && down[c + 1].has(b);
       if (!above && !below) return [];
-      return [{ id: `${c}-${a}-${b}`, c, b, d: linkPath(c, a, b), step: above ? pick.col - (c + 1) : c - pick.col }];
+      return [{ id: `${c}-${a}-${b}`, c, a, b, d: linkPath(c, a, b), step: above ? pick.col - (c + 1) : c - pick.col }];
     }),
   );
 
@@ -178,7 +188,8 @@ export function FlowDiagram({ active, onSelect, running }: { active: number; onS
 
           {GEO.map((g, col) => (
             <text key={`h${col}`} className={`flow-col${col === pick.col ? " is-picked" : ""}`} x={g.x + 14} y={22}>
-              {layers[col].tab}
+              <tspan className="flow-col-product">{layers[col].product}</tspan>
+              <tspan dx={8}>{layers[col].tab}</tspan>
             </text>
           ))}
 
@@ -259,12 +270,24 @@ export function FlowDiagram({ active, onSelect, running }: { active: number; onS
 
         {/* live layer: only what moves (signals, LEDs); it takes no pointer input */}
         <svg className="flow-svg is-live" viewBox="0 0 1000 440" aria-hidden="true" focusable="false">
-          <g key={`p${traceKey}`}>
-            {[0, CYCLE / 2].map((wave) =>
+          {/* not keyed by the pick: lights on conduits that stay lit keep running through a new pick */}
+          <g>
+            {LINKS.flatMap((links, c) =>
+              links.map(([a, b]) => (
+                <path
+                  key={`i${c}-${a}-${b}`}
+                  className="flow-pulse is-idle"
+                  pathLength={1}
+                  style={idleTiming(seedOf(c, a, b))}
+                  d={linkPath(c, a, b)}
+                />
+              )),
+            )}
+            {WAVES.map((wave) =>
               traced.map((t) => (
                 <g key={`${wave}-${t.id}`}>
-                  <path className="flow-pulse-halo" pathLength={1} style={timing(START + wave + t.c * HOP)} d={t.d} />
-                  <path className="flow-pulse" pathLength={1} style={timing(START + wave + t.c * HOP)} d={t.d} />
+                  <path className="flow-pulse-halo" pathLength={1} style={litTiming(t.c, wave, seedOf(t.c, t.a, t.b))} d={t.d} />
+                  <path className="flow-pulse" pathLength={1} style={litTiming(t.c, wave, seedOf(t.c, t.a, t.b))} d={t.d} />
                 </g>
               )),
             )}
@@ -287,8 +310,18 @@ export function FlowDiagram({ active, onSelect, running }: { active: number; onS
 
       </div>
 
-      {/* Narrow screens: the picked tier's units as a row of choices, then the lineage as a vertical
-          path (one row per tier) with the same running signal and LEDs, then the detail. */}
+      {/* Narrow screens: the tiers as a 3D stack, the picked tier's units as a row of choices, and
+          the secondary detail folded away. */}
+      <FlowStack3D
+        units={UNITS}
+        pick={pick}
+        active={active}
+        traced={traced}
+        links={LINKS}
+        inLine={inLine}
+        onChoose={choose}
+        onTier={onSelect}
+      />
       <div className="flow-chips" role="group" aria-label={`Đơn vị tầng ${layers[pick.col].tab}`}>
         {UNITS[pick.col].map((u, i) => (
           <button key={u.title} type="button" aria-pressed={i === pick.i} onClick={() => choose(pick.col, i)}>
@@ -296,22 +329,11 @@ export function FlowDiagram({ active, onSelect, running }: { active: number; onS
           </button>
         ))}
       </div>
-      <ol key={`m${traceKey}`} className="flow-path" aria-label="Đường đi của việc qua bốn tầng">
-        {UNITS.map((units, col) => {
-          const ids = col < pick.col ? [...up[col]] : col > pick.col ? [...down[col]] : [pick.i];
-          return (
-            <li key={col} className={col === pick.col ? "is-picked" : undefined} style={{ "--led-delay": `${START + col * HOP}s`, "--cycle": `${CYCLE}s` } as CSSProperties}>
-              <span className="flow-path-tier">{layers[col].tab}</span>
-              <span className="flow-path-units">{ids.map((i) => units[i].title).join(", ")}</span>
-            </li>
-          );
-        })}
-      </ol>
 
       <div className="flow-detail" aria-live="polite">
         <div className="flow-detail-main">
           <p className="flow-detail-name">
-            <strong>{unit.title}</strong> <span>{unit.role}</span>
+            <strong>{unit.title}</strong>
           </p>
           <p className="flow-detail-agent">GEO Agent {unit.agent}</p>
           <p className="flow-detail-route">
@@ -319,15 +341,6 @@ export function FlowDiagram({ active, onSelect, running }: { active: number; onS
             {to.length > 0 && <>Chuyển tới {to.join(", ")}.</>}
           </p>
         </div>
-        <dl className="flow-detail-work">
-          {unit.work.map(([label, value]) => (
-            <div key={label}>
-              <dt>{label}</dt>
-              <dd>{value}</dd>
-            </div>
-          ))}
-        </dl>
-        <p className="flow-detail-note">Số liệu minh họa</p>
       </div>
     </div>
   );

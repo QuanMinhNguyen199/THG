@@ -27,7 +27,7 @@ export function Header() {
       <a href="#" className="brand" aria-label="THEHEGEO trang chủ">
         <Logo className="brand-logo" />
       </a>
-      <nav aria-label="Điều hướng chính" className={open ? "open" : undefined}>
+      <nav id="site-navigation" aria-label="Điều hướng chính" className={open ? "open" : undefined}>
         {links.map((link) => (
           <a key={link.href} href={link.href} onClick={() => setOpen(false)}>
             {link.label}
@@ -42,9 +42,11 @@ export function Header() {
         <button
           id="menu"
           aria-expanded={open}
+          aria-controls="site-navigation"
           aria-label={open ? "Đóng menu" : "Mở menu"}
           onClick={() => setOpen((o) => !o)}
         >
+          <span />
           <span />
           <span />
         </button>

@@ -17,9 +17,8 @@ import { themes, type Theme } from "./content";
 type SiteState = {
   theme: Theme;
   setTheme: (theme: Theme) => void;
-  /** True when the pause control or prefers-reduced-motion stops decorative motion. */
+  /** True when prefers-reduced-motion stops decorative motion. */
   paused: boolean;
-  togglePaused: () => void;
   /** Live values for rAF loops and anime callbacks, which must not wait for a re-render. */
   pausedRef: RefObject<boolean>;
   accentRef: RefObject<string>;
@@ -115,7 +114,6 @@ export function SiteProvider({ children }: { children: ReactNode }) {
     }
   }, []);
 
-  const togglePaused = useCallback(() => setPaused((p) => !p), []);
 
   // Follow system scheme changes live.
   useEffect(() => {
@@ -126,8 +124,8 @@ export function SiteProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const value = useMemo(
-    () => ({ theme, setTheme, paused, togglePaused, pausedRef, accentRef, inkRef, announcement }),
-    [theme, setTheme, paused, togglePaused, announcement],
+    () => ({ theme, setTheme, paused, pausedRef, accentRef, inkRef, announcement }),
+    [theme, setTheme, paused, announcement],
   );
 
   return <SiteContext.Provider value={value}>{children}</SiteContext.Provider>;
