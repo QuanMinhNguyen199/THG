@@ -4,7 +4,6 @@ import { animate } from "animejs";
 import { useCallback, useEffect, useRef, useState, type KeyboardEvent } from "react";
 import { layers } from "./content";
 import { FlowDiagram } from "./FlowDiagram";
-import { Lines } from "./Sections";
 import { useSite } from "./SiteContext";
 
 const FLOORS = layers.length;
@@ -102,7 +101,7 @@ export function Architecture() {
     shown.current = active;
     const el = panel.current;
     if (!el || paused) return;
-    const motion = animate(el.querySelectorAll(".panel-symbol,h3,p"), {
+    const motion = animate(el.querySelectorAll("p"), {
       opacity: [0.65, 1],
       y: [direction.current * 6, 0],
       duration: 220,
@@ -126,7 +125,7 @@ export function Architecture() {
   return (
     <section ref={scene} className="architecture-scroll" id="architecture" aria-label="Khám phá bốn tầng tổ chức">
       <div ref={stage} className="architecture wrap">
-        <div className="architecture-art is-flow" data-floor={`${String(active + 1).padStart(2, "0")} / ${layer.floor}`}>
+        <div className="architecture-art is-flow" data-floor={layer.floor}>
           <FlowDiagram active={active} onSelect={goTo} running={inView && !paused} />
           <div className="art-caption">
             <span>GEO AGENT / LUỒNG XỬ LÝ</span>
@@ -144,34 +143,36 @@ export function Architecture() {
             <br />
             Mỗi tầng một vai trò. Cùng một mục tiêu.
           </p>
-          <div className="layer-layout">
-            <div className="tabs" role="tablist" aria-label="Tầng tổ chức" aria-orientation="vertical">
-              {layers.map((l, i) => (
+          {/* The four tiers as one readable list: each row names the tier and its GEO product; the
+              tier in view opens under its name with its headline and description, full width. */}
+          <div className="layer-layout tier-list" role="tablist" aria-label="Tầng tổ chức" aria-orientation="vertical">
+            {layers.map((l, i) => (
+              <div key={l.tab} className={`tier-item${active === i ? " is-active" : ""}`}>
                 <button
-                  key={l.tab}
                   ref={(el) => {
                     tabs.current[i] = el;
                   }}
                   id={`tab-${i}`}
                   role="tab"
+                  className="tier-head"
                   aria-selected={active === i}
                   aria-controls="layer-panel"
                   tabIndex={active === i ? 0 : -1}
                   onClick={() => goTo(i)}
                   onKeyDown={(e) => onTabKey(e, i)}
                 >
-                  <span>0{i + 1}</span>
-                  {l.tab}
+                  <span className="tier-names">
+                    <strong>{l.product}</strong>
+                    <span>{l.tab}</span>
+                  </span>
                 </button>
-              ))}
-            </div>
-            <div ref={panel} id="layer-panel" role="tabpanel" aria-labelledby={`tab-${active}`} tabIndex={0}>
-              <span className="panel-symbol">↗</span>
-              <h3>
-                <Lines lines={layer.title} />
-              </h3>
-              <p>{layer.body}</p>
-            </div>
+                {active === i && (
+                  <div ref={panel} id="layer-panel" className="tier-body" role="tabpanel" aria-labelledby={`tab-${i}`}>
+                    <p>{l.body}</p>
+                  </div>
+                )}
+              </div>
+            ))}
           </div>
           <div className="scroll-cue">
             <span className="floor-progress">

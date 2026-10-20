@@ -1,11 +1,9 @@
 "use client";
 
-// Third view of the four-tier section: the organisation as a branching hierarchy, built as a lit
-// circuit board tilted in perspective. Governance is the root plate; it branches to management
-// units, then execution work, then services. Every unit is a plate with thickness, and branches are
-// conduits that plug into sockets on the plates. Choosing a unit traces only its lineage (the units
-// that hand work down to it and those it passes work on to); signals then run down that lineage
-// from governance in two staggered waves, and each unit's LED flashes as a signal arrives.
+// The four-tier section's board: four independent tiers side by side as columns of plates on a lit
+// circuit board. Every unit is a plate with thickness; conduits between neighbouring columns are
+// always live (lit, carrying bursting lights, sockets flashing as lights arrive) and do not stand
+// for work passing from one tier to another. Picking a tier lights its plates and rests the rest.
 //
 // Two stacked SVGs: a static board (plates, conduits, the bloom-filtered trace) and a live layer
 // with only the moving lights, so the running signals never force the filtered board to repaint.
@@ -13,7 +11,7 @@
 import { useEffect, useId, useRef, useState, type CSSProperties, type KeyboardEvent, type PointerEvent } from "react";
 import { layers } from "./content";
 import { FlowStack3D } from "./FlowStack3D";
-import { HOP, START, WAVES, idleTiming, litTiming, seedOf, timing } from "./flowSignals";
+import { HOP, START, WAVES, litTiming, seedOf, timing } from "./flowSignals";
 
 type Unit = { title: string; role: string; work: [string, string][]; agent: string };
 
@@ -21,11 +19,13 @@ type Unit = { title: string; role: string; work: [string, string][]; agent: stri
 const UNITS: Unit[][] = [
   [
     { title: "Quản trị", role: "Định hướng, phê duyệt", work: [["Việc đã giao", "38"], ["Chờ phê duyệt", "5"]], agent: "tổng hợp báo cáo để lãnh đạo nắm tình hình và phê duyệt công việc." },
+    { title: "Ban lãnh đạo", role: "Chỉ đạo, điều hành", work: [["Nhiệm vụ trọng tâm", "12"], ["Chờ chỉ đạo", "3"]], agent: "tổng hợp tiến độ nhiệm vụ trọng tâm để lãnh đạo chỉ đạo kịp thời." },
+    { title: "Hội đồng tư vấn", role: "Tham mưu chiến lược", work: [["Đề xuất", "6"], ["Chờ ý kiến", "2"]], agent: "tóm tắt hồ sơ, đề xuất để hội đồng xem xét trước phiên họp." },
   ],
   [
     { title: "Văn phòng", role: "Tổng hợp, điều phối", work: [["Đang xử lý", "12"], ["Sắp đến hạn", "2"]], agent: "bóc tách nhiệm vụ từ công văn đến và đề xuất người phụ trách." },
     { title: "Phòng chuyên môn", role: "Theo dõi công việc", work: [["Đang xử lý", "17"], ["Sắp đến hạn", "4"]], agent: "theo dõi tiến độ hồ sơ, nhắc người phụ trách trước hạn hai ngày." },
-    { title: "Phòng tài chính", role: "Nguồn lực, ngân sách", work: [["Đang xử lý", "9"], ["Sắp đến hạn", "1"]], agent: "đối chiếu đề nghị thanh toán với dự toán đã duyệt." },
+    { title: "Nhà máy sản xuất", role: "Năng suất, tiến độ", work: [["Đang xử lý", "9"], ["Sắp đến hạn", "1"]], agent: "đối chiếu đề nghị thanh toán với dự toán đã duyệt." },
   ],
   [
     { title: "Soạn thảo", role: "Dự thảo văn bản", work: [["Bản nháp", "6"], ["Chờ góp ý", "2"]], agent: "soạn dự thảo theo mẫu, kèm căn cứ đã dẫn." },
@@ -43,17 +43,22 @@ const UNITS: Unit[][] = [
 ];
 // Branches from each column to the next: [from, to] unit indices.
 const LINKS: [number, number][][] = [
-  [[0, 0], [0, 1], [0, 2]],
+  // Symbolic, not an org chart: governance and management cross-link freely.
+  [[0, 0], [0, 1], [1, 0], [1, 1], [1, 2], [2, 1], [2, 2]],
   [[0, 0], [0, 4], [1, 1], [1, 2], [1, 3], [2, 2], [2, 4]],
   [[0, 0], [1, 1], [2, 1], [2, 2], [3, 3], [4, 0], [4, 2]],
 ];
-// Geometry in viewBox units (1000 × 440): column x, plate width/height/thickness, unit centres.
+// Geometry in viewBox units (1000 × 600, the board's on-screen proportions on desktop): column x,
+// plate width/height/thickness, unit centres.
 const GEO = [
-  { x: 40, w: 200, h: 120, t: 12, centers: [230] },
-  { x: 300, w: 196, h: 62, t: 7, centers: [130, 230, 330] },
-  { x: 566, w: 170, h: 46, t: 6, centers: [80, 155, 230, 305, 380] },
-  { x: 796, w: 176, h: 46, t: 6, centers: [110, 190, 270, 350] },
+  { x: 20, w: 225, h: 84, t: 8, centers: [150, 300, 450] },
+  { x: 290, w: 225, h: 84, t: 8, centers: [150, 300, 450] },
+  { x: 560, w: 195, h: 66, t: 7, centers: [84, 196, 308, 420, 532] },
+  { x: 795, w: 195, h: 66, t: 7, centers: [120, 240, 360, 480] },
 ];
+
+// Narrow columns widen their header box to the header text ("GEO OPERATIONS  Thực thi").
+const HEAD_W = 218;
 
 type Pick = { col: number; i: number };
 // Opening a tier as a whole (its tab, scrolling, or the tier name) starts from its first unit, so
@@ -61,16 +66,6 @@ type Pick = { col: number; i: number };
 const FIRST = 0;
 
 
-/** Units above that hand work down to the pick, and units below that it passes work on to. */
-function lineage({ col, i }: Pick) {
-  const up: Set<number>[] = UNITS.map(() => new Set());
-  const down: Set<number>[] = UNITS.map(() => new Set());
-  up[col].add(i);
-  down[col].add(i);
-  for (let c = col - 1; c >= 0; c--) for (const [a, b] of LINKS[c]) if (up[c + 1].has(b)) up[c].add(a);
-  for (let c = col; c < LINKS.length; c++) for (const [a, b] of LINKS[c]) if (down[c].has(a)) down[c + 1].add(b);
-  return { up, down };
-}
 
 function curve(x1: number, y1: number, x2: number, y2: number) {
   const dx = (x2 - x1) * 0.5;
@@ -111,8 +106,9 @@ export function FlowDiagram({ active, onSelect, running }: { active: number; onS
     row.scrollLeft = Math.max(0, Math.min(left, row.scrollWidth - row.clientWidth));
   }, [pick.col, pick.i]);
 
-  const { up, down } = lineage(pick);
-  const inLine = (c: number, i: number) => up[c].has(i) || down[c].has(i);
+  // The four tiers are independent of one another: picking a tier lights that whole tier and rests
+  // the other three. No cable is singled out as a path between tiers; they all keep running.
+  const inLine = (c: number, _unit?: number) => c === pick.col;
   const choose = (col: number, i: number) => {
     setPick({ col, i });
     const target = col !== active ? { col, i } : null;
@@ -148,26 +144,17 @@ export function FlowDiagram({ active, onSelect, running }: { active: number; onS
     board.current?.style.removeProperty("--tilt-y");
   };
 
-  const unit = UNITS[pick.col][pick.i];
-  const from = pick.col > 0 ? [...up[pick.col - 1]].map((a) => UNITS[pick.col - 1][a].title) : [];
-  const to = pick.col < UNITS.length - 1 ? [...down[pick.col + 1]].map((b) => UNITS[pick.col + 1][b].title) : [];
-  const traceKey = `${pick.col}-${pick.i}`;
-  const traced = LINKS.flatMap((links, c) =>
-    links.flatMap(([a, b]) => {
-      const above = up[c].has(a) && up[c + 1].has(b);
-      const below = down[c].has(a) && down[c + 1].has(b);
-      if (!above && !below) return [];
-      return [{ id: `${c}-${a}-${b}`, c, a, b, d: linkPath(c, a, b), step: above ? pick.col - (c + 1) : c - pick.col }];
-    }),
-  );
+  const traced: { id: string; c: number; a: number; b: number; d: string; step: number }[] = [];
+  // Desktop board: every conduit is live, drawn as the lit trace (red, under the bloom filter) and
+  // carrying the bursting lights, as the picked lineage used to; drawn in once, column by column.
+  const conduits = LINKS.flatMap((links, c) => links.map(([a, b]) => ({ id: `${c}-${a}-${b}`, c, a, b, d: linkPath(c, a, b), step: c })));
 
   return (
     <div className={`flow-stage${running ? " is-running" : ""}`}>
-      <p className="flow-hint">Chọn một đơn vị để xem việc đi từ đâu đến đâu.</p>
 
       <div className="flow-board-wrap">
       <div className="flow-board" ref={board} onPointerMove={onMove} onPointerLeave={onLeave}>
-        <svg className="flow-svg is-static" viewBox="0 0 1000 440" role="group" aria-label="Sơ đồ bốn tầng tổ chức">
+        <svg className="flow-svg is-static" viewBox="0 0 1000 600" role="group" aria-label="Sơ đồ bốn tầng tổ chức">
           <defs>
             <filter id={`${uid}-glow`} x="-20%" y="-60%" width="140%" height="220%">
               <feGaussianBlur in="SourceGraphic" stdDeviation="3.4" result="blur" />
@@ -187,7 +174,7 @@ export function FlowDiagram({ active, onSelect, running }: { active: number; onS
               <stop offset="1" stopColor="#fff" stopOpacity="0" />
             </radialGradient>
             <mask id={`${uid}-floor`}>
-              <rect x="-200" y="-40" width="1400" height="520" fill={`url(#${uid}-fade)`} />
+              <rect x="-200" y="-40" width="1400" height="680" fill={`url(#${uid}-fade)`} />
             </mask>
             <linearGradient id={`${uid}-plate`} x1="0" y1="0" x2="0" y2="1">
               <stop offset="0" className="flow-plate-top" />
@@ -196,13 +183,17 @@ export function FlowDiagram({ active, onSelect, running }: { active: number; onS
           </defs>
 
           {/* the board's floor */}
-          <rect x="-200" y="-40" width="1400" height="520" fill={`url(#${uid}-grid)`} mask={`url(#${uid}-floor)`} />
+          <rect x="-200" y="-40" width="1400" height="680" fill={`url(#${uid}-grid)`} mask={`url(#${uid}-floor)`} />
 
+          {/* column headers; the picked tier's header sits in a highlighted box as wide as its plates */}
           {GEO.map((g, col) => (
-            <text key={`h${col}`} className={`flow-col${col === pick.col ? " is-picked" : ""}`} x={g.x + 14} y={22}>
-              <tspan className="flow-col-product">{layers[col].product}</tspan>
-              <tspan dx={8}>{layers[col].tab}</tspan>
-            </text>
+            <g key={`h${col}`} className={`flow-col-head${col === pick.col ? " is-picked" : ""}`}>
+              <rect className="flow-col-box" x={g.x} y={4} width={Math.max(g.w, HEAD_W)} height={34} rx={7} />
+              <text className="flow-col" x={g.x + 14} y={26}>
+                <tspan className="flow-col-product">{layers[col].product}</tspan>
+                <tspan dx={8}>{layers[col].tab}</tspan>
+              </text>
+            </g>
           ))}
 
           {/* conduits at rest: a dark casing with a faint top highlight */}
@@ -214,9 +205,9 @@ export function FlowDiagram({ active, onSelect, running }: { active: number; onS
               </g>
             )),
           )}
-          {/* the traced lineage: lit conduits that draw outward from the pick, under a bloom filter */}
-          <g key={traceKey} filter={`url(#${uid}-glow)`}>
-            {traced.map((t) => (
+          {/* every conduit lit, under a bloom filter; drawn in once, column by column */}
+          <g filter={`url(#${uid}-glow)`}>
+            {conduits.map((t) => (
               <g key={t.id} className="flow-trace" style={{ "--d": `${t.step * 120}ms` } as CSSProperties}>
                 <path className="flow-trace-body" pathLength={1} d={t.d} />
                 <path className="flow-trace-hl" pathLength={1} d={t.d} />
@@ -233,8 +224,8 @@ export function FlowDiagram({ active, onSelect, running }: { active: number; onS
                 const lit = inLine(col, i);
                 return (
                   <g key={`s${u.title}`} className={`flow-plate${lit ? " is-lit" : ""}`}>
-                    <rect className="flow-plate-edge" x={g.x} y={y + g.t} width={g.w} height={g.h} rx={col === 0 ? 12 : 8} />
-                    <rect className="flow-plate-face" x={g.x} y={y} width={g.w} height={g.h} rx={col === 0 ? 12 : 8} fill={`url(#${uid}-plate)`} />
+                    <rect className="flow-plate-edge" x={g.x} y={y + g.t} width={g.w} height={g.h} rx={8} />
+                    <rect className="flow-plate-face" x={g.x} y={y} width={g.w} height={g.h} rx={8} fill={`url(#${uid}-plate)`} />
                   </g>
                 );
               }),
@@ -258,21 +249,16 @@ export function FlowDiagram({ active, onSelect, running }: { active: number; onS
                   onClick={() => choose(col, i)}
                   onKeyDown={(e) => onKey(e, col, i)}
                 >
-                  <rect className="flow-hit" x={g.x} y={cy - g.h / 2} width={g.w} height={g.h} rx={col === 0 ? 12 : 8} />
+                  <rect className="flow-hit" x={g.x} y={cy - g.h / 2} width={g.w} height={g.h} rx={8} />
                   {col > 0 && <circle className="flow-socket" cx={g.x - 4} cy={cy} r={4} />}
                   {col < UNITS.length - 1 && <circle className="flow-socket" cx={g.x + g.w + 4} cy={cy} r={4} />}
-                  {col === 0 ? (
+                  {col <= 1 ? (
                     <>
-                      <text x={g.x + 22} y={cy + 6} className="flow-title is-root">{u.title}</text>
-                      <text x={g.x + 22} y={cy + 32} className="flow-role">{u.role}</text>
-                    </>
-                  ) : col === 1 ? (
-                    <>
-                      <text x={g.x + 18} y={cy - 2} className="flow-title">{u.title}</text>
-                      <text x={g.x + 18} y={cy + 17} className="flow-role">{u.role}</text>
+                      <text x={g.x + 20} y={cy - 4} className="flow-title">{u.title}</text>
+                      <text x={g.x + 20} y={cy + 20} className="flow-role">{u.role}</text>
                     </>
                   ) : (
-                    <text x={g.x + 18} y={cy + 5} className="flow-title is-small">{u.title}</text>
+                    <text x={g.x + 20} y={cy + 6} className="flow-title is-small">{u.title}</text>
                   )}
                 </g>
               );
@@ -281,22 +267,11 @@ export function FlowDiagram({ active, onSelect, running }: { active: number; onS
         </svg>
 
         {/* live layer: only what moves (signals, LEDs); it takes no pointer input */}
-        <svg className="flow-svg is-live" viewBox="0 0 1000 440" aria-hidden="true" focusable="false">
+        <svg className="flow-svg is-live" viewBox="0 0 1000 600" aria-hidden="true" focusable="false">
           {/* not keyed by the pick: lights on conduits that stay lit keep running through a new pick */}
           <g>
-            {LINKS.flatMap((links, c) =>
-              links.map(([a, b]) => (
-                <path
-                  key={`i${c}-${a}-${b}`}
-                  className="flow-pulse is-idle"
-                  pathLength={1}
-                  style={idleTiming(seedOf(c, a, b))}
-                  d={linkPath(c, a, b)}
-                />
-              )),
-            )}
             {WAVES.map((wave) =>
-              traced.map((t) => (
+              conduits.map((t) => (
                 <g key={`${wave}-${t.id}`}>
                   <path className="flow-pulse-halo" pathLength={1} style={litTiming(t.c, wave, seedOf(t.c, t.a, t.b))} d={t.d} />
                   <path className="flow-pulse" pathLength={1} style={litTiming(t.c, wave, seedOf(t.c, t.a, t.b))} d={t.d} />
@@ -305,12 +280,12 @@ export function FlowDiagram({ active, onSelect, running }: { active: number; onS
             )}
             {UNITS.map((units, col) =>
               units.map((u, i) => {
-                if (!inLine(col, i)) return null;
                 const g = GEO[col];
                 const cy = g.centers[i];
                 return (
                   <g key={`l${u.title}`}>
-                    <rect className={`flow-led${col === pick.col && i === pick.i ? " is-picked" : ""}`} x={g.x + 7} y={cy - g.h * 0.3} width={3} height={g.h * 0.6} rx={1.5} style={timing(START + col * HOP)} />
+                    {/* the plate's status bar lights on the picked tier; every input socket flashes as lights arrive */}
+                    {inLine(col, i) && <rect className={`flow-led${col === pick.col && i === pick.i ? " is-picked" : ""}`} x={g.x + 7} y={cy - g.h * 0.3} width={3} height={g.h * 0.6} rx={1.5} style={timing(START + col * HOP)} />}
                     {col > 0 && <circle className="flow-led" cx={g.x - 4} cy={cy} r={2.6} style={timing(START + col * HOP)} />}
                   </g>
                 );
@@ -344,18 +319,15 @@ export function FlowDiagram({ active, onSelect, running }: { active: number; onS
         ))}
       </div>
 
-      <div className="flow-detail" aria-live="polite">
-        <div className="flow-detail-main">
-          <p className="flow-detail-name">
-            <strong>{unit.title}</strong>
-          </p>
-          <p className="flow-detail-agent">GEO Agent {unit.agent}</p>
-          <p className="flow-detail-route">
-            {from.length > 0 && <>Nhận việc từ {from.join(", ")}. </>}
-            {to.length > 0 && <>Chuyển tới {to.join(", ")}.</>}
-          </p>
-        </div>
+      {/* Narrow screens: an overview of what the tier does. The four tiers are independent of one
+          another, and the unit chips above stand for the kinds of work a tier covers. */}
+      <div className="flow-tier" aria-live="polite">
+        <p className="flow-tier-name">
+          <strong>{layers[pick.col].product}</strong>
+        </p>
+        <p className="flow-tier-body">{layers[pick.col].body}</p>
       </div>
+
     </div>
   );
 }

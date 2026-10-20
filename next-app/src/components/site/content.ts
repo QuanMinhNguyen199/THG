@@ -17,10 +17,10 @@ export const metrics = [
 
 // `product` names each tier's block in the four-tier diagrams.
 export const layers = [
-  { tab: "Quản trị", product: "GEO Governance", floor: "QUẢN TRỊ", title: ["Định hướng chiến lược.", "Giữ vững mục tiêu."], body: "Kết nối thông tin để hỗ trợ quản trị và định hướng tổ chức. Con người giữ quyền quyết định và chịu trách nhiệm cuối cùng." },
-  { tab: "Quản lý", product: "GEO Management", floor: "QUẢN LÝ", title: ["Kết nối nguồn lực.", "Đồng bộ vận hành."], body: "Hỗ trợ người quản lý tổng hợp thông tin, theo dõi công việc và phối hợp giữa các bộ phận trong cùng một hệ thống." },
-  { tab: "Thực thi", product: "GEO Operations", floor: "THỰC THI", title: ["Biến quyết định", "thành hành động."], body: "GEO Agent được thiết kế xuyên suốt để hỗ trợ từng tầng, giải quyết đúng điểm nghẽn và đưa mọi hoạt động trở lại nhịp vận hành." },
-  { tab: "Dịch vụ", product: "GEO Service", floor: "DỊCH VỤ", title: ["Hỗ trợ đúng lúc.", "Phục vụ đúng nhu cầu."], body: "Kết nối tri thức tổ chức với nhu cầu tra cứu và hỗ trợ. Cung cấp thông tin trong phạm vi dữ liệu và quyền truy cập được cho phép." },
+  { tab: "Quản trị", product: "GEO Governance", floor: "QUẢN TRỊ", title: ["Định hướng chiến lược.", "Giữ vững mục tiêu."], body: "Tổng hợp báo cáo, tham mưu, đề xuất hỗ trợ các quyết định quản trị. Đóng vai trò như trợ lý." },
+  { tab: "Quản lý", product: "GEO Management", floor: "QUẢN LÝ", title: ["Kết nối nguồn lực.", "Đồng bộ vận hành."], body: "Theo dõi và bóc tách nhiệm vụ, phân công quản lý đảm bảo hiện thực hóa quyết định quản trị." },
+  { tab: "Thực thi", product: "GEO Operations", floor: "THỰC THI", title: ["Biến quyết định", "thành hành động."], body: "Đóng vai trò như co-worker làm việc với các cán bộ thực thi." },
+  { tab: "Dịch vụ", product: "GEO Service", floor: "DỊCH VỤ", title: ["Hỗ trợ đúng lúc.", "Phục vụ đúng nhu cầu."], body: "Kết nối các hệ thống thông tin rời rạc và chăm sóc khách hàng, hỗ trợ người dân." },
 ];
 
 export type ProjectId = "tax";

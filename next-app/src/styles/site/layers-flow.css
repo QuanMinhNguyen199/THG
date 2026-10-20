@@ -7,7 +7,6 @@
   position: absolute; inset: 52px 0 50px;
   display: flex; flex-direction: column; gap: 14px;
 }
-.flow-hint { margin: 0; font-size: 13px; color: var(--muted); }
 /* The board: two stacked SVGs (static board, live lights). */
 .flow-board-wrap { position: relative; flex: 1 1 auto; min-height: 0; }
 /* The board rests flat: text on a layer tilted through perspective is resampled from its raster and
@@ -27,14 +26,17 @@
 
 .flow-grid-line { fill: none; stroke: color-mix(in srgb, var(--white) 7%, transparent); stroke-width: 1; }
 
-.flow-col { font-family: var(--font-body), sans-serif; font-size: 13px; fill: var(--muted); }
-.flow-col.is-picked { fill: var(--red); }
-.flow-col-product { font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; font-size: 11px; fill: var(--white); }
+.flow-col { font-family: var(--font-body), sans-serif; font-size: 15px; fill: var(--muted); }
+/* The picked tier's header: a red box with white type (box and type fade in together). */
+.flow-col-box { fill: transparent; stroke: transparent; stroke-width: 1; transition: fill 0.25s, stroke 0.25s; }
+.flow-col, .flow-col-product { transition: fill 0.25s; }
+.flow-col-head.is-picked .flow-col-box { fill: var(--red); stroke: color-mix(in srgb, #fff 18%, var(--red)); }
+.flow-col-head.is-picked .flow-col, .flow-col-head.is-picked .flow-col-product { fill: #fff; }
+.flow-col-product { font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; font-size: 13px; fill: var(--white); }
 
-.flow-title { font-family: var(--font-body), sans-serif; font-size: 17px; font-weight: 600; fill: var(--muted); transition: fill 0.25s; }
-.flow-title.is-small { font-size: 15px; font-weight: 500; }
-.flow-title.is-root { font-family: var(--font-display), sans-serif; font-size: 34px; letter-spacing: -0.02em; }
-.flow-role { font-size: 12px; fill: var(--muted); opacity: 0.75; }
+.flow-title { font-family: var(--font-body), sans-serif; font-size: 21px; font-weight: 600; fill: var(--muted); transition: fill 0.25s; }
+.flow-title.is-small { font-size: 19px; font-weight: 500; }
+.flow-role { font-size: 15px; fill: var(--muted); opacity: 0.75; }
 
 /* Plates: a face over a darker edge offset downward (the thickness), with one cast shadow. */
 .flow-plate-top { stop-color: color-mix(in srgb, var(--white) 9%, var(--bg)); }
@@ -62,7 +64,8 @@
 
 /* Conduits: a dark casing with a lighter core read as a tube; lit ones draw outward from the pick. */
 .flow-conduit-case { fill: none; stroke: color-mix(in srgb, var(--white) 9%, var(--bg)); stroke-width: 6; stroke-linecap: round; }
-.flow-conduit-core { fill: none; stroke: color-mix(in srgb, var(--white) 16%, transparent); stroke-width: 1.4; stroke-linecap: round; }
+/* Conduits are always live: a red core, not a resting grey one. */
+.flow-conduit-core { fill: none; stroke: color-mix(in srgb, var(--red) 65%, transparent); stroke-width: 1.4; stroke-linecap: round; }
 .flow-trace-body, .flow-trace-hl {
   fill: none; stroke-linecap: round; stroke-dasharray: 1; stroke-dashoffset: 1;
   animation: flow-draw 0.5s cubic-bezier(0.22, 1, 0.36, 1) var(--d, 0ms) forwards;
@@ -88,6 +91,15 @@
   stroke-dasharray: 0.12 3; stroke-dashoffset: 0.12;
   animation-name: flow-drift; animation-timing-function: linear;
 }
+/* Always-on flow: every cable carries a bright light drifting at a constant pace (flow-drift). */
+.flow-pulse.is-flow, .flow-pulse-halo.is-flow {
+  stroke-dasharray: 0.12 3; stroke-dashoffset: 0.12;
+  animation-name: flow-drift; animation-timing-function: linear;
+}
+.flow-pulse-halo.is-flow { stroke-width: 7; opacity: 0.35; }
+/* On the light theme a white core vanishes into the page: the light is red, its halo softer. */
+[data-theme=industrial] .flow-pulse.is-flow { stroke: var(--red); }
+[data-theme=industrial] .flow-pulse-halo.is-flow { opacity: 0.18; }
 @keyframes flow-drift {
   from { stroke-dashoffset: 0.12; }
   to { stroke-dashoffset: -1; }
@@ -125,6 +137,7 @@
 .flow-detail-note { grid-column: 1 / -1; margin-top: 8px !important; font-size: 11px; color: var(--muted); opacity: 0.7; }
 
 .flow-chips { display: none; }
+.flow-tier { display: none; }
 
 @media (prefers-reduced-motion: reduce) {
   .flow-board, .flow-board.is-leaning { transform: none; transition: none; }
@@ -149,7 +162,7 @@
   .architecture-art.is-flow .art-caption { display: none; }
 
   .flow-stage { inset: 22px 0 0; gap: 10px; }
-  .flow-hint, .flow-board-wrap, .flow-detail { display: none; }
+
 
   /* The stack: solid decks seen from above at a shallow turn (angles match FlowStack3D.tsx). */
   .s3 { position: relative; display: block; flex: 1 1 auto; min-height: 220px; }
@@ -224,16 +237,22 @@
   /* Flat overlay: lit lineage between decks, its signal, and the leader to the label. */
   .s3-lines { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; }
   .s3-lines.is-live { will-change: transform; }
-  /* Every cable is the lineage's red; resting ones are thinner and fainter, so the picked lineage
-     still reads first. */
-  .s3-cable { fill: none; stroke: var(--red); stroke-width: 1.1; stroke-linecap: round; opacity: 0.55; }
-  .s3-cable.is-trunk { stroke-width: 0.9; opacity: 0.4; }
+  /* Conduits and lights match the desktop board's (its strokes are scaled by ~0.9 there, so these
+     px widths are the same on screen): a dark casing around a red core, a bright light with a halo. */
+  /* The desktop conduit, scaled to the stack: the phone board is far smaller than the desktop one,
+     so full-size strokes swamped the blocks. */
+  .s3-cable-case { fill: none; stroke: color-mix(in srgb, var(--white) 9%, var(--bg)); stroke-width: 3; stroke-linecap: round; }
+  /* Lit like the desktop board's conduits: a red body with a pale highlight, in a dark casing. */
+  .s3-cable { fill: none; stroke: var(--red); stroke-width: 1.4; stroke-linecap: round; opacity: 0.85; }
+  .s3-cable.is-trunk { opacity: 0.45; }
+  .s3-cable-hl { display: none; }
+  /* Light theme: no casing (a pale casing reads as plastic tubing on the light page). */
+  [data-theme=industrial] .s3-cable-case { display: none; }
   .s3-beam { fill: none; stroke: var(--red); stroke-width: 1.8; opacity: 0.85; }
-  .s3-lines .flow-pulse { stroke-width: 2.2; }
-  .s3-lines .flow-pulse-halo { stroke-width: 8; }
-  /* Resting cables: the same red light and speed, with a narrower halo: a wide halo on every cable
-     is the costliest stroke to repaint on a phone. */
-  .s3-lines .flow-pulse-halo.is-rest { stroke-width: 4.5; opacity: 0.55; }
+  .s3-lines .flow-pulse { stroke-width: 1.8; }
+  .s3-lines .flow-pulse-halo { stroke-width: 6; opacity: 0.35; }
+  [data-theme=industrial] .s3-lines .flow-pulse { stroke: var(--red); }
+  [data-theme=industrial] .s3-lines .flow-pulse-halo { opacity: 0.2; }
   .s3-leader { fill: none; stroke: color-mix(in srgb, var(--white) 55%, transparent); stroke-width: 1; stroke-dasharray: 2 3; }
 
   /* Flat column: tier names in a plain stack; the picked tier opens into the unit label. */

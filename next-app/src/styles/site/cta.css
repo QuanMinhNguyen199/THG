@@ -38,6 +38,17 @@
 .paper b { display: block; margin: 4.5cqw 0 6cqw; font-size: 8.4cqw; line-height: 1.35; font-weight: 500; }
 .paper-line { display: block; height: 0.5cqw; width: 85%; margin: 2.6cqw 0; background: #aaa0a4; }
 .paper-line.is-short { width: 55%; }
+/* The paper is crisp white with a red top edge and a hairline border in both themes; on the light
+   theme the panel also takes a cooler grey, so the two no longer blend. */
+[data-theme=industrial] .projects.is-single .project-visual { background: linear-gradient(160deg, #e9ecf0, #dde1e7); }
+[data-theme=industrial] .projects.is-single .project:hover .project-visual { background: linear-gradient(160deg, #e4e8ed, #d6dbe2); }
+.projects.is-single .document {
+  background: #ffffff; border: 1px solid #d3d8df; border-top: 0.9cqw solid var(--red);
+  box-shadow: 0 2px 4px #1723371a, 14px 24px 40px #17233733;
+}
+.projects.is-single .paper-line, .tdn-front .paper-line { background: #c9ced6; }
+/* The dialog cover is the same paper at a larger size: same white, red edge and border. */
+.tdn-dialog .tdn-front { background: #ffffff; border: 1px solid #d3d8df; border-top: 0.9cqw solid var(--red); }
 .paper-stamp {
   position: absolute; right: 9cqw; bottom: 10cqw; padding: 2.4cqw 2.8cqw; line-height: 1.15;
   border: 0.3cqw solid #c1152b; color: #c1152b; font: 5cqw var(--font-display), sans-serif; transform: rotate(10deg);

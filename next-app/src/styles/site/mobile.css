@@ -89,20 +89,22 @@
   .s3:not(.is-gl) .s3-deck:not(:first-child)::after { content: ""; position: absolute; inset: 3% -1% -8% 3%; pointer-events: none; background: radial-gradient(ellipse at 53% 45%, #00000020, transparent 74%); transform: translateZ(0.25px); }
   .s3:not(.is-gl) :is(.s3-deck, .s3-block) > .s3-face.is-left { filter: brightness(1.08); }
   .s3:not(.is-gl) :is(.s3-deck, .s3-block) > .s3-face.is-front { filter: brightness(0.82); }
-  .s3-cable { opacity: 0.15; stroke: var(--muted); }
-  .s3-cable.is-trunk { opacity: 0.08; }
-  .s3-beam { stroke-width: 1; opacity: 0.7; }
-  .s3-lines .flow-pulse { stroke: #fff; stroke-width: 1.6; filter: none; }
-  .s3-lines .flow-pulse-halo { stroke-width: 3.5; opacity: 0.2; filter: none; }
-  [data-theme=industrial] .s3-lines .flow-pulse { stroke: var(--red); }
   [data-theme=industrial] .s3:not(.is-gl) .s3-top { box-shadow: inset 0 0 0 1px #64738255, 0 2px 3px #1723371f; }
   [data-theme=industrial] .s3:not(.is-gl) .s3-block.is-lit .s3-top { box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--red) 60%, transparent), 0 2px 3px #1723371f; }
   [data-theme=industrial] .s3:not(.is-gl) .s3-block.is-picked .s3-top { box-shadow: inset 0 0 0 1px var(--red), inset 0 -2px var(--red), 0 2px 3px #1723371f; }
-  [data-theme=industrial] .s3-cable { opacity: 0.24; }
+  /* The desktop board has no height here, but its overflowing layers would still sit over the chips. */
+  .flow-board-wrap { display: none; }
   .flow-chips { flex-wrap: nowrap; overflow-x: auto; padding: 2px 0 6px; gap: 8px; scrollbar-width: none; }
   .flow-chips button { min-height: 44px; font-size: 13px; box-shadow: none; }
   .flow-chips button[aria-pressed=true] { box-shadow: none; }
-  .flow-detail { display: grid; grid-template-columns: 1fr; gap: 12px; padding-top: 16px; }
+  /* The info panel is a tier overview on phones (the tiers are independent); unit detail stays off. */
+  .flow-detail { display: none !important; }
+  .flow-tier { display: block; padding-top: 16px; border-top: 1px solid var(--line); }
+  .flow-tier p { margin: 0; }
+  .flow-tier-name { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
+  .flow-tier-name strong { font-size: 13px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--accent-text, var(--red)); }
+  .flow-tier-name span { font-size: 13px; color: var(--muted); }
+  .flow-tier-body { margin-top: 10px !important; font-size: 15px; line-height: 1.7; color: var(--white); }
   .flow-detail-main > .flow-detail-agent { display: block; margin-top: 8px !important; }
   .flow-detail-main > .flow-detail-route { display: none; }
   .flow-detail .flow-more { display: block; padding-top: 4px; }

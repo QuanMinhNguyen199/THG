@@ -10,13 +10,28 @@
     height: min(76svh, 760px);
   }
   .architecture-scroll .architecture-copy { min-width: 0; }
+  /* The fixed header (64px) sits over the pinned scene: keep the heading clear of it. */
+  .architecture-scroll .architecture { padding-top: 88px; padding-bottom: 24px; }
   .architecture-scroll .architecture h2 { font-size: clamp(28px, 2.8vw, 42px); }
-  .architecture-scroll .layer-layout { grid-template-columns: 100px minmax(0, 1fr); gap: 16px; }
-  .architecture-scroll .tabs button { font-size: 13px; }
-  .architecture-scroll .tabs button span { margin-right: 8px; }
   .architecture-scroll .intro { margin-top: 20px; }
-  .architecture-scroll #layer-panel h3 { font-size: 17px; }
 }
+
+/* Tier list (Architecture.tsx): one row per tier, the open tier's copy under its name. */
+.architecture-scroll .tier-list { display: block; margin-top: 8px; border-top: 1px solid var(--line); }
+.tier-item { border-bottom: 1px solid var(--line); }
+.tier-head {
+  display: flex; align-items: center; gap: 16px; width: 100%; padding: 14px 0;
+  background: none; text-align: left; color: var(--muted); transition: color 0.2s;
+}
+.tier-head:hover { color: var(--white); }
+.tier-names { display: flex; flex-direction: column; gap: 3px; }
+.tier-names strong { font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; }
+.tier-names span { font-size: 17px; line-height: 1.25; }
+.tier-item.is-active .tier-head { color: var(--white); }
+.tier-item.is-active .tier-names strong { color: var(--accent-text, var(--red)); }
+/* Scoped under the list so these win over the older #layer-panel rules (12px copy, 175px min-height). */
+.tier-list #layer-panel { min-height: 0; padding: 0 0 20px; }
+.tier-list #layer-panel p { margin: 0; font-size: 15px; line-height: 1.7; color: color-mix(in srgb, var(--white) 76%, transparent); }
 
 @media (max-width: 720px) {
   /* Touch scrolling is fast: give each tier about one screen of travel (was ~0.4), so a flick does

@@ -11,7 +11,7 @@
 
 import { useCallback, useEffect, useLayoutEffect, useRef, useState, type CSSProperties } from "react";
 import { layers } from "./content";
-import { WAVES, idleTiming, litTiming, seedOf } from "./flowSignals";
+import { WAVES, litTiming, seedOf } from "./flowSignals";
 import type { StackGL } from "./FlowStackGL";
 import { chooseRenderer, rememberCSS } from "./stackRenderer";
 
@@ -21,7 +21,6 @@ type Trace = { id: string; c: number; a: number; b: number };
 type Point = { x: number; y: number };
 type Lines = { tiles: Record<string, Point> };
 
-const GOV_BLOCKS = 3; // components drawn on the governance deck (one unit)
 
 // View: rotateX(TILT) rotateZ(-TURN), matching the CSS. A shallow turn keeps each deck's footprint
 // short on screen, which is what lets four decks fit one above another.
@@ -55,29 +54,20 @@ function cable(p: Point, q: Point, c: number, a: number, b: number) {
 }
 
 /**
- * Lights on one cable between deck `c` and the next (flowSignals): every cable carries the same
- * red-haloed light at the lineage's speed; the lit lineage has three waves hopping tier by tier, a
- * resting cable one. Each cable keeps its own lag and pace, so the lights fall out of step.
+ * Lights on one cable (flowSignals), exactly as on the desktop board's conduits: every cable is
+ * always active, carrying one bright light with its red halo that drifts at a constant pace, on the
+ * cable's own lag and speed, so the whole stack keeps flowing whichever tier is picked.
  */
-// Stretch both duration and delay so mobile runs 20% slower without changing wave phases.
-function mobileTiming(style: CSSProperties): CSSProperties {
-  return {
-    ...style,
-    animationDuration: `${(parseFloat(String(style.animationDuration)) * 1.25).toFixed(3)}s`,
-    animationDelay: `${(parseFloat(String(style.animationDelay)) * 1.25).toFixed(3)}s`,
-  };
-}
-
-function signals(d: string, c: number, seed: number, lit: boolean) {
-  if (!lit) {
-    return <path className="flow-pulse is-idle" pathLength={1} style={mobileTiming(idleTiming(seed))} d={d} />;
-  }
-  const waves = WAVES;
-  return waves.map((w) => {
-    const style = mobileTiming(litTiming(c, w, seed));
+/**
+ * Lights on one cable, exactly as on the desktop board's conduits (flowSignals): three bursting
+ * waves per cycle, a bright core over a red halo, each cable on its own lag and pace.
+ */
+function signals(d: string, c: number, seed: number, _lit?: boolean) {
+  return WAVES.map((w) => {
+    const style = litTiming(c, w, seed);
     return (
       <g key={w}>
-        <path className={lit ? "flow-pulse-halo" : "flow-pulse-halo is-rest"} pathLength={1} style={style} d={d} />
+        <path className="flow-pulse-halo" pathLength={1} style={style} d={d} />
         <path className="flow-pulse" pathLength={1} style={style} d={d} />
       </g>
     );
@@ -204,7 +194,7 @@ export function FlowStack3D({
   }, [measure, active, pick.col, pick.i, size]);
 
   // Governance hands work down from a different component for each unit below it.
-  const at = (col: number, i: number, to = 1) => lines?.tiles[col === 0 ? `0-0-${to % GOV_BLOCKS}` : `${col}-${i}`];
+  const at = (col: number, i: number, _to?: number) => lines?.tiles[`${col}-${i}`];
   const last = units.length - 1;
   // Shift the stack down by half its on-screen height so its middle sits at the box's middle.
   const centre = Math.round(((last * size.step + LIFT) / 2) * Math.sin(TILT));
@@ -246,8 +236,13 @@ export function FlowStack3D({
       {lines && (
         <>
           <svg className="s3-lines" aria-hidden="true" focusable="false">
+            {/* each cable is a conduit like the desktop board's: a dark casing around a red core */}
             {cables.map((k) => (
-              <path key={k.key} className={k.className} d={k.d} />
+              <g key={k.key}>
+                <path className="s3-cable-case" d={k.d} />
+                <path className={k.className} d={k.d} />
+                <path className="s3-cable-hl" d={k.d} />
+              </g>
             ))}
           </svg>
           <svg className="s3-lines is-live" aria-hidden="true" focusable="false">
@@ -271,18 +266,15 @@ export function FlowStack3D({
                   <span>{layers[col].product}</span>
                 </i>
                 <i className="s3-face is-left" />
-                {(col === 0 ? Array.from({ length: GOV_BLOCKS }, () => row[0]) : row).map((u, k) => {
-                  const i = col === 0 ? 0 : k;
+                {row.map((u, i) => {
                   const lit = inLine(col, i);
-                  // Governance is one unit drawn as three components: they light and rise together.
                   const isPick = col === pick.col && i === pick.i;
                   const h = isPick ? RISE.picked : col === active ? RISE.active : lit ? RISE.lit : RISE.rest;
                   return (
                     <button
-                      key={`${u.title}-${k}`}
+                      key={u.title}
                       type="button"
-                      data-tile={col === 0 ? `0-0-${k}` : `${col}-${i}`}
-                      tabIndex={col === 0 && k > 0 ? -1 : undefined}
+                      data-tile={`${col}-${i}`}
                       className={`s3-block${lit ? " is-lit" : ""}${isPick ? " is-picked" : ""}`}
                       style={{ "--h": `${h}px` } as CSSProperties}
                       aria-pressed={isPick}
@@ -309,7 +301,7 @@ export function FlowStack3D({
           <div key={col} className={`s3-row${col === active ? " is-active" : ""}`} style={{ top: lines ? `${span(lines.tiles, col)?.r.y ?? 0}px` : `${15 + col * 23}%` }}>
             <button type="button" className="s3-tier" onClick={() => onTier(col)} aria-current={col === active ? "step" : undefined}>
               <strong className="s3-tier-product">{layers[col].product}</strong>
-              <span className="s3-tier-caption"><span>0{col + 1}</span> {layers[col].tab}</span>
+              <span className="s3-tier-caption">{layers[col].tab}</span>
             </button>
           </div>
         ))}
