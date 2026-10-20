@@ -14,5 +14,5 @@
 /* Touch screens scroll by swiping: no scrollbars, on the page or on any scrolling row (unit chips, menu). */
 @media (max-width:720px),(pointer:coarse){html,html *{scrollbar-width:none}html::-webkit-scrollbar,html *::-webkit-scrollbar{display:none}}
 .hero-bottom{bottom:90px}.floor-progress i{transition:transform .8s cubic-bezier(.22,1,.36,1)}
-@media(max-width:720px){.brand{width:175px}.hero-bottom{bottom:86px}.footer-word-clip{font-size:17.4vw;height:.86em;margin-bottom:14px}}
+@media(max-width:720px){.brand{width:175px}.hero-bottom{bottom:86px}.footer-word-clip{font-size:17.4vw;height:.96em;margin-bottom:10px}}
 @media(prefers-reduced-motion:reduce){.footer-word{will-change:auto}.floor-progress i{transition:none}}

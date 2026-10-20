@@ -56,7 +56,9 @@ const GEO = [
 ];
 
 type Pick = { col: number; i: number };
-const middle = (col: number) => Math.floor((UNITS[col].length - 1) / 2);
+// Opening a tier as a whole (its tab, scrolling, or the tier name) starts from its first unit, so
+// the unit chips read from the start of the row.
+const FIRST = 0;
 
 
 /** Units above that hand work down to the pick, and units below that it passes work on to. */
@@ -79,10 +81,11 @@ const linkPath = (c: number, a: number, b: number) =>
 
 export function FlowDiagram({ active, onSelect, running }: { active: number; onSelect: (tier: number) => void; running: boolean }) {
   const uid = useId().replace(/:/g, "");
-  const [pick, setPick] = useState<Pick>({ col: active, i: middle(active) });
+  const [pick, setPick] = useState<Pick>({ col: active, i: FIRST });
   const board = useRef<HTMLDivElement>(null);
+  const chips = useRef<HTMLDivElement>(null);
   const tilt = useRef(0);
-  // Scrolling or a tab moves to another tier: start from its middle unit. A unit picked on the
+  // Scrolling or a tab moves to another tier: start from its first unit. A unit picked on the
   // diagram keeps its place when the section scrolls to that unit's tier.
   // A unit picked on another tier scrolls the section through the tiers in between; hold the pick
   // until that scroll arrives instead of resetting at each tier it passes.
@@ -95,9 +98,18 @@ export function FlowDiagram({ active, onSelect, running }: { active: number; onS
       setPick(target);
       return;
     }
-    setPick((p) => (p.col === active ? p : { col: active, i: middle(active) }));
+    setPick((p) => (p.col === active ? p : { col: active, i: FIRST }));
   }, [active]);
   useEffect(() => () => cancelAnimationFrame(tilt.current), []);
+
+  // Bring the picked chip into the row's view (the row only; the page itself does not scroll).
+  useEffect(() => {
+    const row = chips.current;
+    const chip = row?.children[pick.i] as HTMLElement | undefined;
+    if (!row || !chip) return;
+    const left = chip.offsetLeft - row.offsetLeft - (row.clientWidth - chip.offsetWidth) / 2;
+    row.scrollLeft = Math.max(0, Math.min(left, row.scrollWidth - row.clientWidth));
+  }, [pick.col, pick.i]);
 
   const { up, down } = lineage(pick);
   const inLine = (c: number, i: number) => up[c].has(i) || down[c].has(i);
@@ -322,7 +334,9 @@ export function FlowDiagram({ active, onSelect, running }: { active: number; onS
         onChoose={choose}
         onTier={onSelect}
       />
-      <div className="flow-chips" role="group" aria-label={`Đơn vị tầng ${layers[pick.col].tab}`}>
+      {/* Keyed by tier: a fresh row starts unscrolled. Safari keeps a row's old scroll offset when
+          its content shrinks, which left a one-chip tier with its only chip scrolled out of view. */}
+      <div key={pick.col} ref={chips} className="flow-chips" role="group" aria-label={`Đơn vị tầng ${layers[pick.col].tab}`}>
         {UNITS[pick.col].map((u, i) => (
           <button key={u.title} type="button" aria-pressed={i === pick.i} onClick={() => choose(pick.col, i)}>
             {u.title}
