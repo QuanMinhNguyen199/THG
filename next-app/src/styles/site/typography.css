@@ -23,3 +23,8 @@ img, video, canvas{ image-rendering: auto; }
 .tdn-face, .tdn-back, .tdn-inside, .tdn-pop, .tdn-panel, .flow-board{
   outline: 1px solid transparent;
 }
+
+/* No line ends with a single orphaned word anywhere on the site: headings balance their lines,
+   running text avoids a lone last word. (Browsers without support simply wrap as before.) */
+h1, h2, h3, h4, h5, h6, strong, b, figcaption, dt, .page-eyebrow, .jd-problem, .corp-lead { text-wrap: balance; }
+p, li, dd, td, th, blockquote, label, small { text-wrap: pretty; }

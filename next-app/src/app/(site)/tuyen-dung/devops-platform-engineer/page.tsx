@@ -3,7 +3,7 @@ import { JobDetail } from "@/components/site/CorporatePages";
 import { job } from "@/components/site/catalog";
 import { SiteShell } from "@/components/site/SiteShell";
 
-const data = job("phan-tich-nghiep-vu-khu-vuc-cong");
+const data = job("devops-platform-engineer");
 export const metadata: Metadata = { title: `${data.title} — Tuyển dụng THEHEGEO` };
 
 export default function Page() {

@@ -485,85 +485,174 @@ export const ABOUT: Page[] = [
 
 export type Job = {
   slug: string;
+  /** The title as the JD gives it. */
   title: string;
-  /** The standard job-family name candidates search for (AI Engineer, Business Analyst…); the jobs page filters by it. */
+  /** The JD's own qualifier after the title, e.g. "LLM, Agents & Workflow". */
+  focus?: string;
+  /** Short code for the folder stamp and the application subject. */
+  code: string;
+  /** The standard job family candidates search for; the jobs page filters by it. */
   family: string;
-  team: string;
-  problem: string;
+  /** One line on what the role does, from the JD's duties (list cards and the folder). */
+  summary: string;
+  intro: string;
   duties: string[];
   requirements: string[];
   plus: string[];
+  benefits: string[];
+  location: string;
+  /** How the JD asks applicants to title their email, when it says. */
+  subject?: string;
 };
 
-// TODO(unconfirmed): location, type, headcount, deadline and the HR address (the document's
-// "[Cần HR]"); until supplied each JD shows them as being updated and applications go to the
-// general contact address.
+// Source: the JD documents in the project's JD folder (21/10/2026). Applications go to HR_EMAIL /
+// HR_PHONE as the JDs give them.
+// TODO(unconfirmed): three JDs (AI, Data, DevOps) give "Khu đô thị Ciputra" in their header and
+// "Giảng Võ" in section 6; Giảng Võ (what all six give in section 6) is shown.
+export const HR_EMAIL = "hr@thehegeo.com";
+export const HR_PHONE = "0346 931 848";
+
+const INTRO = "TheHeGeo đang xây dựng nền tảng Data, AI, Agent và các sản phẩm chuyển đổi số quy mô lớn cho doanh nghiệp và cơ quan chính phủ.";
+const PLUS = ["Kinh nghiệm AI/LLM, Kubernetes, hệ thống phân tán, GovTech hoặc Enterprise Platform."];
+const BENEFITS = ["Mức thu nhập cạnh tranh, thưởng theo hiệu quả, tham gia các dự án AI/Data quy mô lớn, môi trường công nghệ hiện đại."];
+const LOCATION = "Giảng Võ, Hà Nội";
+
 export const JOBS: Job[] = [
   {
-    slug: "ky-su-trien-khai-ai",
-    title: "Kỹ sư triển khai AI cùng khách hàng",
-    family: "AI Engineer",
-    team: "Triển khai",
-    problem: "Đưa GEO Agent vào làm việc thật trong cơ quan nhà nước và doanh nghiệp lớn.",
-    duties: [
-      "Ngồi cùng cán bộ để hiểu cách họ làm việc.",
-      "Cấu hình và kết nối GEO Agent với hệ thống văn bản, dữ liệu của khách hàng.",
-      "Đưa bài học từ hiện trường về đội sản phẩm.",
-    ],
-    requirements: ["Nền tảng lập trình vững.", "Kinh nghiệm tích hợp hệ thống hoặc xử lý dữ liệu.", "Giao tiếp tốt với người không chuyên công nghệ."],
-    plus: ["Đã làm dự án cho cơ quan nhà nước.", "Đã dùng LLM trong sản phẩm thật."],
+    slug: "ai-engineer",
+    title: "AI Engineer",
+    focus: "LLM, Agents & Workflow",
+    code: "AI",
+    family: "AI & ML Engineering",
+    summary: "Phát triển AI Agents, Copilot, Tool Calling, Workflow và RAG.",
+    intro: INTRO,
+    duties: ["Phát triển AI Agents, Copilot.", "Tool Calling và Workflow.", "RAG và Knowledge Services.", "Guardrails và Audit."],
+    requirements: ["Python hoặc TypeScript", "LLM APIs", "RAG", "Backend Engineering"],
+    plus: PLUS,
+    benefits: BENEFITS,
+    location: LOCATION,
   },
   {
-    slug: "ky-su-nen-tang-ai",
-    title: "Kỹ sư nền tảng AI",
-    family: "AI Engineer",
-    team: "Nền tảng",
-    problem: "Xây nền tảng để nhiều cơ quan cùng dùng AI trên một hạ tầng, an toàn và đổi được mô hình.",
+    slug: "mlops-engineer",
+    title: "MLOps Engineer",
+    focus: "AI Platform",
+    code: "MLOPS",
+    family: "AI & ML Engineering",
+    summary: "Xây dựng và vận hành pipeline training–serving, model serving và giám sát model trên Kubernetes.",
+    intro: INTRO,
     duties: [
-      "Phát triển cổng LLM API, nền tảng Agent, bộ nhớ liên kết tài liệu.",
-      "Tối ưu triển khai tại chỗ.",
-      "Xây cơ chế phân quyền, nhật ký, giám sát.",
+      "ML Pipeline & Orchestration: Xây dựng/vận hành pipeline training-serving trên Kubernetes; điều phối workflow (Airflow/Kubeflow/Argo Workflows), quản lý experiment & model registry (MLflow).",
+      "Model Serving & LLM: Triển khai model serving (KServe/Triton/vLLM/Ray), tối ưu inference, GPU scheduling; kinh nghiệm vận hành LLM/RAG là lợi thế lớn (khớp cụm LLM + AI-factory hiện có).",
+      "Data & Feature: Làm việc với Lakehouse (MinIO/S3, Iceberg/Nessie, Trino/Spark), feature pipeline, data versioning; JupyterHub cho data scientist.",
+      "MLOps tooling & tự động hóa: CI/CD cho ML (test/build/deploy model), containerize (Docker/Harbor), IaC (Ansible), Python vững.",
+      "Monitoring & tối ưu: Giám sát model (drift, latency, accuracy), resource/GPU utilization (Prometheus/Grafana), cost optimization.",
+      "Nền tảng & phối hợp: Hiểu Kubernetes + môi trường on-premise/data center, phối hợp chặt với Platform/DevSecOps; tư duy chủ động, debug độc lập.",
+    ],
+    requirements: ["Python", "ML/LLM Systems", "Kubernetes", "Monitoring cho AI"],
+    plus: PLUS,
+    benefits: BENEFITS,
+    location: LOCATION,
+  },
+  {
+    slug: "data-engineer",
+    title: "Data Engineer / Analytics Engineer",
+    code: "DATA",
+    family: "Data Engineering",
+    summary: "Xây dựng Data Pipeline, Lakehouse, Data Mart và dashboard phân tích.",
+    intro: INTRO,
+    duties: ["Xây dựng Data Pipeline và Lakehouse.", "Thiết kế Bronze/Silver/Gold.", "Data Mart, Feature Dataset, Data Quality.", "Phân tích dữ liệu và dashboard."],
+    requirements: ["SQL, Python", "Spark, Airflow", "Data Modeling", "Data Governance"],
+    plus: PLUS,
+    benefits: BENEFITS,
+    location: LOCATION,
+  },
+  {
+    slug: "devops-platform-engineer",
+    title: "DevOps / Platform Engineer",
+    focus: "Kubernetes, Observability & Identity",
+    code: "DEVOPS",
+    family: "Platform & DevOps",
+    summary: "Vận hành Kubernetes on-premise, CI/CD, GitOps, mạng, bảo mật và giám sát hệ thống.",
+    intro: INTRO,
+    duties: [
+      "Kubernetes & ảo hóa: Vận hành cụm K8s self-hosted (Kubespray/kubeadm), HA control plane, Longhorn/storage; ảo hóa KVM/libvirt trên bare-metal Linux (Ubuntu).",
+      "CI/CD & Container: Jenkins (hoặc GitLab CI/ArgoCD), Harbor registry, build/scan/deploy pipeline, GitOps.",
+      "Networking & Edge: HAProxy/Nginx load balancing, host-based routing, Cloudflare (Tunnel, Zero Trust/Access, DNS), VPN, firewall/NAT, troubleshooting tầng mạng.",
+      "Security (DevSecOps): Hardening, secrets management, RBAC, IAM/Keycloak, vulnerability scanning, least-privilege, audit/compliance (ưu tiên hiểu Nghị định 13 về dữ liệu cá nhân).",
+      "Data platform (lợi thế): MinIO/S3, Lakehouse (Iceberg/Nessie/Trino/Spark), PostgreSQL.",
+      "Tự động hóa & vận hành: Bash/Python, IaC (Ansible/Terraform), monitoring (Prometheus/Grafana), tư duy debug độc lập, chủ động — quen môi trường on-premise/data center.",
+      "Xây dựng CI/CD, GitOps, Monitoring, Logging, Tracing.",
+      "Backup, DR, Security Hardening.",
+    ],
+    requirements: ["Kubernetes, Docker, Helm, Helmfile", "Linux & PostgreSQL", "CI/CD, GitOps, OIDC/SSO", "Prometheus, Grafana, OpenTelemetry"],
+    plus: PLUS,
+    benefits: BENEFITS,
+    location: LOCATION,
+  },
+  {
+    slug: "fullstack-engineer",
+    title: "Fullstack Engineer",
+    focus: "Backend & Frontend",
+    code: "FULLSTACK",
+    family: "Software Engineering",
+    summary: "Phát triển Backend APIs, Microservices và Dashboard/Portal, tích hợp AI Services.",
+    intro: INTRO,
+    duties: ["Backend APIs và Microservices.", "Frontend Dashboard/Portal.", "Realtime với WebSocket/SSE.", "Tích hợp AI Services."],
+    requirements: ["Golang hoặc Node.js", "ReactJS/Next.js", "Zustand, TanStack Query", "Tailwind CSS, shadcn/ui"],
+    plus: PLUS,
+    benefits: BENEFITS,
+    location: LOCATION,
+  },
+  {
+    slug: "business-analyst",
+    title: "Business Analyst",
+    code: "BA",
+    family: "Business Analysis",
+    summary: "Kết nối nhu cầu nghiệp vụ với giải pháp công nghệ, từ khảo sát yêu cầu đến nghiệm thu.",
+    intro:
+      "TheHeGeo đang xây dựng các nền tảng Data, AI, Agent và sản phẩm chuyển đổi số quy mô lớn cho doanh nghiệp và cơ quan chính phủ. Chúng tôi tìm kiếm Business Analyst có khả năng kết nối nhu cầu nghiệp vụ với giải pháp công nghệ, giúp đội ngũ tạo ra sản phẩm đúng mục tiêu, dễ sử dụng và có thể vận hành bền vững trong môi trường Enterprise và GovTech.",
+    duties: [
+      "Làm việc với khách hàng, người dùng, Product Owner và các bên liên quan để khảo sát, làm rõ và thống nhất nhu cầu nghiệp vụ.",
+      "Phân tích quy trình hiện tại, xác định vấn đề, mục tiêu, phạm vi và đề xuất quy trình hoặc giải pháp phù hợp.",
+      "Chuyển hóa yêu cầu thành tài liệu rõ ràng như BRD, SRS, user story, use case, acceptance criteria, workflow, BPMN hoặc UML.",
+      "Phối hợp với UX/UI, Data, AI và Engineering để thiết kế tính năng cho nền tảng dữ liệu, AI Agent, cổng dịch vụ và hệ thống doanh nghiệp.",
+      "Mô hình hóa dữ liệu nghiệp vụ, làm rõ quy tắc xử lý, phân quyền, tích hợp API và luồng trao đổi dữ liệu giữa các hệ thống.",
+      "Quản lý yêu cầu và thay đổi xuyên suốt vòng đời sản phẩm; bảo đảm khả năng truy vết từ nhu cầu đến thiết kế, phát triển, kiểm thử và nghiệm thu.",
+      "Chuẩn bị kịch bản UAT, phối hợp kiểm thử, ghi nhận phản hồi, theo dõi lỗi và hỗ trợ nghiệm thu, đào tạo, chuyển giao cho người dùng.",
+      "Hỗ trợ lập kế hoạch, ưu tiên backlog, đánh giá tác động và truyền đạt tiến độ, rủi ro, phụ thuộc cho các bên liên quan.",
     ],
     requirements: [
-      "Kinh nghiệm xây hệ thống backend hoặc hạ tầng.",
-      "Hiểu cách LLM, RAG và Agent vận hành.",
-      "Quen làm việc với container và hạ tầng tại chỗ.",
+      "Có từ 2 năm kinh nghiệm ở vị trí Business Analyst, System Analyst, Product Analyst hoặc vai trò tương đương trong dự án phần mềm.",
+      "Có kỹ năng khai thác yêu cầu, phỏng vấn, tổ chức workshop, phân tích vấn đề và điều phối thống nhất giữa nhiều nhóm liên quan.",
+      "Viết tài liệu nghiệp vụ mạch lạc; sử dụng tốt user story, use case, acceptance criteria, process flow, BPMN hoặc UML.",
+      "Hiểu vòng đời phát triển phần mềm và cách làm Agile hoặc Scrum; có khả năng quản lý backlog, thay đổi và tiêu chí hoàn thành.",
+      "Có tư duy hệ thống, logic và dữ liệu; hiểu các khái niệm cơ bản về cơ sở dữ liệu, API, tích hợp hệ thống, phân quyền và audit log.",
+      "Có khả năng phối hợp với đội Data và AI để làm rõ nguồn dữ liệu, chất lượng dữ liệu, đầu vào, đầu ra, giới hạn và tiêu chí đánh giá giải pháp.",
+      "Giao tiếp, trình bày và viết tiếng Việt tốt; có khả năng đọc hiểu tài liệu kỹ thuật tiếng Anh.",
+      "Chủ động, cẩn trọng, có tinh thần sở hữu công việc và sẵn sàng làm việc với các bài toán nghiệp vụ phức tạp.",
     ],
-    plus: ["Kinh nghiệm về bảo mật và an toàn thông tin.", "Đã vận hành mô hình trên GPU."],
-  },
-  {
-    slug: "phan-tich-nghiep-vu-khu-vuc-cong",
-    title: "Chuyên viên phân tích nghiệp vụ khu vực công",
-    family: "Business Analyst",
-    team: "Nghiệp vụ",
-    problem: "Biến cách bộ máy nhà nước giao việc, duyệt và báo cáo thành quy trình mà GEO Agent hiểu được.",
-    duties: [
-      "Khảo sát nghiệp vụ tại cơ quan.",
-      "Viết quy trình, quy tắc và tiêu chí cho Agent.",
-      "Kiểm tra kết quả Agent có đúng thể thức và quy định không.",
+    plus: [
+      "Có kinh nghiệm sử dụng Outline (tương đương Confluence) để xây dựng, tổ chức và quản trị tài liệu dự án.",
+      "Có kinh nghiệm sử dụng Plane (tương đương Jira) để quản lý backlog, sprint, issue và tiến độ thực hiện.",
+      "Từng tham gia dự án Data Platform, AI hoặc LLM, AI Agent, Enterprise Platform, GovTech hoặc chuyển đổi số quy mô lớn.",
+      "Có kinh nghiệm với hệ thống tích hợp nhiều dịch vụ, API, workflow, master data, báo cáo hoặc dashboard quản trị.",
+      "Hiểu các yêu cầu về bảo mật, dữ liệu cá nhân, phân quyền, lưu vết và tuân thủ trong môi trường doanh nghiệp hoặc cơ quan nhà nước.",
+      "Có chứng chỉ hoặc nền tảng về Business Analysis, Product Management, Agile, Scrum, BPMN hoặc UX Research.",
     ],
-    requirements: [
-      "Hiểu văn bản hành chính và cách vận hành của cơ quan nhà nước.",
-      "Viết rõ ràng, có hệ thống.",
-      "Không cần biết lập trình.",
+    benefits: [
+      "Mức thu nhập cạnh tranh, được ghi nhận và thưởng theo năng lực và hiệu quả công việc.",
+      "Tham gia trực tiếp vào các sản phẩm Data, AI và Agent có quy mô lớn, phục vụ bài toán thực tế của doanh nghiệp và khu vực công.",
+      "Làm việc cùng đội ngũ Product, Data, AI và Engineering trong môi trường công nghệ hiện đại, đề cao tính chủ động và hợp tác.",
+      "Có cơ hội phát triển theo hướng Senior BA, Product Owner, Product Manager hoặc chuyên gia phân tích giải pháp.",
+      "Chế độ phúc lợi và các quyền lợi khác theo chính sách của công ty và quy định pháp luật.",
     ],
-    plus: ["Từng làm việc trong cơ quan nhà nước, ngành Thuế hoặc tài chính công.", "Đã dùng AI trong công việc."],
-  },
-  {
-    slug: "ky-su-phan-cung-aiot",
-    title: "Kỹ sư phần cứng AIoT",
-    family: "Hardware Engineer",
-    team: "AIoT",
-    problem: "Đưa AI ra hiện trường, từ cảm biến trên cầu đến AI Box.",
-    duties: [
-      "Thiết kế và cải tiến datalogger, bo mạch, AI Box.",
-      "Lắp đặt và hiệu chỉnh tại công trình.",
-      "Phối hợp với đội phần mềm để đưa dữ liệu lên nền tảng.",
-    ],
-    requirements: ["Nền tảng điện tử hoặc cơ điện tử.", "Kinh nghiệm lập trình nhúng.", "Sẵn sàng làm việc tại hiện trường."],
-    plus: ["Kinh nghiệm về cảm biến quan trắc công trình, thị giác máy tính hoặc robot."],
+    location: LOCATION,
+    subject: "[BA] Họ và tên",
   },
 ];
+
+/** The application email for a job: to HR, titled as the JD asks (or with the role's code and name). */
+export const applyHref = (j: Job) => `mailto:${HR_EMAIL}?subject=${encodeURIComponent(j.subject ?? `[${j.code}] Ứng tuyển ${j.title}`)}`;
 
 export const JOBS_HOME: Page = {
   slug: "",

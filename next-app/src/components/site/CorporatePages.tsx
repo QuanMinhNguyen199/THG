@@ -4,7 +4,7 @@ import Link from "next/link";
 import { asset } from "@/lib/asset";
 import { CaseShowcase } from "./CaseShowcase";
 import { MOCK_CASES } from "./cases";
-import { APPLY_EMAIL, JOBS, SECTIONS, type Block, type Cell, type Job, type Page, type SectionKey } from "./catalog";
+import { HR_EMAIL, HR_PHONE, JOBS, SECTIONS, applyHref, type Block, type Cell, type Job, type Page, type SectionKey } from "./catalog";
 import { ContactForm } from "./ContactForm";
 import { ContactList } from "./Contacts";
 import { JobList } from "./JobList";
@@ -367,27 +367,35 @@ export function JobsPage({ page }: { page: Page }) {
 }
 
 /**
- * One job description, laid out like a printed JD: the role and the problem it solves at the top,
- * the description on the left (duties → requirements → pluses), and on the right a card with the
- * hiring facts and the apply action that stays in view while reading. Other open roles close it.
+ * One job description, laid out like a printed JD: the role and its introduction at the top, the
+ * description on the left (duties → requirements → pluses → benefits), and on the right a card
+ * with the hiring facts and the apply action that stays in view while reading. Other open roles
+ * close it. Content comes from the JD documents (catalog.ts).
  */
 export function JobDetail({ job }: { job: Job }) {
-  const apply = `mailto:${APPLY_EMAIL}?subject=${encodeURIComponent(`Ứng tuyển: ${job.title}`)}`;
+  const apply = applyHref(job);
   const lists: [string, string[]][] = [
     ["Bạn sẽ làm", job.duties],
     ["Bạn cần có", job.requirements],
     ["Điểm cộng", job.plus],
+    ["Quyền lợi", job.benefits],
   ];
-  // TODO(unconfirmed): location, type, headcount and deadline are not in the source document yet.
-  const facts: [string, string | null][] = [
+  const facts: [string, string][] = [
     ["Vị trí", job.family],
-    ["Nhóm", job.team],
-    ["Địa điểm", null],
-    ["Hình thức", null],
-    ["Số lượng", null],
-    ["Hạn nộp", null],
+    ["Địa điểm", job.location],
   ];
   const others = JOBS.filter((j) => j.slug !== job.slug);
+  // "Kubernetes & ảo hóa: …" items lead with their area in bold.
+  const item = (text: string) => {
+    const m = text.match(/^([^:]{2,48}):\s(.+)$/);
+    return m ? (
+      <>
+        <strong>{m[1]}:</strong> {m[2]}
+      </>
+    ) : (
+      text
+    );
+  };
   return (
     <div className="wrap jd">
       <div className="jd-head">
@@ -396,7 +404,8 @@ export function JobDetail({ job }: { job: Job }) {
         </p>
         <p className="jd-family">{job.family}</p>
         <h1>{job.title}</h1>
-        <p className="jd-problem">{job.problem}</p>
+        {job.focus && <p className="jd-focus">{job.focus}</p>}
+        <p className="jd-problem">{job.intro}</p>
       </div>
       <div className="jd-body">
         <article className="jd-main">
@@ -405,7 +414,7 @@ export function JobDetail({ job }: { job: Job }) {
               <h2>{title}</h2>
               <ul>
                 {items.map((i) => (
-                  <li key={i}>{i}</li>
+                  <li key={i}>{item(i)}</li>
                 ))}
               </ul>
             </section>
@@ -416,16 +425,28 @@ export function JobDetail({ job }: { job: Job }) {
             {facts.map(([k, v]) => (
               <div key={k}>
                 <dt>{k}</dt>
-                <dd className={v ? undefined : "is-pending"}>{v ?? "Đang cập nhật"}</dd>
+                <dd>{v}</dd>
               </div>
             ))}
           </dl>
           <a href={apply} className="button jd-apply">
             Ứng tuyển vị trí này
           </a>
-          <p className="jd-how">
-            Gửi CV tới <a href={apply}>{APPLY_EMAIL}</a>, tiêu đề ghi tên vị trí.
-          </p>
+          <p className="jd-how">Gửi CV và hồ sơ năng lực{job.subject ? `, tiêu đề hồ sơ: ${job.subject}` : ""}.</p>
+          <dl className="jd-contact">
+            <div>
+              <dt>Email</dt>
+              <dd>
+                <a href={apply}>{HR_EMAIL}</a>
+              </dd>
+            </div>
+            <div>
+              <dt>Điện thoại</dt>
+              <dd>
+                <a href={`tel:${HR_PHONE.replace(/\s/g, "")}`}>{HR_PHONE}</a>
+              </dd>
+            </div>
+          </dl>
         </aside>
       </div>
       {others.length > 0 && (

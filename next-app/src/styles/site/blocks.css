@@ -135,7 +135,7 @@
 .jd-section li:last-child { border-bottom: 1px solid var(--line); }
 .jd-section li::before { content: ""; position: absolute; left: 0; top: 25px; width: 10px; height: 2px; background: var(--red); }
 .jd-side { position: sticky; top: 96px; padding: 28px; border: 1px solid var(--card-line); border-radius: 12px; background: var(--card); }
-.jd-facts { margin: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 18px 16px; }
+.jd-facts { margin: 0; display: grid; grid-template-columns: 1fr; gap: 18px 16px; }
 .jd-facts dt { font-size: 13px; color: var(--muted); }
 .jd-facts dd { margin: 4px 0 0; font-size: 16px; font-weight: 600; color: var(--white); }
 .jd-facts dd.is-pending { font-weight: 400; font-style: italic; color: var(--muted); }
@@ -227,3 +227,17 @@
   .fact-cards, .fact-cards.is-many { grid-template-columns: 1fr; gap: 12px; }
   .fact-card { padding: 20px; }
 }
+
+/* JD page: the role's own qualifier under its title (e.g. "LLM, Agents & Workflow"). */
+.jd-focus { margin: 12px 0 0; font-size: clamp(17px, 1.5vw, 20px); font-weight: 600; color: var(--muted); }
+.jd-section li strong { font-weight: 600; color: var(--white); }
+.jd-how a[href^="tel:"] { white-space: nowrap; }
+/* HR contact under the apply button: one row per channel, label left, value right. */
+.jd-contact { display: grid; gap: 0; margin: 10px 0 0; border-top: 1px solid var(--card-line); }
+
+.jd-contact div { display: flex; justify-content: space-between; align-items: center; gap: 12px; min-height: 44px; border-bottom: 1px solid var(--card-line); }
+.jd-contact dt { font-size: 13px; color: var(--muted); }
+.jd-contact dd { margin: 0; font-size: 15px; font-weight: 600; }
+.jd-contact a { color: var(--white); text-decoration: none; white-space: nowrap; }
+.jd-contact a:hover { color: var(--red); }
+.jd-contact div:last-child { border-bottom: 0; }

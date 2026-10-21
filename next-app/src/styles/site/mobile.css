@@ -30,8 +30,6 @@
   [data-theme] .shared-page .hero-description { font-size: 15px; line-height: 1.7; }
   /* the GEOagents hero carries copy and needs the dark shade; Home's film has none (home.css) */
   [data-theme] .shared-page .hero-shade:not(.home-hero-shade) { background: linear-gradient(0deg, #000e 0%, #0009 48%, #0003 100%); }
-  /* the phone film is framed on its subjects (centre-left of the frame) */
-  .home-hero .hero-video { object-position: 44% 50%; }
   .shared-page .hero-actions { gap: 10px; margin-top: 24px; }
   .shared-page .hero-actions .button { width: 100%; min-height: 48px; padding: 14px 18px; font-size: 14px; }
   [data-theme] .shared-page .hero-bottom { bottom: 24px; left: 20px; right: 20px; }
