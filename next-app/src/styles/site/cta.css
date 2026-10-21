@@ -283,7 +283,7 @@
 .folder-reading-more:hover { color: #c1152b; }
 @media (max-width: 720px) {
   .job-folders { grid-template-columns: minmax(0, 1fr); }
-  .has-job .tdn-book { --H: min(560px, 82dvh); transform-origin: 50% 50%; }
+  .has-job .tdn-book { --H: min(720px, 86dvh); transform-origin: 50% 50%; }
   .has-job .tdn-cover, .has-job .tdn-inside { top: 0; left: 0; width: 100%; height: 100%; transform-origin: 0 50%; }
   .has-job .tdn-back { transform: rotateY(180deg); }
   .job-folder-content { grid-template-columns: 1fr; grid-template-rows: auto 1fr auto; border-left: 8px solid #d5c8af; border-radius: 2px 8px 8px 2px; }
@@ -304,6 +304,9 @@
   .job-brief-points dd { font-size: 16px; }
 }
 @media (max-width: 380px), (max-height: 650px) {
+  .job-brief-tags:not(.is-skills) li:nth-child(n+5) { display: none; }
+  .job-brief-tags { margin-top: 12px; }
+  .job-brief-tags h3 { margin-bottom: 6px; }
   .job-folder-summary { margin-top: 8px; font-size: 14px; line-height: 1.5; }
   .job-brief-facts div { padding-top: 8px; padding-bottom: 8px; }
   .job-brief-facts dd { font-size: 13px; }
@@ -319,4 +322,19 @@
 /* Phones: a little smaller and lifted, clear of the index line at the foot of the visual. */
 @media (max-width: 720px) {
   .projects.is-single .document { height: min(64cqh, calc(66cqw / var(--paper-r, 0.8))); translate: 0 -14px; }
+}
+/* Folder brief: tags rather than the JD's lists. */
+.job-brief-tags { margin-top: 22px; }
+.job-brief-tags h3 { margin: 0 0 10px; font-size: 13px; font-weight: 700; color: #6a5d4e; }
+.job-brief-tags ul { margin: 0; padding: 0; list-style: none; display: flex; flex-wrap: wrap; gap: 8px; }
+.job-brief-tags li { padding: 7px 12px; border: 1px solid #d6cbb8; border-radius: 999px; background: #fff; font-size: 14px; line-height: 1.3; color: #251c20; }
+.job-brief-tags.is-skills li { border-color: #c1152b40; color: #c1152b; font-weight: 600; }
+@media (max-width: 720px) {
+  .job-brief-tags { margin-top: 16px; }
+  .job-brief-tags li { padding: 6px 10px; font-size: 13px; }
+}
+/* the brief scrolls inside the folder when it is longer than the screen allows; a soft fade at its
+   foot shows there is more */
+@media (max-width: 720px) {
+  .has-job .folder-reading-body { -webkit-mask-image: linear-gradient(180deg, #000 calc(100% - 28px), #0000); mask-image: linear-gradient(180deg, #000 calc(100% - 28px), #0000); padding-bottom: 28px; }
 }

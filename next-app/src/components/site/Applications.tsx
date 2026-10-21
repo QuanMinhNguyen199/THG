@@ -21,7 +21,7 @@ function closedCard(isJob = false) {
   const vh = innerHeight;
   const W = vertical ? 0.92 * vw : Math.min(1000, 0.94 * vw);
   // A job folder on a phone is sized to its short brief, not to the screen.
-  const H = isJob ? (vertical ? Math.min(560, 0.82 * vh) : Math.min(740, 0.9 * vh)) : vertical ? Math.min(740, 0.82 * vh) : Math.min(620, 0.84 * vh);
+  const H = isJob ? (vertical ? Math.min(720, 0.86 * vh) : Math.min(740, 0.9 * vh)) : vertical ? Math.min(740, 0.82 * vh) : Math.min(620, 0.84 * vh);
   return { vertical, W, H, w: vertical ? W : W / 2, h: vertical && !isJob ? H / 2 : H };
 }
 
@@ -332,7 +332,7 @@ export function ProjectCase({ data, reading, applyHref, moreHref }: { data: Case
               <div className="document" ref={doc}>
                 <Paper data={data} />
               </div>
-              <span className="visual-index">{data.index}</span>
+              {data.index && <span className="visual-index">{data.index}</span>}
             </div>
             <div className="project-info">
               <div>

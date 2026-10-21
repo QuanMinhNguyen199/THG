@@ -53,8 +53,7 @@ export const TDN: CaseData = {
   model: "folder",
 };
 
-// TODO(unconfirmed): illustrations until the real case studies are approved; confirm the client
-// may be named (PTSC M&C) before publishing.
+// PTSC M&C project copy supplied by the user; other illustrative cases remain marked in data.
 export const MOCK_CASES: Record<string, CaseData> = {
   "dich-vu-cong": {
     id: "dich-vu-cong",
@@ -82,12 +81,12 @@ export const MOCK_CASES: Record<string, CaseData> = {
   },
   "quan-ly-du-an": {
     id: "quan-ly-du-an",
-    name: "Trợ lý AI hồ sơ kỹ thuật",
+    name: "Trợ lý AI Quản lý Dự án Công nghiệp",
     org: "PTSC M&C",
     index: "03 / QUẢN LÝ DỰ ÁN",
-    summary: "Trợ lý AI cho hồ sơ kỹ thuật dự án.",
-    description: "AI tổng hợp tiến độ, hồ sơ và đầu việc của từng dự án, nhắc hạn và báo sớm các hạng mục có nguy cơ chậm.",
-    note: "AI theo dõi và cảnh báo. Người quản lý dự án quyết định điều chỉnh.",
+    summary: "Tra cứu hồ sơ kỹ thuật, bản vẽ và tiến độ công trình dầu khí tại PTSC M&C.",
+    description: "Kho tri thức RAG hỗ trợ tra cứu quy chuẩn, hồ sơ thiết kế và tiến độ công trình; cảnh báo mâu thuẫn kỹ thuật và đôn đốc các mốc công việc theo quy trình Human-in-the-Loop.",
+    note: "Tìm kiếm hồ sơ từ hàng giờ xuống dưới 5 giây. Triển khai On-premise trong hạ tầng của đơn vị; con người kiểm soát các quyết định.",
     kicker: "Quản lý dự án",
     checks: ["Tiến độ", "Hồ sơ dự án", "Đầu việc"],
     checkFoot: "Theo từng hạng mục",
@@ -101,7 +100,7 @@ export const MOCK_CASES: Record<string, CaseData> = {
       { col: "Đang làm", cards: ["Thi công hạng mục", "Nghiệm thu", "Báo cáo tuần"] },
       { col: "Hoàn thành", cards: ["Phê duyệt chủ trương"] },
     ],
-    mock: true,
+    mock: false,
   },
   "ai-platform": {
     id: "ai-platform",

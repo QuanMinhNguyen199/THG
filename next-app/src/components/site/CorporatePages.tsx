@@ -239,6 +239,33 @@ function BlockView({ block, index }: { block: Block; index: number }) {
           {block.en && <p className="corp-en">{block.en}</p>}
         </div>,
       );
+    case "project":
+      return wrap(
+        "is-project-evidence",
+        <div className="project-evidence">
+          <div className="project-evidence-profile">
+            <p className="project-evidence-client">{block.client}</p>
+            {block.dossier && <dl className="project-evidence-dossier">
+              {([
+                ["Thời gian thực hiện", block.dossier.period],
+                ["Trạng thái triển khai", block.dossier.status],
+                ["Phạm vi thực hiện", block.dossier.scope],
+                ["Vai trò của THEHEGEO", block.dossier.role],
+              ] as const).map(([label, value]) => <div key={label}>
+                <dt>{label}</dt><dd>{value}</dd>
+              </div>)}
+            </dl>}
+          </div>
+          <div className="project-evidence-content">
+            <div><h3>Bài toán</h3><p>{block.problem}</p></div>
+            <div><h3>Giải pháp GEO Agent</h3><ul>{block.solution.map(item => <li key={item}>{item}</li>)}</ul></div>
+            <div className="project-evidence-result"><h3>Kết quả</h3><p>{block.result}</p></div>
+            {block.link && <Go href={block.link.href} className="corp-more">
+              {block.link.label} <Arrow />
+            </Go>}
+          </div>
+        </div>,
+      );
     case "case":
       return wrap("is-case applications is-bare", <CaseShowcase data={MOCK_CASES[block.id]} />, "ptsc");
     case "contact":
@@ -367,19 +394,12 @@ export function JobsPage({ page }: { page: Page }) {
 }
 
 /**
- * One job description, laid out like a printed JD: the role and its introduction at the top, the
- * description on the left (duties → requirements → pluses → benefits), and on the right a card
- * with the hiring facts and the apply action that stays in view while reading. Other open roles
- * close it. Content comes from the JD documents (catalog.ts).
+ * One job description, following the JD document section by section (1. Giới thiệu … 7. Cách ứng
+ * tuyển, numbered as the document numbers them), with a card beside it holding the hiring facts and
+ * the apply action that stays in view while reading. Other open roles close it. Content: catalog.ts.
  */
 export function JobDetail({ job }: { job: Job }) {
   const apply = applyHref(job);
-  const lists: [string, string[]][] = [
-    ["Bạn sẽ làm", job.duties],
-    ["Bạn cần có", job.requirements],
-    ["Điểm cộng", job.plus],
-    ["Quyền lợi", job.benefits],
-  ];
   const facts: [string, string][] = [
     ["Vị trí", job.family],
     ["Địa điểm", job.location],
@@ -396,6 +416,29 @@ export function JobDetail({ job }: { job: Job }) {
       text
     );
   };
+  const list = (items: string[]) => (
+    <ul>
+      {items.map((i) => (
+        <li key={i}>{item(i)}</li>
+      ))}
+    </ul>
+  );
+  const sections: [string, React.ReactNode][] = [
+    ["Giới thiệu", <p key="p">{job.intro}</p>],
+    ["Mô tả công việc", list(job.duties)],
+    ["Yêu cầu", list(job.requirements)],
+    ["Điểm cộng", list(job.plus)],
+    ["Quyền lợi", list(job.benefits)],
+    ["Địa điểm làm việc", <p key="p">{job.location}.</p>],
+    [
+      "Cách ứng tuyển",
+      <p key="p">
+        Gửi CV và hồ sơ năng lực qua email <a href={apply}>{HR_EMAIL}</a> hoặc liên hệ{" "}
+        <a href={`tel:${HR_PHONE.replace(/\s/g, "")}`}>{HR_PHONE}</a>
+        {job.subject ? `. Tiêu đề hồ sơ: ${job.subject}.` : "."}
+      </p>,
+    ],
+  ];
   return (
     <div className="wrap jd">
       <div className="jd-head">
@@ -405,18 +448,15 @@ export function JobDetail({ job }: { job: Job }) {
         <p className="jd-family">{job.family}</p>
         <h1>{job.title}</h1>
         {job.focus && <p className="jd-focus">{job.focus}</p>}
-        <p className="jd-problem">{job.intro}</p>
       </div>
       <div className="jd-body">
         <article className="jd-main">
-          {lists.map(([title, items]) => (
+          {sections.map(([title, body], i) => (
             <section key={title} className="jd-section">
-              <h2>{title}</h2>
-              <ul>
-                {items.map((i) => (
-                  <li key={i}>{item(i)}</li>
-                ))}
-              </ul>
+              <h2>
+                <span className="jd-num">{i + 1}.</span> {title}
+              </h2>
+              {body}
             </section>
           ))}
         </article>

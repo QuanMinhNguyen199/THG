@@ -10,7 +10,7 @@ const ALL = "Tất cả vị trí";
 function jobFolder(job: Job): CaseData {
   const name = job.focus ? `${job.title} (${job.focus})` : job.title;
   return {
-    id: job.slug, name, org: job.family, index: "JD",
+    id: job.slug, name, org: job.family, index: "",
     summary: job.summary, description: job.summary,
     note: `Địa điểm: ${job.location}.`,
     kicker: "Tuyển dụng THEHEGEO", checks: ["Công việc", "Yêu cầu", "Điểm cộng"],
@@ -19,19 +19,27 @@ function jobFolder(job: Job): CaseData {
   };
 }
 
-/** The folder is a brief: what the role does (under its title), the facts a candidate checks first
- *  and the skills it asks for. Everything else is on the full JD page. */
+/** The folder is an overview, not a copy of the JD: the facts, then what the work centres on and
+ *  the skills it asks for, as tags. The full sections (duties, plus points, benefits…) are on the
+ *  JD page. Long duties ("Area: detail…") give their area; short ones are used as they are. */
+const area = (t: string) => (t.match(/^([^:]{2,48}):\s/)?.[1] ?? t).replace(/\.$/, "");
+
 function JobBrief({ job }: { job: Job }) {
-  // A list of short skills reads as one line; a list of sentences shows its first one.
-  const short = job.requirements.every((r) => r.length <= 40);
+  const focus = job.areas ?? (job.duties.every((d) => d.length <= 48 || /^[^:]{2,48}:\s/.test(d)) ? job.duties.slice(0, 6).map(area) : []);
+  const skills = job.skills ?? job.requirements;
   return <div className="job-brief">
     <dl className="job-brief-facts">
       <div><dt>Vị trí</dt><dd>{job.family}</dd></div>
       <div><dt>Địa điểm</dt><dd>{job.location}</dd></div>
     </dl>
-    <dl className="job-brief-points">
-      <div><dt>{short ? "Kỹ năng cần có" : "Yêu cầu chính"}</dt><dd>{short ? job.requirements.join(" · ") : job.requirements[0]}</dd></div>
-    </dl>
+    {focus.length > 0 && <div className="job-brief-tags">
+      <h3>Trọng tâm công việc</h3>
+      <ul>{focus.map(f => <li key={f}>{f}</li>)}</ul>
+    </div>}
+    <div className="job-brief-tags is-skills">
+      <h3>Kỹ năng chính</h3>
+      <ul>{skills.map(k => <li key={k}>{k}</li>)}</ul>
+    </div>
   </div>;
 }
 

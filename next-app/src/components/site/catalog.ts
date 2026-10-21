@@ -18,6 +18,16 @@ export type Block =
   | { type: "partners"; title?: string; groups: { group: string; names: string[] }[] }
   | { type: "callout"; title?: string; body: string; en?: string }
   | { type: "case"; title?: string; id: string }
+  | {
+      type: "project";
+      title: string;
+      client: string;
+      problem: string;
+      solution: string[];
+      result: string;
+      dossier?: { period: string; status: string; scope: string; role: string };
+      link?: Link;
+    }
   | { type: "contact" }
   | { type: "jobs" };
 
@@ -211,8 +221,9 @@ export const SOLUTIONS: Page[] = [
 
 export const APPS_HOME: Page = {
   slug: "",
-  name: "Ứng dụng",
+  name: "Use Case",
   title: "Bài toán thật. Quy mô thật.",
+  lead: "Các giải pháp GEO Agent đã được kiểm chứng thực tế tại các khối cơ quan Nhà nước và doanh nghiệp trọng yếu.",
   en: "Real problems. Real scale.",
   blocks: [
     {
@@ -221,6 +232,7 @@ export const APPS_HOME: Page = {
         { title: "HKD", body: "Trợ lý AI giúp hộ kinh doanh khai và nộp thuế.", href: "/ung-dung/hkd/", cta: "Xem chi tiết" },
         { title: "A360", body: "Nhìn mỗi doanh nghiệp từ 16 chiều để quản lý và dự báo thu ngân sách.", href: "/ung-dung/a360/", cta: "Xem chi tiết" },
         { title: "AI Platform", body: "Một nền tảng AI dùng chung cho nhiều cơ quan.", href: "/ung-dung/ai-platform/", cta: "Xem chi tiết" },
+        { title: "Quản lý dự án công nghiệp", body: "Trợ lý AI tra cứu hồ sơ kỹ thuật và theo dõi công việc tại PTSC M&C.", href: "/ung-dung/quan-ly-du-an/", cta: "Xem chi tiết" },
       ],
     },
   ],
@@ -328,7 +340,17 @@ export const APPS: Page[] = [
         title: "Nguyên tắc",
         body: ["Cán bộ thuế hỏi bằng tiếng Việt qua GEO Agent. A360 đối chiếu báo cáo tài chính, tờ khai GTGT, TNDN theo mã số thuế; luôn tách bạch dữ kiện và nhận định, không bịa số liệu. Cán bộ là người kết luận."],
       },
-      { type: "text", title: "Đang triển khai", body: ["Thuế TP Hà Nội, hướng tới mở rộng theo quy mô ngành Thuế."] },
+      {
+        type: "project",
+        title: "Hệ thống AI DN360",
+        client: "Cục Thuế Thành phố Hà Nội",
+        problem: "Phân tích sức khỏe tài chính và phát hiện rủi ro thuế tự động cho hàng chục nghìn doanh nghiệp.",
+        solution: [
+          "Tự động đọc, bóc tách và đối chiếu dữ liệu báo cáo tài chính, thuế GTGT, TNDN theo mã số thuế.",
+          "Tách bạch dữ kiện thực tế và nhận định đề xuất; cảnh báo các điểm bất thường (Red Flags).",
+        ],
+        result: "Giảm 80% thời gian tra cứu thủ công; hỗ trợ cán bộ Thuế truy vấn thông tin bằng tiếng Việt tự nhiên với độ chính xác cao.",
+      },
     ],
     cta: DEMO,
   },
@@ -361,7 +383,39 @@ export const APPS: Page[] = [
         title: "Sân chơi đổi mới sáng tạo",
         body: ["Cổng LLM API mở cho các đơn vị đổi mới sáng tạo xây ứng dụng mới, không phải tự dựng hạ tầng AI riêng."],
       },
-      { type: "text", title: "Đang triển khai", body: ["TP Hà Nội."] },
+      {
+        type: "project",
+        title: "Nền tảng AI dùng chung (iHanoi / Tax OS)",
+        client: "UBND Thành phố Hà Nội",
+        problem: "Xây dựng hạ tầng AI tập trung phục vụ đa cơ quan hành chính và tương tác với người dân.",
+        solution: [
+          "Triển khai mô hình 4 tầng vận hành: tự động phân loại phản ánh của người dân, bóc tách văn bản chỉ đạo và hỗ trợ dịch vụ công.",
+          "Đảm bảo an toàn thông tin Cấp độ 3+ và đáp ứng tiêu chuẩn AI Chủ quyền (Sovereign AI) trên Private Cloud.",
+        ],
+        result: "Chuẩn hóa luồng xử lý văn bản liên cơ quan và nâng cao tốc độ phản hồi dịch vụ hành chính công 24/7.",
+      },
+    ],
+    cta: DEMO,
+  },
+  {
+    slug: "quan-ly-du-an",
+    name: "Quản lý dự án công nghiệp",
+    kind: "Trợ lý AI cho hồ sơ kỹ thuật và tiến độ",
+    title: "Kho tài liệu kỹ thuật trở thành tri thức của dự án.",
+    lead: "GEO Agent hỗ trợ tra cứu quy chuẩn, hồ sơ thiết kế và theo dõi các mốc công việc trong dự án công nghiệp.",
+    blocks: [
+      {
+        type: "project",
+        title: "Trợ lý AI Quản lý Dự án Công nghiệp",
+        client: "Tổng công ty PTSC M&C",
+        problem: "Quản trị và truy vấn kho tài liệu kỹ thuật, bản vẽ công trình dầu khí đồ sộ.",
+        solution: [
+          "Tích hợp kho tri thức RAG tra cứu chính xác quy chuẩn, hồ sơ thiết kế và tiến độ công trình.",
+          "Cảnh báo mâu thuẫn kỹ thuật và đôn đốc các mốc công việc quan trọng theo quy trình Human-in-the-Loop.",
+        ],
+        result: "Rút ngắn thời gian tìm kiếm hồ sơ từ hàng giờ xuống dưới 5 giây; triển khai On-premise, dữ liệu được xử lý và lưu trữ trong hạ tầng của đơn vị.",
+      },
+      { type: "case", title: "Trợ lý AI trong dự án", id: "quan-ly-du-an" },
     ],
     cta: DEMO,
   },
@@ -436,6 +490,27 @@ export const ABOUT_HOME: Page = {
 // TODO(unconfirmed): the founder approves the mission and vision wording.
 export const ABOUT: Page[] = [
   {
+    slug: "kinh-nghiem-du-an",
+    name: "Kinh nghiệm dự án",
+    title: "Kinh nghiệm dự án",
+    lead: "Các dự án GEO Agent tại cơ quan Nhà nước và doanh nghiệp: bài toán, giải pháp triển khai và kết quả đạt được.",
+    // Reuse the supplied project records so the portfolio and Use Cases stay consistent.
+    // Dates, acceptance status and contractual responsibilities have not been supplied.
+    blocks: APPS.flatMap(page => page.blocks
+      .filter((block): block is Extract<Block, { type: "project" }> => block.type === "project")
+      .map(block => ({
+        ...block,
+        dossier: {
+          period: "Đang cập nhật",
+          status: "Đang cập nhật",
+          scope: "Đang cập nhật",
+          role: "Đang cập nhật",
+        },
+        link: { label: "Xem Use Case chi tiết", href: `/ung-dung/${page.slug}/` },
+      }))),
+    cta: { label: "Trao đổi về dự án của anh/chị", href: CONTACT },
+  },
+  {
     slug: "su-menh-tam-nhin",
     name: "Sứ mệnh và Tầm nhìn",
     title: "Sứ mệnh và Tầm nhìn",
@@ -503,6 +578,11 @@ export type Job = {
   location: string;
   /** How the JD asks applicants to title their email, when it says. */
   subject?: string;
+  /** Key skills as short tags for the folder brief, taken from the JD's own wording; when absent,
+   *  the requirements are used (they are already short). */
+  skills?: string[];
+  /** Areas of work as short tags for the folder brief, when the JD's duties are full sentences. */
+  areas?: string[];
 };
 
 // Source: the JD documents in the project's JD folder (21/10/2026). Applications go to HR_EMAIL /
@@ -648,6 +728,8 @@ export const JOBS: Job[] = [
     ],
     location: LOCATION,
     subject: "[BA] Họ và tên",
+    areas: ["Khảo sát nhu cầu nghiệp vụ", "Phân tích quy trình", "BRD, SRS, user story", "Phối hợp UX/UI, Data, AI", "UAT và nghiệm thu", "Quản lý backlog"],
+    skills: ["Từ 2 năm kinh nghiệm BA", "BRD, SRS", "User story, use case", "BPMN, UML", "Agile, Scrum", "API, dữ liệu, phân quyền"],
   },
 ];
 

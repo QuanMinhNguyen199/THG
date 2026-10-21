@@ -29,7 +29,7 @@ export const NAV: NavItem[] = [
   // The full GEOagents product page is its own tab.
   { href: `/${GEOAGENTS.slug}/`, label: GEOAGENTS.label },
   withChildren("giai-phap"),
-  withChildren("ung-dung"),
+  { ...withChildren("ung-dung"), label: "Use Case" },
   withChildren("ve-thehegeo"),
   { href: "/tuyen-dung/", label: "Tuyển dụng" },
 ];

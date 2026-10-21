@@ -241,3 +241,31 @@
 .jd-contact a { color: var(--white); text-decoration: none; white-space: nowrap; }
 .jd-contact a:hover { color: var(--red); }
 .jd-contact div:last-child { border-bottom: 0; }
+
+/* JD sections follow the Word document: numbered headings on a rule, as in the printed JD. */
+.jd-section + .jd-section { margin-top: 40px; }
+.jd-section h2 { display: flex; align-items: baseline; gap: 10px; margin: 0 0 14px; padding-bottom: 12px; border-bottom: 2px solid var(--white); font-size: 21px; font-weight: 700; letter-spacing: -0.01em; }
+.jd-num { min-width: 1.4em; color: var(--red); font-variant-numeric: tabular-nums; }
+.jd-section > p { margin: 0; font-size: 17px; line-height: 1.65; color: color-mix(in srgb, var(--white) 88%, transparent); }
+.jd-section > p a { color: var(--white); text-decoration: underline; text-underline-offset: 3px; }
+.jd-section li:first-child { border-top: 0; }
+
+/* Project experience lives inside its matching Use Case. */
+.project-evidence { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 2fr); gap: 48px; }
+.project-evidence-client { margin: 0; max-width: 24ch; font-size: clamp(20px, 2vw, 28px); line-height: 1.4; color: var(--white); font-weight: 600; }
+.project-evidence-content { display: grid; gap: 28px; }
+.project-evidence-content h3 { margin: 0 0 10px; font-size: 18px; line-height: 1.4; color: var(--white); }
+.project-evidence-content p, .project-evidence-content ul { margin: 0; font-size: 16px; line-height: 1.75; color: var(--muted); }
+.project-evidence-content ul { padding-left: 20px; }
+.project-evidence-content li + li { margin-top: 10px; }
+.project-evidence-result { padding-top: 24px; border-top: 1px solid var(--line); }
+.project-evidence-result h3 { color: var(--accent-text, var(--red)); }
+.project-evidence-dossier { display: grid; gap: 16px; margin: 28px 0 0; }
+.project-evidence-dossier div { padding-top: 14px; border-top: 1px solid var(--line); }
+.project-evidence-dossier dt { font-size: 14px; font-weight: 600; line-height: 1.5; color: var(--white); }
+.project-evidence-dossier dd { margin: 4px 0 0; font-size: 15px; line-height: 1.6; color: var(--muted); }
+@media (max-width: 720px) {
+  .project-evidence { grid-template-columns: minmax(0, 1fr); gap: 24px; }
+  .project-evidence-client { max-width: none; }
+  .project-evidence-dossier { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; margin-top: 20px; }
+}
