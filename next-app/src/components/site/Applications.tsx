@@ -1,11 +1,9 @@
 "use client";
 
-import { useEffect, useRef, type MouseEvent, type ReactNode, type SyntheticEvent } from "react";
-import { projects } from "./content";
-
-const tax = projects.tax;
-// What the product checks, taken from its description (no claims beyond the existing copy).
-const CHECKS = ["Báo cáo tài chính", "Thuế giá trị gia tăng", "Thuế thu nhập doanh nghiệp"];
+import { useRouter } from "next/navigation";
+import { useEffect, useId, useRef, type MouseEvent, type ReactNode, type SyntheticEvent } from "react";
+import Link from "next/link";
+import { TDN, type CaseData } from "./cases";
 
 const EASE = "cubic-bezier(0.22, 1, 0.36, 1)";
 // Paper springing up off a fold: a little overshoot past upright, then settling.
@@ -17,31 +15,32 @@ const NARROW = "(max-width: 720px)";
  * (.tdn-book --W/--H). The paper on the case takes this shape, so the card that flies out of it is
  * the same paper at a larger size, not a different one.
  */
-function closedCard() {
+function closedCard(isJob = false) {
   const vertical = matchMedia(NARROW).matches;
   const vw = innerWidth;
   const vh = innerHeight;
   const W = vertical ? 0.92 * vw : Math.min(1000, 0.94 * vw);
-  const H = vertical ? Math.min(740, 0.82 * vh) : Math.min(620, 0.84 * vh);
-  return { vertical, W, H, w: vertical ? W : W / 2, h: vertical ? H / 2 : H };
+  // A job folder on a phone is sized to its short brief, not to the screen.
+  const H = isJob ? (vertical ? Math.min(560, 0.82 * vh) : Math.min(740, 0.9 * vh)) : vertical ? Math.min(740, 0.82 * vh) : Math.min(620, 0.84 * vh);
+  return { vertical, W, H, w: vertical ? W : W / 2, h: vertical && !isJob ? H / 2 : H };
 }
 
 /** The paper card: on the case and on the card's cover. Sized in cqw, so both render identically. */
-function Paper() {
+function Paper({ data }: { data: CaseData }) {
   return (
     <div className="paper">
-      <span>AI / TAX INTELLIGENCE</span>
+      <span>{data.tag}</span>
       <b>
-        Đúng dữ liệu.
+        {data.headline[0]}
         <br />
-        Rõ nghĩa vụ.
+        {data.headline[1]}
       </b>
       <i className="paper-line" />
       <i className="paper-line is-short" />
       <div className="paper-stamp">
-        TAX
+        {data.stamp[0]}
         <br />
-        360
+        {data.stamp[1]}
       </div>
     </div>
   );
@@ -64,11 +63,38 @@ function Piece({ at, className, children, label }: { at: string; className: stri
   );
 }
 
-export function Applications() {
+/** `bare`: the project card alone, for pages that give it their own heading (Use Case). */
+export function Applications({ bare = false }: { bare?: boolean }) {
+  return (
+    <section className={bare ? "applications is-bare" : "applications wrap"} id={bare ? undefined : "applications"}>
+      {!bare && (
+        <div className="section-heading">
+          <h2>
+            Trí tuệ đi vào
+            <br />
+            <span>thực tiễn.</span>
+          </h2>
+          <p>
+            GEOagents trong những bài toán
+            <br />
+            vận hành chuyên biệt.
+          </p>
+        </div>
+      )}
+      <ProjectCase data={TDN} />
+    </section>
+  );
+}
+
+/** One case study: a paper card on a panel that opens into the 3D spread. */
+export function ProjectCase({ data, reading, applyHref, moreHref }: { data: CaseData; reading?: ReactNode; applyHref?: string; moreHref?: string }) {
+  const titleId = `${useId().replace(/:/g, "")}-case-title`;
   const dialog = useRef<HTMLDialogElement>(null);
   const book = useRef<HTMLDivElement>(null);
   const doc = useRef<HTMLDivElement>(null);
   const busy = useRef(false);
+  const popScale = reading ? "scale(1)" : HI;
+
 
   // showModal() focuses the dialog itself only when the dialog carries the autofocus attribute
   // (React's autoFocus prop does not write it); otherwise Safari jumps to the first button inside.
@@ -79,8 +105,10 @@ export function Applications() {
   // Keep the case paper in the closed card's proportions.
   useEffect(() => {
     const fit = () => {
-      const c = closedCard();
+      const c = closedCard(Boolean(reading));
       doc.current?.style.setProperty("--paper-ratio", `${c.w} / ${c.h}`);
+      // the same ratio as a number, so the paper can be fitted to its frame both ways (cta.css)
+      doc.current?.style.setProperty("--paper-r", (c.w / c.h).toFixed(4));
     };
     fit();
     addEventListener("resize", fit);
@@ -96,9 +124,9 @@ export function Applications() {
    */
   const geometry = () => {
     const el = book.current!;
-    const c = closedCard();
+    const c = closedCard(Boolean(reading));
     // The closed card is the second half of the spread; shift the spread so it sits centred.
-    const shift = c.vertical ? `0px, ${-c.H / 4}px` : `${-c.W / 4}px, 0px`;
+    const shift = reading && c.vertical ? "0px, 0px" : c.vertical ? `0px, ${-c.H / 4}px` : `${-c.W / 4}px, 0px`;
     const paper = doc.current!;
     const r = paper.getBoundingClientRect();
     const scale = paper.offsetWidth / c.w;
@@ -110,10 +138,10 @@ export function Applications() {
     const closed = `translate(${shift}) translateZ(0px)`;
     const lifted = `translate(${dx * 0.35}px, ${dy * 0.35}px) translate(${shift}) rotate(${angle / 2}deg) translateZ(90px) scale(${(scale + 1) / 2})`;
     // Eye level with the table: the card lies almost flat and the pieces stand by the same angle.
-    const tilt = c.vertical ? 64 : 66;
-    const spread = `translateY(${c.H * (c.vertical ? 0.12 : 0.24)}px) rotateX(${tilt}deg)`;
+    const tilt = reading ? 0 : (c.vertical ? 64 : 66);
+    const spread = reading ? "none" : `translateY(${c.H * (c.vertical ? 0.12 : 0.24)}px) rotateX(${tilt}deg)`;
     el.style.setProperty("--tilt", `${tilt}deg`);
-    return { start, closed, lifted, spread, rise: `rotateX(${-tilt}deg) ${HI}`, cover: c.vertical ? "rotateX(180deg)" : "rotateY(-180deg)" };
+    return { start, closed, lifted, spread, rise: `rotateX(${-tilt}deg) ${popScale}`, cover: c.vertical && !reading ? "rotateX(180deg)" : "rotateY(-180deg)" };
   };
 
   const parts = () => {
@@ -137,6 +165,35 @@ export function Applications() {
     const { el, cover, faces, pops, casts } = parts();
     const g = geometry();
     d.classList.add("is-open");
+    if (reading) {
+      const content = el.querySelector<HTMLElement>(".job-folder-content")!;
+      if (!matchMedia("(prefers-reduced-motion: reduce)").matches) {
+        doc.current!.style.visibility = "hidden";
+        // The text is printed on the open leaves: it stays hidden while the closed folder flies in
+        // and while the cover swings, and shows only once the cover lies open (the cover's inside
+        // and the right leaf share the reading pages' colours, so the text simply appears on them).
+        content.style.opacity = "0";
+        await el.animate([{ transform: g.start }, { transform: g.closed }], { duration: 420, easing: EASE, fill: "forwards" }).finished;
+        await Promise.all([
+          el.animate([{ transform: g.closed }, { transform: "none" }], { duration: 640, easing: EASE, fill: "forwards" }).finished,
+          cover.animate([{ transform: "none" }, { transform: g.cover }], { duration: 640, easing: EASE, fill: "forwards" }).finished,
+        ]);
+        await content.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 220, easing: "ease-out", fill: "forwards" }).finished;
+      }
+      content.style.removeProperty("opacity");
+      // Once unfolded, render type at native size with no 3D/composited ancestor.
+      d.classList.add("is-standing", "is-job-ready");
+      [el, cover, content].forEach(n => n.getAnimations().forEach(a => a.cancel()));
+      // The book is centred with half-viewport offsets, which can land the text between device
+      // pixels and soften it; nudge it onto the pixel grid.
+      el.style.transform = "none";
+      const r = el.getBoundingClientRect();
+      const px = (v: number) => (Math.round(v * devicePixelRatio) / devicePixelRatio - v).toFixed(3);
+      el.style.transform = `translate(${px(r.left)}px, ${px(r.top)}px)`;
+      busy.current = false;
+      return;
+    }
+
     if (matchMedia("(prefers-reduced-motion: reduce)").matches) {
       el.style.transform = g.spread;
       cover.style.transform = g.cover;
@@ -144,6 +201,7 @@ export function Applications() {
       casts.forEach((n) => (n.style.opacity = "1"));
       d.classList.add("is-standing");
       busy.current = false;
+
       return;
     }
     // The case paper hands over to the card in the first moments of the flight. Only flat leaves
@@ -158,7 +216,7 @@ export function Applications() {
     setTimeout(() => d.classList.add("is-standing"), 560);
     pops.forEach((n, i) => {
       const delay = 480 + i * 55;
-      n.animate([{ opacity: 0, transform: `rotateX(0deg) ${HI}` }, { opacity: 1, transform: `rotateX(-6deg) ${HI}`, offset: 0.1 }, { opacity: 1, transform: g.rise }], { duration: 520, delay, easing: POP, fill: "forwards" });
+      n.animate([{ opacity: 0, transform: `rotateX(0deg) ${popScale}` }, { opacity: 1, transform: `rotateX(-6deg) ${popScale}`, offset: 0.1 }, { opacity: 1, transform: g.rise }], { duration: 520, delay, easing: POP, fill: "forwards" });
       casts[i].animate([{ opacity: 0, transform: "skewX(var(--sun-skew)) scaleY(0.05)" }, { opacity: 1, transform: "skewX(var(--sun-skew)) scaleY(1)" }], { duration: 520, delay, easing: EASE, fill: "forwards" });
     });
     await Promise.all([el, cover, ...pops, ...casts].flatMap((n) => n.getAnimations().map((a) => a.finished.catch(() => {}))));
@@ -173,6 +231,20 @@ export function Applications() {
     pops.forEach((n) => Object.assign(n.style, { transform: g.rise, opacity: "1" }));
     casts.forEach((n) => Object.assign(n.style, { transform: "skewX(var(--sun-skew)) scaleY(1)", opacity: "1" }));
     busy.current = false;
+
+  };
+
+  /** Shut the open folder at once, with no closing motion (when leaving the page from inside it). */
+  const dismiss = () => {
+    const d = dialog.current;
+    const el = book.current;
+    if (!d || !el) return;
+    [el, ...el.querySelectorAll("*")].forEach((n) => n.getAnimations().forEach((a) => a.cancel()));
+    el.style.removeProperty("transform");
+    d.classList.remove("is-open", "is-standing", "is-job-ready");
+    if (d.open) d.close();
+    doc.current!.style.visibility = "";
+    busy.current = false;
   };
 
   const close = async (after?: () => void) => {
@@ -180,6 +252,32 @@ export function Applications() {
     if (!d || busy.current || !d.open) return;
     busy.current = true;
     const { el, cover, faces, pops, casts } = parts();
+    if (reading) {
+      const g = geometry();
+      d.classList.remove("is-job-ready", "is-standing");
+      if (!matchMedia("(prefers-reduced-motion: reduce)").matches) {
+        const content = el.querySelector<HTMLElement>(".job-folder-content")!;
+        // The text lifts off the leaves first, then the cover closes over blank pages.
+        cover.style.transform = g.cover;
+        el.style.transform = "none";
+        await content.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 160, fill: "forwards" }).finished;
+        cover.style.removeProperty("transform");
+        await Promise.all([
+          cover.animate([{ transform: g.cover }, { transform: "none" }], { duration: 420, easing: EASE, fill: "forwards" }).finished,
+          el.animate([{ transform: "none" }, { transform: g.closed }], { duration: 420, easing: EASE, fill: "forwards" }).finished,
+        ]);
+        await el.animate([{ transform: g.closed }, { transform: g.start }], { duration: 350, easing: EASE, fill: "forwards" }).finished;
+      }
+      d.close();
+      d.classList.remove("is-open");
+      el.querySelectorAll("*").forEach(n => n.getAnimations().forEach(a => a.cancel()));
+      el.getAnimations().forEach(a => a.cancel());
+      el.style.removeProperty("transform");
+      doc.current!.style.visibility = "";
+      busy.current = false;
+      after?.();
+      return;
+    }
     d.classList.remove("is-standing");
     if (!matchMedia("(prefers-reduced-motion: reduce)").matches) {
       const g = geometry();
@@ -191,7 +289,7 @@ export function Applications() {
           .flatMap(([n, cast], i) => {
             const t = { duration: 260, delay: i * 35, easing: "cubic-bezier(0.55, 0, 0.75, 0.3)", fill: "forwards" as const };
             return [
-              n.animate([{ transform: g.rise, opacity: 1 }, { transform: `rotateX(0deg) ${HI}`, opacity: 1, offset: 0.85 }, { transform: `rotateX(0deg) ${HI}`, opacity: 0 }], t).finished,
+              n.animate([{ transform: g.rise, opacity: 1 }, { transform: `rotateX(0deg) ${popScale}`, opacity: 1, offset: 0.85 }, { transform: `rotateX(0deg) ${popScale}`, opacity: 0 }], t).finished,
               cast.animate([{ opacity: 1, transform: "skewX(var(--sun-skew)) scaleY(1)" }, { opacity: 0, transform: "skewX(var(--sun-skew)) scaleY(0.05)" }], t).finished,
             ];
           }),
@@ -222,35 +320,24 @@ export function Applications() {
   const onBackdrop = (e: MouseEvent<HTMLDialogElement>) => {
     if (e.target === dialog.current) close();
   };
-  const toDemo = () => close(() => document.querySelector("#cta")?.scrollIntoView({ behavior: "smooth" }));
+  // Demo bookings go to the contact page (its form).
+  const router = useRouter();
+  const toDemo = () => close(() => router.push("/ve-thehegeo/lien-he/", { scroll: false }));
 
   return (
     <>
-      <section className="applications wrap" id="applications">
-        <div className="section-heading">
-          <h2>
-            Trí tuệ đi vào
-            <br />
-            <span>thực tiễn.</span>
-          </h2>
-          <p>
-            GEOagents trong những bài toán
-            <br />
-            vận hành chuyên biệt.
-          </p>
-        </div>
         <div className="projects is-single">
-          <button className="project tax" onClick={open} aria-haspopup="dialog">
+          <button className={`project tone-${data.tone}${data.mock ? " is-mock" : ""}`} onClick={open} aria-haspopup="dialog">
             <div className="project-visual">
               <div className="document" ref={doc}>
-                <Paper />
+                <Paper data={data} />
               </div>
-              <span className="visual-index">{tax.index}</span>
+              <span className="visual-index">{data.index}</span>
             </div>
             <div className="project-info">
               <div>
-                <h3>{tax.name}</h3>
-                <p>{tax.company}</p>
+                <h3>{data.name}</h3>
+                <p>{data.org}</p>
               </div>
               <span className="project-arrow" aria-hidden="true">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
@@ -258,66 +345,81 @@ export function Applications() {
                 </svg>
               </span>
             </div>
-            <p className="project-desc">{tax.summary}</p>
+            <p className="project-desc">{data.summary}</p>
           </button>
         </div>
-      </section>
 
-      <dialog ref={dialog} className="tdn-dialog" tabIndex={-1} autoFocus aria-labelledby="tdn-title" onCancel={onCancel} onClick={onBackdrop}>
+      <dialog ref={dialog} className={`tdn-dialog tone-${data.tone}${reading ? " has-job" : ""}`} tabIndex={-1} autoFocus aria-label={reading ? data.name : undefined} aria-labelledby={reading ? undefined : titleId} onCancel={onCancel} onClick={onBackdrop}>
         <div className="tdn-book" ref={book}>
           <div className="tdn-ground" aria-hidden="true" />
           <div className="tdn-page tdn-inside" />
           {/* the cover: the paper outside, plain card stock inside */}
           <div className="tdn-cover">
             <div className="tdn-face tdn-front">
-              <Paper />
+              <Paper data={data} />
             </div>
             <div className="tdn-face tdn-back" />
           </div>
           {/* Everything else stands up off the open card, in three rows; DOM order is back to front
               (also the order the pieces rise in). */}
           <div className="tdn-edge" aria-hidden="true" />
-          <div className="tdn-pops">
-            {CHECKS.map((c, i) => (
+          {reading ? <article className="job-folder-content" data-lenis-prevent>
+            <div className="job-folder-intro">
+              <h2>{data.name}</h2>
+              <p className="job-folder-team">{data.org}</p>
+              <p className="job-folder-summary">{data.description}</p>
+              <span className="job-folder-mark" aria-hidden="true">THEHEGEO</span>
+            </div>
+            <button type="button" className="job-folder-close" onClick={() => close()} aria-label="Đóng mô tả công việc">Đóng</button>
+            <div className="folder-reading-body">{reading}</div>
+            <div className="folder-reading-footer">
+              <a className="button" href={applyHref}>Ứng tuyển vị trí này</a>
+              {/* Next keeps the list page alive behind the next one, so the modal must shut on the way out. */}
+              {moreHref && <Link className="folder-reading-more" href={moreHref} scroll={false} onClick={dismiss}>Xem JD đầy đủ</Link>}
+            </div>
+          </article> : <div className="tdn-pops">
+            {data.checks.map((c, i) => (
               <Piece key={c} at={`at-sheet-${i}`} className="tdn-sheet">
                 <b>{c}</b>
                 <span className="tdn-sheet-line" />
                 <span className="tdn-sheet-line" />
                 <span className="tdn-sheet-line is-short" />
-                <small>Theo mã số thuế</small>
+                <small>{data.checkFoot}</small>
               </Piece>
             ))}
             <Piece at="at-title" className="tdn-panel tdn-title" label>
-              <p className="tdn-index">Tài chính và thuế</p>
-              <h2 id="tdn-title">{tax.name}</h2>
-              <p className="tdn-org">{tax.company}</p>
+              <p className="tdn-index">
+                {data.kicker}
+              </p>
+              <h2 id={titleId}>{data.name}</h2>
+              <p className="tdn-org">{data.org}</p>
             </Piece>
             <Piece at="at-about" className="tdn-panel tdn-about" label>
-              <p className="tdn-lead">{tax.description}</p>
+              <p className="tdn-lead">{data.description}</p>
               {/* phones have no room for the separate note piece: it closes the description instead */}
-              <p className="tdn-about-note">AI đối chiếu và chỉ ra chênh lệch. Cán bộ thuế xem xét và kết luận.</p>
-              <p className="tdn-checks-sr">Đối chiếu theo mã số thuế: {CHECKS.join(", ")}.</p>
+              <p className="tdn-about-note">{data.note}</p>
+              <p className="tdn-checks-sr">{data.checkFoot}: {data.checks.join(", ")}.</p>
             </Piece>
             <Piece at="at-seal" className="tdn-seal">
-              TAX
+              {data.stamp[0]}
               <br />
-              360
+              {data.stamp[1]}
             </Piece>
             <Piece at="at-note" className="tdn-panel tdn-note" label>
-              AI đối chiếu và chỉ ra chênh lệch. Cán bộ thuế xem xét và kết luận.
+              {data.note}
             </Piece>
             <Piece at="at-actions" className="tdn-panel tdn-actions" label>
-              <button type="button" className="tdn-primary" onClick={toDemo}>
-                Đặt lịch demo
-              </button>
+              {applyHref ? <a className="tdn-primary" href={applyHref}>Ứng tuyển</a> : <button type="button" className="tdn-primary" onClick={toDemo}>Đặt lịch demo</button>}
               <button type="button" className="tdn-close" onClick={() => close()}>
                 Đóng
               </button>
             </Piece>
-          </div>
+          </div>}
         </div>
       </dialog>
     </>
   );
 }
+
+
 

@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { cta } from "./content";
 import { Lines } from "./Sections";
 
@@ -11,12 +12,12 @@ export function Cta() {
         </h2>
         <p className="cta-question">{cta.question}</p>
         <p className="cta-body">{cta.body}</p>
-        <a className="button cta-button" href={cta.href}>
+        <Link className="button cta-button" href={cta.href} scroll={false}>
           {cta.action}
           <svg viewBox="0 0 24 24" aria-hidden="true">
             <path d="M4 12h15m-6-6 6 6-6 6" />
           </svg>
-        </a>
+        </Link>
       </div>
     </section>
   );

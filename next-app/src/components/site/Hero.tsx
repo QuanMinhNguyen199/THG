@@ -1,7 +1,9 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState, type MouseEvent, type PointerEvent } from "react";
+import { useCallback, useEffect, useRef, useState, type MouseEvent, type PointerEvent, type ReactNode } from "react";
+import Link from "next/link";
 import { asset } from "@/lib/asset";
+import { cta } from "./content";
 import { useSite } from "./SiteContext";
 
 const PauseIcon = () => (
@@ -26,7 +28,11 @@ const INTERACTIVE = "a,button";
  * shows the play/pause state; clicking the stage toggles playback. A real button in the bottom bar
  * offers the same control to keyboard and touch users.
  */
-export function Hero() {
+/**
+ * `children` replaces the GEOagents copy (the home page puts its own over the same stage, with the
+ * same cursor); `autoplay` starts the film instead of waiting for a click.
+ */
+export function Hero({ children, className = "", autoplay = false, video: film, videoSmall: filmSmall, poster }: { children?: ReactNode; className?: string; autoplay?: boolean; /** One MP4 in place of the GEOagents film set. */ video?: string; /** A lighter MP4 of the same film for phones. */ videoSmall?: string; poster?: string } = {}) {
   const { paused: motionPaused } = useSite();
   const section = useRef<HTMLElement>(null);
   const video = useRef<HTMLVideoElement>(null);
@@ -55,11 +61,11 @@ export function Hero() {
     else v.pause();
   }, [visibleNow]);
 
-  // Start paused and reset to paused when site-wide motion settings change.
+  // Start paused (or playing, with `autoplay`) and reset when site-wide motion settings change.
   useEffect(() => {
-    choice.current = null;
+    choice.current = autoplay && !motionPaused ? "play" : null;
     sync();
-  }, [motionPaused, sync]);
+  }, [motionPaused, sync, autoplay]);
 
   // Stop decoding while the hero is offscreen.
   useEffect(() => {
@@ -172,7 +178,7 @@ export function Hero() {
     // The stage click mirrors the visible toggle button, which is the keyboard-accessible control.
     <section
       ref={section}
-      className={`hero${cursorOn ? " has-cursor" : ""}${feedback ? " is-video-feedback" : ""}`}
+      className={`hero${className ? ` ${className}` : ""}${cursorOn ? " has-cursor" : ""}${feedback ? " is-video-feedback" : ""}`}
       id="geoagents"
       onPointerMove={onPointerMove}
       onPointerLeave={() => setCursorOn(false)}
@@ -185,7 +191,7 @@ export function Hero() {
         loop
         playsInline
         preload="auto"
-        poster={asset("/media/hero-poster.jpg")}
+        poster={poster === undefined ? asset("/media/hero-poster.jpg") : poster ? asset(poster) : undefined}
         aria-hidden="true"
         onPlay={() => {
           if (!visibleNow() || !inView.current || document.hidden) { video.current?.pause(); return; }
@@ -194,33 +200,46 @@ export function Hero() {
         onPause={() => setPlaying(false)}
       >
         {/* H.264 first (widest support); VP9 WebM for browsers without H.264. Phones get 720p. */}
-        <source src={asset("/media/hero-720.mp4")} type={MP4} media="(max-width: 900px)" />
-        <source src={asset("/media/hero-720.webm")} type={WEBM} media="(max-width: 900px)" />
-        <source src={asset("/media/hero-1080.mp4")} type={MP4} />
-        <source src={asset("/media/hero-1080.webm")} type={WEBM} />
+        {film ? (
+          <>
+            {filmSmall && <source src={asset(filmSmall)} type={MP4} media="(max-width: 900px)" />}
+            <source src={asset(film)} type={MP4} />
+          </>
+        ) : (
+          <>
+            <source src={asset("/media/hero-720.mp4")} type={MP4} media="(max-width: 900px)" />
+            <source src={asset("/media/hero-720.webm")} type={WEBM} media="(max-width: 900px)" />
+            <source src={asset("/media/hero-1080.mp4")} type={MP4} />
+            <source src={asset("/media/hero-1080.webm")} type={WEBM} />
+          </>
+        )}
       </video>
-      <div className="hero-shade" />
+      {children ?? (
+        <>
+          <div className="hero-shade" />
 
-      <div className="hero-copy">
-        <h1>
-          GEO<span>agents</span>
-        </h1>
-        <p className="hero-subtitle">WORKFORCE FOR MISSION-CRITICAL OPERATIONS</p>
-        <p className="hero-description">
-          Đội ngũ AI đồng hành cùng tổ chức. Dữ liệu và quyết định vẫn thuộc về bạn.
-        </p>
-        <div className="hero-actions">
-          <a className="button" href="#architecture">
-            Khám phá GEOagents{" "}
-            <svg viewBox="0 0 24 24">
-              <path d="M4 12h15m-6-6 6 6-6 6" />
-            </svg>
-          </a>
-          <a className="button button-ghost" href="#cta">
-            Đặt lịch tư vấn
-          </a>
-        </div>
-      </div>
+          <div className="hero-copy">
+            <h1>
+              GEO<span>agents</span>
+            </h1>
+            <p className="hero-subtitle">WORKFORCE FOR MISSION-CRITICAL OPERATIONS</p>
+            <p className="hero-description">
+              Đội ngũ AI đồng hành cùng tổ chức. Dữ liệu và quyết định vẫn thuộc về bạn.
+            </p>
+            <div className="hero-actions">
+              <a className="button" href="#architecture">
+                Khám phá GEOagents{" "}
+                <svg viewBox="0 0 24 24">
+                  <path d="M4 12h15m-6-6 6 6-6 6" />
+                </svg>
+              </a>
+              <Link className="button button-ghost" href={cta.href} scroll={false}>
+                Đặt lịch tư vấn
+              </Link>
+            </div>
+          </div>
+        </>
+      )}
 
       <div ref={cursor} className={`hero-cursor${cursorOn ? " is-visible" : ""}`} aria-hidden="true">
         <span className="hero-cursor-ring">{playing ? <PauseIcon /> : <PlayIcon />}</span>

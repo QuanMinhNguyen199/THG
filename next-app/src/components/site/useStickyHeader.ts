@@ -15,7 +15,12 @@ export function useStickyHeader<T extends HTMLElement>(heroSelector: string, act
   useEffect(() => {
     const header = ref.current;
     const hero = document.querySelector(heroSelector);
-    if (!active || !header || !hero) return;
+    if (!active || !header) return;
+    // Pages without a hero show the solid bar from the start.
+    if (!hero) {
+      header.setAttribute("data-solid", "");
+      return;
+    }
     let observer: IntersectionObserver | undefined;
     // Measure a frame later: the page is revealed by the theme attribute on <html>, which the site
     // provider sets in its own effect after this one. Measure the bar in its transparent state.

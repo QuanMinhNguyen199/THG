@@ -6,6 +6,21 @@ import { CONTACT_EMAIL } from "./Contacts";
 // specific roles rather than inventing them.
 const APPLY_HREF = `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent("Ứng tuyển THEHEGEO")}`;
 
+/** The application call (also the "Vị trí đang tuyển" section of the recruitment page). */
+export function CareersApply() {
+  return (
+    <div className="careers-apply">
+      <p>Gửi CV và một vài dòng về việc bạn muốn làm. Chúng tôi sẽ liên hệ lại khi có vị trí phù hợp.</p>
+      <a className="button" href={APPLY_HREF}>
+        Gửi CV qua email
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M5 12h14m-6-6 6 6-6 6" />
+        </svg>
+      </a>
+    </div>
+  );
+}
+
 export function Careers() {
   return (
     <section className="careers wrap" id="careers" aria-labelledby="careers-title">
@@ -20,17 +35,7 @@ export function Careers() {
           để con người duyệt mọi bước quan trọng.
         </p>
       </div>
-      <div className="careers-apply">
-        <p>
-          Gửi CV và một vài dòng về việc bạn muốn làm. Chúng tôi sẽ liên hệ lại khi có vị trí phù hợp.
-        </p>
-        <a className="button" href={APPLY_HREF}>
-          Gửi CV qua email
-          <svg viewBox="0 0 24 24" aria-hidden="true">
-            <path d="M5 12h14m-6-6 6 6-6 6" />
-          </svg>
-        </a>
-      </div>
+      <CareersApply />
     </section>
   );
 }

@@ -70,7 +70,7 @@ export function Footer() {
       <div className="wrap footer-bottom">
         <span>© 2026 THEHEGEO</span>
         <span>HUMAN-LED. AI-POWERED.</span>
-        <a className="mobile-top-link" href="#geoagents">Về đầu trang ↑</a>
+        <a className="mobile-top-link" href="#main">Về đầu trang ↑</a>
       </div>
       <div ref={clip} className="footer-word-clip" aria-hidden="true">
         <div ref={word} className="footer-word">

@@ -1,0 +1,126 @@
+/* Case models (CaseShowcase.tsx): a phone, a clipboard board and a server stack, each drawn on its
+   card and again, larger, in its dialog. */
+
+.cm-thumb { position: relative; z-index: 1; display: grid; place-items: center; width: 100%; height: 100%; }
+.project.model-call .project-visual, .project.model-board .project-visual, .project.model-stack .project-visual { display: grid; place-items: center; }
+.project:hover .cm-thumb > * { transform: translateY(-6px) rotate(-1.5deg); }
+/* the models on the case card sit inside its visual with room around them (and clear of its index) */
+.cm-thumb > * { scale: 0.82; transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1); }
+
+/* ── Phone ─────────────────────────────────────────── */
+.m-phone {
+  width: 150px; height: 300px; padding: 7px; border-radius: 30px;
+  background: linear-gradient(160deg, #2a3d63, #121d33); box-shadow: 0 2px 0 #3a5080 inset, 18px 28px 44px #0007;
+}
+.m-phone.is-full { width: 300px; height: 590px; padding: 10px; border-radius: 46px; }
+.m-phone-screen {
+  position: relative; height: 100%; display: flex; flex-direction: column; align-items: center; gap: 8px;
+  padding: 26px 14px 18px; border-radius: 24px; overflow: hidden;
+  background: radial-gradient(circle at 50% 18%, #c1152b44, transparent 55%), linear-gradient(180deg, #0f1a2e, #070b14);
+  color: #eef2f8; text-align: center;
+}
+.m-phone.is-full .m-phone-screen { border-radius: 36px; padding: 40px 18px 26px; gap: 12px; }
+.m-phone-app { font-size: 9px; letter-spacing: 0.14em; text-transform: uppercase; color: #c1152b; }
+.m-phone-caller { font-size: 15px; font-weight: 600; }
+.m-phone.is-full .m-phone-app { font-size: 11px; }
+.m-phone.is-full .m-phone-caller { font-size: 22px; }
+.m-phone-time { font-size: 10px; color: #a9b6cc; }
+.m-wave { display: flex; align-items: center; gap: 3px; height: 34px; margin-top: auto; }
+.m-wave i { width: 3px; height: 100%; border-radius: 2px; background: #c1152b; transform: scaleY(0.3); animation: m-wave 1s ease-in-out infinite; }
+@keyframes m-wave { 50% { transform: scaleY(1); } }
+.m-phone-end { display: grid; place-items: center; width: 40px; height: 40px; border-radius: 50%; background: var(--red); box-shadow: 0 0 18px #c1152b88; }
+.m-phone.is-full .m-phone-end { width: 56px; height: 56px; }
+.m-phone-end svg { width: 55%; fill: #fff; }
+.m-phone-feed { width: 100%; margin: 10px 0 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 10px; text-align: left; }
+.m-phone-feed li { max-width: 88%; padding: 10px 12px; border-radius: 14px; font-size: 13px; line-height: 1.45; background: #ffffff14; }
+.m-phone-feed li.is-in { align-self: flex-end; border-bottom-right-radius: 4px; }
+.m-phone-feed li.is-agent { align-self: flex-start; background: #c1152b33; border: 1px solid #c1152b66; border-bottom-left-radius: 4px; }
+
+/* ── Clipboard board ───────────────────────────────── */
+.m-board {
+  position: relative; width: 300px; height: 300px; padding: 30px 14px 14px; border-radius: 12px;
+  background: linear-gradient(160deg, #d9c29a, #c4a978); box-shadow: inset 0 0 0 1px #0000001a, 18px 26px 40px #0006;
+}
+.m-board.is-full { width: 620px; height: 560px; padding: 54px 24px 24px; border-radius: 18px; }
+.m-board-clip { position: absolute; top: -10px; left: 50%; width: 30%; height: 30px; transform: translateX(-50%); border-radius: 8px; background: linear-gradient(180deg, #e4e7ec, #9aa1ab); box-shadow: 0 4px 8px #0005; }
+.m-board.is-full .m-board-clip { height: 46px; top: -16px; }
+.m-board-sheet { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; height: 100%; padding: 10px; border-radius: 6px; background: #fbf8f2; box-shadow: 0 2px 6px #0002; }
+.m-board.is-full .m-board-sheet { gap: 14px; padding: 18px; }
+.m-col { display: flex; flex-direction: column; gap: 6px; padding: 6px; border-radius: 6px; background: #efe8db; transform-origin: left center; }
+.m-board.is-full .m-col { gap: 10px; padding: 12px; }
+.m-col-head { display: block; height: 6px; border-radius: 3px; background: #3b2a17; opacity: 0.75; }
+.m-board.is-full .m-col-head { height: auto; background: none; opacity: 1; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: #3b2a17; }
+.m-card { display: block; height: 26px; border-radius: 4px; background: #fff; border-left: 3px solid var(--red); box-shadow: 0 1px 2px #0002; }
+.m-col:nth-child(3) .m-card { border-left-color: #3a8a5b; }
+.m-board.is-full .m-card { height: auto; padding: 12px; font-size: 14px; line-height: 1.35; color: #251c20; }
+
+/* ── Server stack ─────────────────────────────────── */
+.m-stack { position: relative; width: 300px; height: 300px; display: grid; place-items: center; perspective: 1600px; }
+.m-stack.is-full { width: 640px; height: 560px; grid-template-columns: 1.3fr 1fr; place-items: center start; }
+.m-stack-world { position: relative; width: 190px; height: 120px; transform-style: preserve-3d; transform: rotateX(58deg) rotateZ(-38deg); }
+.m-stack.is-full .m-stack-world { width: 300px; height: 190px; justify-self: center; transform: translateY(40px) rotateX(58deg) rotateZ(-38deg); }
+.m-layer {
+  position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: space-between; padding: 12px;
+  border-radius: 8px; border: 1px solid #ffffff1f;
+  background: linear-gradient(135deg, #3f444c, #24272c); box-shadow: 0 0 0 1px #0006, 10px 14px 24px #0007;
+}
+.m-leds { display: flex; gap: 6px; }
+.m-leds i { width: 7px; height: 7px; border-radius: 50%; background: #c1152b; box-shadow: 0 0 8px #c1152b; animation: m-led 1.6s infinite; }
+.m-leds i:nth-child(2) { animation-delay: 0.4s; background: #c1152b; }
+.m-leds i:nth-child(3) { animation-delay: 0.8s; }
+@keyframes m-led { 50% { opacity: 0.35; } }
+.m-vents { display: block; height: 30%; border-radius: 4px; background: repeating-linear-gradient(90deg, #ffffff12 0 3px, transparent 3px 8px); }
+.m-stack-labels { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 34px; color: #f2f1ef; }
+.m-stack-labels li { position: relative; padding-left: 22px; font-size: 16px; font-weight: 600; }
+.m-stack-labels li::before { content: ""; position: absolute; left: 0; top: 50%; width: 12px; height: 2px; background: var(--red); }
+
+/* ── Dialog ───────────────────────────────────────── */
+.cm-dialog { position: fixed; inset: 0; width: 100vw; height: 100dvh; max-width: none; max-height: none; margin: 0; padding: 0; border: 0; background: transparent; overflow: auto; color: #251c20; }
+.cm-dialog::backdrop { background: transparent; }
+.cm-backdrop { position: fixed; inset: 0; background: radial-gradient(circle at 35% 50%, #c1152b22, transparent 60%), #070708eb; backdrop-filter: blur(6px); }
+.cm-stage {
+  position: relative; min-height: 100%; display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
+  gap: clamp(24px, 4vw, 64px); align-items: center; padding: 48px clamp(24px, 5vw, 80px);
+}
+.cm-model { display: grid; place-items: center; }
+.cm-info { max-width: 460px; padding: 32px; border-radius: 14px; background: linear-gradient(135deg, #fdfcfb, #efebe8); box-shadow: 0 30px 70px #0008; }
+.cm-kicker { margin: 0; font-size: 12px; color: #7d6e74; }
+.cm-info h2 { margin: 10px 0 0; font-family: var(--font-display), sans-serif; font-size: clamp(30px, 3vw, 44px); line-height: 1.05; letter-spacing: -0.03em; font-weight: 600; color: var(--red); }
+.cm-org { margin: 8px 0 0; font-size: 14px; color: #4a3d43; }
+.cm-lead { margin: 18px 0 0; font-size: 15px; line-height: 1.65; }
+.cm-checks { margin: 16px 0 0; padding: 0; list-style: none; display: flex; flex-wrap: wrap; gap: 8px; }
+.cm-checks li { padding: 6px 12px; border-radius: 999px; background: #ffffff; border: 1px solid #d9d2cf; font-size: 13px; }
+.cm-note { margin: 16px 0 0; padding-top: 14px; border-top: 1px solid #ddd5d1; font-size: 13px; line-height: 1.55; color: #5d5055; }
+.cm-actions { display: flex; gap: 10px; margin-top: 22px; }
+.cm-actions button { padding: 11px 16px; border-radius: 6px; font-size: 13px; font-weight: 600; }
+
+@media (prefers-reduced-motion: reduce) {
+  .m-wave i, .m-leds i { animation: none; }
+  .cm-thumb > * { transition: none; }
+}
+@media (max-width: 900px) {
+  .cm-stage { grid-template-columns: 1fr; justify-items: center; }
+  .m-phone.is-full { width: 240px; height: 470px; }
+  .m-board.is-full { width: min(92vw, 520px); height: 420px; }
+  .m-stack.is-full { width: min(92vw, 520px); height: 420px; }
+}
+
+/* Phones: the board's three columns become three rows, so card titles read on one or two lines
+   instead of one word per line; the dialog opens at its top with room for the clip. */
+@media (max-width: 600px) {
+  .cm-stage { padding: 44px 16px 24px; gap: 20px; align-items: start; }
+  .m-board.is-full { width: 100%; height: auto; padding: 44px 14px 14px; }
+  .m-board.is-full .m-board-sheet { grid-template-columns: minmax(0, 1fr); gap: 10px; padding: 12px; }
+  .m-board.is-full .m-col { flex-direction: row; flex-wrap: wrap; align-items: stretch; gap: 8px; padding: 10px; }
+  .m-board.is-full .m-col-head { flex-basis: 100%; font-size: 12px; }
+  .m-board.is-full .m-card { padding: 9px 11px; font-size: 14px; }
+  .m-stack.is-full { height: 340px; }
+  .m-phone.is-full { width: 230px; height: 450px; }
+  .cm-info { width: 100%; max-width: none; padding: 22px; }
+  .cm-actions button { flex: 1; min-height: 44px; }
+}
+/* Phones: the case card's visual is shorter; keep the model above the index line at its foot. */
+@media (max-width: 720px) {
+  .cm-thumb { padding-bottom: 64px; }
+  .cm-thumb > * { scale: 0.66; }
+}

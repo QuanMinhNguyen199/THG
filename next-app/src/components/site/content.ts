@@ -40,7 +40,6 @@ export const cta = {
   question: "Nhiệm vụ vận hành nào anh/chị muốn cải thiện ngay hôm nay?",
   body: "Hãy gửi cho chúng tôi một bài toán cụ thể. Đội ngũ chuyên gia Thehegeo sẽ xây dựng bản Demo GEO Agent chạy trực tiếp trên dữ liệu mẫu của quý cơ quan/doanh nghiệp.",
   action: "Gửi yêu cầu tư vấn & đặt lịch",
-  // TODO(unconfirmed): real destination (form, booking link or email) has not been provided.
-  // Until then the button stays on this section rather than pointing at an invented address.
-  href: "#cta",
+  // Every consultation / demo booking goes to the contact page (its form).
+  href: "/ve-thehegeo/lien-he/",
 };

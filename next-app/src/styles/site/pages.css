@@ -1,0 +1,62 @@
+/* Sitemap pages (Home, category pages): shared heading, in-page links, section blocks. */
+
+/* The page you are on, in the nav. */
+nav a[aria-current=page] { color: var(--red); }
+nav a[aria-current=page]:after { transform: scaleX(1); }
+
+/* Pages without a hero start below the fixed bar. */
+.shared-page.is-subpage main { padding-top: 64px; }
+
+.page-head { padding: 72px 0 40px; border-bottom: 1px solid var(--line); }
+.page-eyebrow { margin: 0 0 16px; font-size: 12px; font-weight: 600; letter-spacing: 0.14em; color: var(--muted); }
+.page-head h1 {
+  margin: 0; white-space: normal; color: var(--white);
+  font-family: var(--font-display), sans-serif; font-size: clamp(44px, 5.4vw, 80px); font-weight: 600;
+  line-height: 1.05; letter-spacing: -0.035em;
+}
+.page-head h1 span { color: var(--accent-text, var(--red)); font-weight: 500; }
+
+/* In-page links: one chip per section. */
+.page-toc { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 36px; }
+.page-toc a {
+  padding: 10px 16px; border: 1px solid var(--line); border-radius: 999px;
+  font-size: 14px; color: var(--muted); transition: color 0.2s, border-color 0.2s;
+}
+.page-toc a:hover, .page-toc a:focus-visible { color: var(--white); border-color: var(--red); }
+
+/* One block per section: its title in a left column, its body on the right. */
+.page-section {
+  display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); gap: 48px;
+  padding: 64px 0; border-bottom: 1px solid var(--line); scroll-margin-top: 88px;
+}
+.page-section h2 {
+  margin: 0; font-family: var(--font-display), sans-serif; font-size: clamp(24px, 2.4vw, 34px);
+  font-weight: 500; line-height: 1.25; letter-spacing: -0.02em; color: var(--white);
+}
+.page-section-body { min-width: 0; }
+/* No approved copy yet: said plainly, in a quiet dashed slot. */
+.page-pending {
+  margin: 0; display: flex; align-items: center; min-height: 160px; padding: 0 28px;
+  border: 1px dashed color-mix(in srgb, var(--white) 22%, transparent); border-radius: 10px;
+  font-size: 15px; color: var(--muted);
+}
+
+/* Reused sections inside a page block. */
+.applications.is-bare { padding: 0; }
+.applications.is-bare .projects.is-single { margin-top: 0; }
+.page-section .careers-apply { margin-top: 0; }
+.page-contacts { display: grid; gap: 14px; }
+
+/* Six nav items: tighten the gaps on mid-width screens. */
+@media (min-width: 721px) and (max-width: 1250px) {
+  .shared-page nav { gap: 16px; }
+  .shared-page nav a { font-size: 13px; }
+}
+
+@media (max-width: 1023px) {
+  .page-section { grid-template-columns: 1fr; gap: 20px; }
+}
+@media (max-width: 720px) {
+  .page-head { padding: 40px 0 28px; }
+  .page-section { padding: 40px 0; }
+}

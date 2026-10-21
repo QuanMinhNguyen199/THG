@@ -6,7 +6,7 @@
 .cta-question{font-size:clamp(16px,1.4vw,19px);font-weight:600;color:var(--white);margin:28px 0 0}
 .cta-body{font-size:14px;line-height:1.85;color:var(--muted);max-width:620px;margin:14px 0 0;text-wrap:pretty}
 .cta .cta-button{margin-top:44px;background:var(--red);border-color:var(--red);color:#fff;font-weight:600;letter-spacing:.06em;text-transform:uppercase;font-size:12px;padding:18px 26px}
-.cta .cta-button:hover,.cta .cta-button:focus-visible{background:#9e1023;border-color:#9e1023;color:#fff}
+.cta .cta-button:hover,.cta .cta-button:focus-visible{background:#c1152b;border-color:#c1152b;color:#fff}
 [data-theme=industrial] .cta .cta-button{border-radius:6px}
 [data-theme=industrial] .cta .cta-button:hover,[data-theme=industrial] .cta .cta-button:focus-visible{background:#fff;border-color:#fff;color:#c1152b}
 [data-theme=industrial] .cta-inner{padding:64px 32px;border:1px solid var(--line);background:linear-gradient(180deg,#b8142a,#a01023);box-shadow:0 30px 80px -40px var(--ambient-strong,transparent)}
@@ -30,10 +30,21 @@
 /* The case paper: in the closed card's proportions (--paper-ratio, set from script) and drawn in
    container units, so the card that flies out of it is the same paper at a larger size. */
 .projects.is-single .document {
-  width: auto; height: 80%; aspect-ratio: var(--paper-ratio, 500 / 620); padding: 0;
+  width: auto; aspect-ratio: var(--paper-ratio, 500 / 620); padding: 0;
   container-type: inline-size;
+  /* fits the frame both ways: at most 74% of its height and 70% of its width, rotation included */
+  height: min(74cqh, calc(70cqw / var(--paper-r, 0.8)));
+  transform: rotate(-6deg);
 }
-.paper { position: relative; height: 100%; padding: 9cqw 10cqw; display: flex; flex-direction: column; justify-content: center; color: #251c20; }
+.projects.is-single .project:hover .document { transform: rotate(-3deg) translateY(-6px); }
+.projects.is-single .project-visual { container-type: size; }
+/* Folder colours (cases.ts `tone`): paper, ink, rule lines, border and the stock inside the spread.
+   The red top edge and the stamp stay the brand red on every tone. */
+.tone-white { --paper-bg: #ffffff; --paper-ink: #251c20; --paper-line: #c9ced6; --paper-edge: #d3d8df; --paper-stamp: #c1152b; --stock-a: #f1eeeb; --stock-b: #d9d3cf; }
+.tone-navy { --paper-bg: linear-gradient(160deg, #22365a, #172744); --paper-ink: #eef2f8; --paper-line: #43577c; --paper-edge: #0f1a2e; --paper-stamp: #c1152b; --stock-a: #2a3f66; --stock-b: #1a2a47; }
+.tone-kraft { --paper-bg: linear-gradient(160deg, #eadcc0, #dcc9a6); --paper-ink: #3b2a17; --paper-line: #bea77d; --paper-edge: #c8b38c; --paper-stamp: #b0142a; --stock-a: #e5d5b6; --stock-b: #cfb98f; }
+.tone-graphite { --paper-bg: linear-gradient(160deg, #34383f, #25282d); --paper-ink: #f2f1ef; --paper-line: #555a63; --paper-edge: #1c1e22; --paper-stamp: #c1152b; --stock-a: #3a3e45; --stock-b: #26292e; }
+.paper { position: relative; height: 100%; padding: 9cqw 10cqw; display: flex; flex-direction: column; justify-content: center; color: var(--paper-ink, #251c20); }
 .paper > span { font: 2.4cqw var(--font-display), sans-serif; letter-spacing: 0.12em; }
 .paper b { display: block; margin: 4.5cqw 0 6cqw; font-size: 8.4cqw; line-height: 1.35; font-weight: 500; }
 .paper-line { display: block; height: 0.5cqw; width: 85%; margin: 2.6cqw 0; background: #aaa0a4; }
@@ -43,15 +54,15 @@
 [data-theme=industrial] .projects.is-single .project-visual { background: linear-gradient(160deg, #e9ecf0, #dde1e7); }
 [data-theme=industrial] .projects.is-single .project:hover .project-visual { background: linear-gradient(160deg, #e4e8ed, #d6dbe2); }
 .projects.is-single .document {
-  background: #ffffff; border: 1px solid #d3d8df; border-top: 0.9cqw solid var(--red);
+  background: var(--paper-bg, #fff); border: 1px solid var(--paper-edge, #d3d8df); border-top: 0.9cqw solid var(--red);
   box-shadow: 0 2px 4px #1723371a, 14px 24px 40px #17233733;
 }
-.projects.is-single .paper-line, .tdn-front .paper-line { background: #c9ced6; }
+.projects.is-single .paper-line, .tdn-front .paper-line { background: var(--paper-line, #c9ced6); }
 /* The dialog cover is the same paper at a larger size: same white, red edge and border. */
-.tdn-dialog .tdn-front { background: #ffffff; border: 1px solid #d3d8df; border-top: 0.9cqw solid var(--red); }
+.tdn-dialog .tdn-front { background: var(--paper-bg, #fff); border: 1px solid var(--paper-edge, #d3d8df); border-top: 0.9cqw solid var(--red); }
 .paper-stamp {
   position: absolute; right: 9cqw; bottom: 10cqw; padding: 2.4cqw 2.8cqw; line-height: 1.15;
-  border: 0.3cqw solid #c1152b; color: #c1152b; font: 5cqw var(--font-display), sans-serif; transform: rotate(10deg);
+  border: 0.3cqw solid var(--paper-stamp, #c1152b); color: var(--paper-stamp, #c1152b); font: 5cqw var(--font-display), sans-serif; transform: rotate(10deg);
 }
 
 /* AI TDN360 card: the case paper flies out, lies down flat like a card on a desk, opens, and its
@@ -59,7 +70,7 @@
    Animations); this sets the 3D stage. Each piece sits in a slot glued at its row line and is hinged
    at its base; it stands by exactly the card's tilt, so it faces the viewer square on. */
 .tdn-dialog {
-  position: fixed; inset: 0; width: 100vw; height: 100vh; max-width: none; max-height: none;
+  position: fixed; inset: 0; width: 100vw; height: 100vh; height: 100dvh; max-width: none; max-height: none;
   margin: 0; padding: 0; border: 0; background: transparent; overflow: hidden;
   perspective: 1500px; perspective-origin: 50% 45%; color: var(--white);
 }
@@ -70,7 +81,7 @@
   backdrop-filter: blur(10px);
 }
 .tdn-book {
-  --W: min(1000px, 94vw); --H: min(620px, 84vh);
+  --W: min(1000px, 94vw); --H: min(620px, 84dvh);
   position: absolute; left: 50%; top: 50%; width: var(--W); height: var(--H);
   margin: calc(var(--H) / -2) 0 0 calc(var(--W) / -2);
   transform-style: preserve-3d; transform-origin: 75% 50%;
@@ -82,8 +93,8 @@
 /* Open card stock: an even tone, lighter toward the viewer; the spine is a hairline with a few
    pixels of soft shading (a wide crease gradient smears into a hard band when seen this flat). */
 .tdn-back, .tdn-inside { border-radius: 4px; }
-.tdn-back { transform: rotateY(180deg); background: linear-gradient(90deg, #0000 calc(100% - 10px), #0000001a), linear-gradient(0deg, #f1eeeb, #d9d3cf); }
-.tdn-inside { background: linear-gradient(90deg, #0000001a, #0000 10px), linear-gradient(0deg, #f1eeeb, #d9d3cf); box-shadow: inset 1px 0 0 #00000026; }
+.tdn-back { transform: rotateY(180deg); background: linear-gradient(90deg, #0000 calc(100% - 10px), #0000001a), linear-gradient(0deg, var(--stock-a, #f1eeeb), var(--stock-b, #d9d3cf)); }
+.tdn-inside { background: linear-gradient(90deg, #0000001a, #0000 10px), linear-gradient(0deg, var(--stock-a, #f1eeeb), var(--stock-b, #d9d3cf)); box-shadow: inset 1px 0 0 #00000026; }
 
 /* The card on the table: a soft ground shadow spreading under it, and the stock's thickness along
    the near edge. */
@@ -150,7 +161,8 @@
   box-shadow: inset 1px 0 0 #fff, inset -3px 0 0 #0000000f, inset 0 -2px 0 #0000001a;
 }
 .tdn-sheet b { font-size: 14px; line-height: 1.3; font-weight: 700; }
-.tdn-sheet small { margin-top: auto; font-size: 11px; color: #7d6e74; }
+/* The sheet foot sits behind the front panels in the open spread (it read as a cut-off "heo mã số thuế"); the same line is in the panel's screen-reader summary. */
+.tdn-sheet small { display: none; }
 .tdn-sheet-line { display: block; height: 3px; width: 86%; background: #cfc6c2; border-radius: 2px; }
 .tdn-sheet-line.is-short { width: 54%; }
 .tdn-panel {
@@ -185,18 +197,17 @@
 
 /* Phones: the two pages stack and the cover flips up on its top edge; four rows down the card. */
 @media (max-width: 720px) {
-  .tdn-book { --W: 92vw; --H: min(740px, 82vh); transform-origin: 50% 75%; }
+  .tdn-book { --W: 92vw; --H: min(740px, 82dvh); transform-origin: 50% 75%; }
   .tdn-page, .tdn-cover { left: 0; top: 50%; width: 100%; height: 50%; }
   .tdn-cover { transform-origin: 50% 0; }
-  .tdn-back { transform: rotateX(180deg); background: linear-gradient(180deg, #0000 calc(100% - 10px), #0000001a), #e4dfdc; }
-  .tdn-inside { background: linear-gradient(180deg, #0000001a, #0000 10px), #e4dfdc; box-shadow: inset 0 1px 0 #00000026; }
+  .tdn-back { transform: rotateX(180deg); background: linear-gradient(180deg, #0000 calc(100% - 10px), #0000001a), var(--stock-a, #e4dfdc); }
+  .tdn-inside { background: linear-gradient(180deg, #0000001a, #0000 10px), var(--stock-a, #e4dfdc); box-shadow: inset 0 1px 0 #00000026; }
   .at-sheet-0, .at-sheet-1, .at-sheet-2 { bottom: 78%; width: 98px; height: 200px; }
   .at-sheet-0 { left: calc(50% - 152px); }
   .at-sheet-1 { left: calc(50% - 49px); bottom: 81%; height: 224px; }
   .at-sheet-2 { left: calc(50% + 54px); }
   .tdn-sheet { padding: 10px 9px; gap: 6px; border-top-width: 4px; }
   .tdn-sheet b { font-size: 11px; }
-  .tdn-sheet small { font-size: 9px; }
   .at-title { bottom: 54%; left: 5%; width: 90%; height: 150px; }
   .tdn-title h2 { font-size: 36px; }
   .at-about { bottom: 22%; left: 4%; width: 92%; height: 124px; }
@@ -215,12 +226,97 @@
 .careers { padding: 120px 0; border-top: 1px solid var(--line); }
 .careers-apply {
   display: flex; align-items: center; justify-content: space-between; gap: 32px;
-  margin-top: 48px; padding: 32px 36px; border: 1px solid var(--line); background: var(--surface);
+  margin-top: 48px; padding: 32px 36px; border: 1px solid var(--card-line); background: var(--card);
 }
 .careers-apply p { margin: 0; max-width: 56ch; font-size: 15px; line-height: 1.7; color: var(--muted); }
 .careers-apply .button { margin-top: 0; flex: none; background: var(--red); border-color: var(--red); color: #fff; }
-.careers-apply .button:hover { background: #9e1023; border-color: #9e1023; }
+.careers-apply .button:hover { background: #c1152b; border-color: #c1152b; }
 @media (max-width: 720px) {
   .careers { padding: 72px 0; }
   .careers-apply { flex-direction: column; align-items: flex-start; padding: 24px; margin-top: 32px; }
+}
+
+/* Recruitment reuses the TDN paper folder; the JD rises directly from the open folder. */
+.job-folders { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 40px 28px; }
+.job-folders .projects.is-single { margin-top: 0; }
+.job-folders .projects.is-single .project { display: block; width: 100%; text-align: left; }
+.job-folders .projects.is-single .project-visual { height: 310px; }
+.job-folders .projects.is-single .project-info { padding-top: 24px; }
+.job-folders .projects.is-single .project-info h3 { font-size: clamp(20px, 2vw, 26px); }
+.job-folders .projects.is-single .project-desc { max-width: none; margin-top: 14px; font-size: 15px; line-height: 1.6; color: color-mix(in srgb, var(--white) 80%, transparent); }
+.job-folders .projects.is-single .project-info p { font-size: 14px; font-weight: 600; color: var(--accent-text, var(--red)); }
+/* An upright folder. Text is printed on its leaves, with no raised reading panel. */
+.has-job .tdn-book { --H: min(740px, 90dvh); transform-origin: 75% 50%; }
+.has-job .tdn-ground, .has-job .tdn-edge { display: none; }
+.has-job .tdn-cover { z-index: 2; }
+.has-job .tdn-front { box-shadow: 14px 20px 40px #0004; }
+/* The leaves the cover opens onto are the reading pages' own paper, so the text appears on them. */
+.has-job .tdn-back { background: #eee8db; border-radius: 3px 0 0 3px; }
+.has-job .tdn-inside { background: #faf8f3; border-radius: 0 12px 12px 0; box-shadow: inset 1px 0 0 #5a48321a, 12px 22px 46px #0005; }
+.has-job.is-job-ready { perspective: none; }
+.has-job.is-job-ready .tdn-book { transform-style: flat; }
+.has-job.is-job-ready .tdn-cover, .has-job.is-job-ready .tdn-inside { display: none; }
+.job-folder-content { position: absolute; inset: 0; display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr auto; color: #251c20; background: #faf8f3; border-radius: 3px 12px 12px 3px; box-shadow: 12px 22px 46px #0005; }
+.job-folder-content::before { content: ""; position: absolute; left: 50%; top: 0; bottom: 0; width: 16px; transform: translateX(-50%); background: linear-gradient(90deg, #0000, #5a48321a 48%, #fff9 52%, #0000); pointer-events: none; }
+.job-folder-intro { grid-row: 1 / 3; padding: 52px 40px 36px; display: flex; flex-direction: column; background: #eee8db; border-radius: 3px 0 0 3px; }
+.job-folder-intro h2 { margin: 0 0 20px; font-size: clamp(26px, 3vw, 40px); line-height: 1.25; color: #251c20; text-wrap: balance; }
+.job-folder-team { margin: 0 0 32px; color: #c1152b; font-size: 16px; }
+.job-folder-summary { margin: 0; font-size: 17px; line-height: 1.7; }
+.job-folder-mark { margin-top: auto; padding-top: 24px; font-size: 16px; font-weight: 700; letter-spacing: .06em; color: #6a5d4e; }
+.job-folder-close { position: absolute; top: 16px; right: 20px; min-height: 44px; padding: 8px 12px; background: transparent; color: #4a3d43; font: inherit; cursor: pointer; }
+.has-job .folder-reading-body { padding: 80px 32px 24px; min-height: 0; overflow: auto; overscroll-behavior: contain; font-size: 16px; line-height: 1.65; }
+.has-job .folder-reading-footer { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 24px; padding: 20px 32px 32px; }
+.has-job .folder-reading-footer .button { margin: 0; background: #c1152b; color: #fff; }
+.job-folder-content :focus-visible { outline: 2px solid #c1152b; outline-offset: 3px; }
+.job-brief-facts, .job-brief-points { margin: 0; }
+.job-brief dt { font-size: 13px; font-weight: 700; color: #6a5d4e; }
+.job-brief dd { margin: 4px 0 0; color: #251c20; }
+.job-brief dd.is-pending { color: #7a6c5d; font-style: italic; }
+/* The facts a candidate checks first, as a ruled row like the header of a printed form. */
+.job-brief-facts { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); border-top: 2px solid #251c20; border-bottom: 1px solid #d6cbb8; }
+.job-brief-facts div { padding: 12px 12px 14px 0; }
+.job-brief-facts div + div { padding-left: 14px; border-left: 1px solid #d6cbb8; }
+.job-brief-facts dd { font-size: 16px; font-weight: 600; }
+.job-brief-points { display: grid; gap: 22px; margin-top: 32px; }
+.job-brief-points dd { font-size: 18px; line-height: 1.55; }
+.folder-reading-more { min-height: 44px; display: inline-flex; align-items: center; color: #c1152b; font-weight: 600; text-decoration: underline; text-underline-offset: 4px; }
+.folder-reading-more:hover { color: #c1152b; }
+@media (max-width: 720px) {
+  .job-folders { grid-template-columns: minmax(0, 1fr); }
+  .has-job .tdn-book { --H: min(560px, 82dvh); transform-origin: 50% 50%; }
+  .has-job .tdn-cover, .has-job .tdn-inside { top: 0; left: 0; width: 100%; height: 100%; transform-origin: 0 50%; }
+  .has-job .tdn-back { transform: rotateY(180deg); }
+  .job-folder-content { grid-template-columns: 1fr; grid-template-rows: auto 1fr auto; border-left: 8px solid #d5c8af; border-radius: 2px 8px 8px 2px; }
+  .job-folder-content::before { display: none; }
+  .job-folder-intro { grid-row: auto; padding: 20px 66px 12px 18px; background: transparent; }
+  .job-folder-intro h2 { font-size: 21px; margin: 0; text-wrap: initial; }
+  /* the facts row below names the role and team, so the line under the title is not repeated */
+  .job-folder-team { display: none; }
+  .job-folder-mark { display: none; }
+  .job-folder-summary { margin-top: 14px; font-size: 15px; line-height: 1.6; }
+  .folder-reading-more { width: 100%; justify-content: center; }
+  .job-folder-close { top: 12px; right: 10px; }
+  .has-job .folder-reading-body { padding: 8px 18px 12px; font-size: 15px; line-height: 1.5; }
+  .has-job .folder-reading-footer { padding: 12px 18px 20px; }
+  .has-job .folder-reading-footer .button { width: 100%; justify-content: center; }
+  .job-brief-facts dd { font-size: 14px; }
+  .job-brief-points { gap: 14px; margin-top: 18px; }
+  .job-brief-points dd { font-size: 16px; }
+}
+@media (max-width: 380px), (max-height: 650px) {
+  .job-folder-summary { margin-top: 8px; font-size: 14px; line-height: 1.5; }
+  .job-brief-facts div { padding-top: 8px; padding-bottom: 8px; }
+  .job-brief-facts dd { font-size: 13px; }
+  .job-brief-points dd { font-size: 15px; line-height: 1.45; }
+  .has-job .folder-reading-footer { gap: 2px; padding: 8px 18px 12px; }
+  .has-job .folder-reading-footer .button { min-height: 46px; padding-top: 10px; padding-bottom: 10px; }
+  .job-folder-intro h2 { font-size: 18px; }
+  .job-folder-intro { padding-top: 16px; padding-bottom: 6px; }
+  .job-folder-team { margin-top: 6px; }
+  .has-job .folder-reading-body { font-size: 14px; }
+  .job-brief-points { gap: 10px; margin-top: 12px; }
+}
+/* Phones: a little smaller and lifted, clear of the index line at the foot of the visual. */
+@media (max-width: 720px) {
+  .projects.is-single .document { height: min(64cqh, calc(66cqw / var(--paper-r, 0.8))); translate: 0 -14px; }
 }
