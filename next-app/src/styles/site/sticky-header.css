@@ -1,6 +1,6 @@
 /* Sticky top navigation (after thealienware.com): the bar is fixed for both themes. Over the
    hero it is transparent; once the hero scrolls out from under it (`data-solid`, set by
-   useStickyHeader) it becomes a white bar with a soft shadow and tightens its height. */
+   useStickyHeader) it becomes a white bar with a soft shadow. */
 
 .shared-page > header{
   position: fixed;
@@ -9,7 +9,10 @@
   right: 0;
   width: auto;
   z-index: 50;
-  transition: height 0.3s cubic-bezier(0.22, 1, 0.36, 1), background-color 0.3s, color 0.3s, box-shadow 0.3s, border-color 0.3s;
+  /* One height on every page and in both states, so the bar never jumps between tabs; only its
+     colours change when it turns solid. */
+  height: 64px;
+  transition: background-color 0.3s, color 0.3s, box-shadow 0.3s, border-color 0.3s;
 }
 
 /* Dark Tech floats white type over the film; the faint divider marks the bar, as in the reference. */
@@ -115,9 +118,6 @@
   .shared-page > header #menu[aria-expanded=true] span:nth-child(1) { transform: translateY(6px) rotate(45deg); }
   .shared-page > header #menu[aria-expanded=true] span:nth-child(2) { opacity: 0; }
   .shared-page > header #menu[aria-expanded=true] span:nth-child(3) { transform: translateY(-6px) rotate(-45deg); }
-  .shared-page > header[data-solid] {
-    height: 56px;
-  }
 }
 
 @media (prefers-reduced-motion: reduce) {

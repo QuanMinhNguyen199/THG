@@ -147,11 +147,10 @@
   html.menu-open, html.menu-open body { overflow: hidden; }
   .shared-page > header nav#site-navigation {
     position: absolute; top: 100%; left: 0; right: 0;
-    height: calc(100dvh - 78px); max-height: none;
+    height: calc(100dvh - 64px); max-height: none;
     flex-direction: column; gap: 0; padding: 0; overflow: hidden;
     background: #0e0c0d; color: #f2f1ef; border: 0; box-shadow: none;
   }
-  .shared-page > header[data-solid] nav#site-navigation { height: calc(100dvh - 56px); }
   .shared-page > header nav#site-navigation.open { display: flex; animation: menu-in 0.24s cubic-bezier(0.22, 1, 0.36, 1); }
   @keyframes menu-in { from { opacity: 0; } }
 
