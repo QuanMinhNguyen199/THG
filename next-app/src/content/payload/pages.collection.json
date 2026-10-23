@@ -1,0 +1,363 @@
+{
+  "slug": "pages",
+  "admin": {
+    "useAsTitle": "title"
+  },
+  "versions": {
+    "drafts": true
+  },
+  "fields": [
+    {
+      "name": "slug",
+      "type": "text",
+      "required": true,
+      "unique": true
+    },
+    {
+      "name": "title",
+      "type": "text",
+      "required": true
+    },
+    {
+      "name": "layout",
+      "type": "blocks",
+      "required": true,
+      "minRows": 1,
+      "blocks": [
+        {
+          "slug": "homeHero",
+          "fields": [
+            {
+              "name": "enabled",
+              "type": "checkbox",
+              "defaultValue": true
+            },
+            {
+              "name": "anchor",
+              "type": "text",
+              "required": false
+            },
+            {
+              "name": "heading",
+              "type": "text",
+              "required": true
+            }
+          ]
+        },
+        {
+          "slug": "metrics",
+          "fields": [
+            {
+              "name": "enabled",
+              "type": "checkbox",
+              "defaultValue": true
+            },
+            {
+              "name": "anchor",
+              "type": "text",
+              "required": false
+            },
+            {
+              "name": "label",
+              "type": "text",
+              "required": true
+            },
+            {
+              "name": "items",
+              "type": "array",
+              "required": true,
+              "minRows": 1,
+              "fields": [
+                {
+                  "name": "to",
+                  "type": "number",
+                  "required": true
+                },
+                {
+                  "name": "label",
+                  "type": "text",
+                  "required": true
+                },
+                {
+                  "name": "pad",
+                  "type": "number",
+                  "min": 1,
+                  "max": 12
+                },
+                {
+                  "name": "prefix",
+                  "type": "text",
+                  "required": false
+                },
+                {
+                  "name": "suffix",
+                  "type": "text",
+                  "required": false
+                },
+                {
+                  "name": "unit",
+                  "type": "text",
+                  "required": false
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "slug": "partners",
+          "fields": [
+            {
+              "name": "enabled",
+              "type": "checkbox",
+              "defaultValue": true
+            },
+            {
+              "name": "anchor",
+              "type": "text",
+              "required": false
+            },
+            {
+              "name": "title",
+              "type": "text",
+              "required": true
+            },
+            {
+              "name": "items",
+              "type": "array",
+              "required": true,
+              "minRows": 1,
+              "fields": [
+                {
+                  "name": "name",
+                  "type": "text",
+                  "required": true
+                }
+              ]
+            },
+            {
+              "name": "linkLabel",
+              "type": "text",
+              "required": true
+            },
+            {
+              "name": "href",
+              "type": "text",
+              "required": true
+            }
+          ]
+        },
+        {
+          "slug": "coreShowcase",
+          "fields": [
+            {
+              "name": "enabled",
+              "type": "checkbox",
+              "defaultValue": true
+            },
+            {
+              "name": "anchor",
+              "type": "text",
+              "required": false
+            },
+            {
+              "name": "kicker",
+              "type": "text",
+              "required": true
+            },
+            {
+              "name": "title",
+              "type": "text",
+              "required": true
+            },
+            {
+              "name": "highlight",
+              "type": "text",
+              "required": true
+            },
+            {
+              "name": "items",
+              "type": "array",
+              "required": true,
+              "minRows": 1,
+              "fields": [
+                {
+                  "name": "product",
+                  "type": "text",
+                  "required": true
+                },
+                {
+                  "name": "label",
+                  "type": "text",
+                  "required": true
+                }
+              ]
+            },
+            {
+              "name": "linkLabel",
+              "type": "text",
+              "required": true
+            },
+            {
+              "name": "href",
+              "type": "text",
+              "required": true
+            }
+          ]
+        },
+        {
+          "slug": "agentDemo",
+          "fields": [
+            {
+              "name": "enabled",
+              "type": "checkbox",
+              "defaultValue": true
+            },
+            {
+              "name": "anchor",
+              "type": "text",
+              "required": false
+            },
+            {
+              "name": "kicker",
+              "type": "text",
+              "required": true
+            },
+            {
+              "name": "title",
+              "type": "text",
+              "required": true
+            },
+            {
+              "name": "highlight",
+              "type": "text",
+              "required": true
+            },
+            {
+              "name": "body",
+              "type": "text",
+              "required": true
+            }
+          ]
+        },
+        {
+          "slug": "navigationTiles",
+          "fields": [
+            {
+              "name": "enabled",
+              "type": "checkbox",
+              "defaultValue": true
+            },
+            {
+              "name": "anchor",
+              "type": "text",
+              "required": false
+            },
+            {
+              "name": "title",
+              "type": "text",
+              "required": true
+            },
+            {
+              "name": "highlight",
+              "type": "text",
+              "required": true
+            },
+            {
+              "name": "items",
+              "type": "array",
+              "required": true,
+              "minRows": 1,
+              "fields": [
+                {
+                  "name": "href",
+                  "type": "text",
+                  "required": true
+                },
+                {
+                  "name": "label",
+                  "type": "text",
+                  "required": true
+                },
+                {
+                  "name": "image",
+                  "type": "text",
+                  "required": false
+                },
+                {
+                  "name": "size",
+                  "type": "select",
+                  "required": true,
+                  "options": [
+                    "normal",
+                    "wide"
+                  ]
+                },
+                {
+                  "name": "items",
+                  "type": "array",
+                  "required": true,
+                  "minRows": 1,
+                  "fields": [
+                    {
+                      "name": "text",
+                      "type": "text",
+                      "required": true
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "slug": "cta",
+          "fields": [
+            {
+              "name": "enabled",
+              "type": "checkbox",
+              "defaultValue": true
+            },
+            {
+              "name": "anchor",
+              "type": "text",
+              "required": false
+            },
+            {
+              "name": "title",
+              "type": "array",
+              "required": true,
+              "minRows": 1,
+              "fields": [
+                {
+                  "name": "text",
+                  "type": "text",
+                  "required": true
+                }
+              ]
+            },
+            {
+              "name": "question",
+              "type": "text",
+              "required": true
+            },
+            {
+              "name": "body",
+              "type": "text",
+              "required": true
+            },
+            {
+              "name": "action",
+              "type": "text",
+              "required": true
+            },
+            {
+              "name": "href",
+              "type": "text",
+              "required": true
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

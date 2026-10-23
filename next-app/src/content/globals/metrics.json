@@ -1,0 +1,23 @@
+[
+  {
+    "to": 4,
+    "pad": 2,
+    "label": "Tầng vận hành"
+  },
+  {
+    "to": 100,
+    "unit": "%",
+    "label": "Chủ quyền dữ liệu"
+  },
+  {
+    "prefix": "Level ",
+    "to": 3,
+    "suffix": "+",
+    "label": "An toàn thông tin"
+  },
+  {
+    "to": 2,
+    "pad": 2,
+    "label": "Cấp độ kiểm soát"
+  }
+]

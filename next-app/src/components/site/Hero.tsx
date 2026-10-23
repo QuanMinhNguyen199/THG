@@ -32,7 +32,7 @@ const INTERACTIVE = "a,button";
  * `children` replaces the GEOagents copy (the home page puts its own over the same stage, with the
  * same cursor); `autoplay` starts the film instead of waiting for a click.
  */
-export function Hero({ children, className = "", autoplay = false, video: film, videoSmall: filmSmall, poster }: { children?: ReactNode; className?: string; autoplay?: boolean; /** One MP4 in place of the GEOagents film set. */ video?: string; /** A lighter MP4 of the same film for phones. */ videoSmall?: string; poster?: string } = {}) {
+export function Hero({ children, className = "", id = "geoagents", autoplay = false, video: film, videoSmall: filmSmall, poster }: { children?: ReactNode; className?: string; id?: string; autoplay?: boolean; /** One MP4 in place of the GEOagents film set. */ video?: string; /** A lighter MP4 of the same film for phones. */ videoSmall?: string; poster?: string } = {}) {
   const { paused: motionPaused } = useSite();
   const section = useRef<HTMLElement>(null);
   const video = useRef<HTMLVideoElement>(null);
@@ -179,7 +179,7 @@ export function Hero({ children, className = "", autoplay = false, video: film, 
     <section
       ref={section}
       className={`hero${className ? ` ${className}` : ""}${cursorOn ? " has-cursor" : ""}${feedback ? " is-video-feedback" : ""}`}
-      id="geoagents"
+      id={id}
       onPointerMove={onPointerMove}
       onPointerLeave={() => setCursorOn(false)}
       onClick={onStageClick}

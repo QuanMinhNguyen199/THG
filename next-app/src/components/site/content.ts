@@ -7,13 +7,8 @@ export const themes: { id: Theme; label: string; name: string; title: string }[]
   { id: "industrial", label: "Industrial", name: "Industrial", title: "Industrial — 60% #FFFFFF · 30% #c1152b · 10% #121212" },
 ];
 
-/** Each metric counts up to `to` when it scrolls into view; `pad` keeps leading zeros ("04"). */
-export const metrics = [
-  { to: 4, pad: 2, label: "Tầng vận hành" },
-  { to: 100, unit: "%", label: "Chủ quyền dữ liệu" },
-  { prefix: "Level ", to: 3, suffix: "+", label: "An toàn thông tin" },
-  { to: 2, pad: 2, label: "Cấp độ kiểm soát" },
-];
+// Compatibility exports for existing consumers; canonical defaults live in content/globals.
+export { default as metrics } from "@/content/globals/metrics.json";
 
 // `product` names each tier's block in the four-tier diagrams.
 export const layers = [
@@ -35,11 +30,5 @@ export const projects: Record<ProjectId, { name: string; company: string; summar
   },
 };
 
-export const cta = {
-  title: ["Sẵn sàng đưa AI Agent vào", "bộ máy vận hành?"],
-  question: "Nhiệm vụ vận hành nào anh/chị muốn cải thiện ngay hôm nay?",
-  body: "Hãy gửi cho chúng tôi một bài toán cụ thể. Đội ngũ chuyên gia Thehegeo sẽ xây dựng bản Demo GEO Agent chạy trực tiếp trên dữ liệu mẫu của quý cơ quan/doanh nghiệp.",
-  action: "Gửi yêu cầu tư vấn & đặt lịch",
-  // Every consultation / demo booking goes to the contact page (its form).
-  href: "/ve-thehegeo/lien-he/",
-};
+import defaultCta from "@/content/globals/cta.json";
+export const cta = { ...defaultCta, title: defaultCta.title.map(line => line.text) };

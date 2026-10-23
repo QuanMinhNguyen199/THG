@@ -3,11 +3,11 @@
 // screen readers only.
 import { Hero } from "./Hero";
 
-export function HomeHero() {
+export function HomeHero({ id, heading = "THEHEGEO: Công nghệ có tầm nhìn. Vận hành có chủ quyền." }: { heading?: string; id?: string }) {
   return (
-    <Hero className="home-hero">
+    <Hero className="home-hero" id={id}>
       <div className="hero-shade home-hero-shade" />
-      <h1 className="sr-only">THEHEGEO: Công nghệ có tầm nhìn. Vận hành có chủ quyền.</h1>
+      <h1 className="sr-only">{heading}</h1>
     </Hero>
   );
 }

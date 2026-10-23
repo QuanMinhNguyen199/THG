@@ -1,14 +1,15 @@
 import Link from "next/link";
-import { cta } from "./content";
+import defaultCta from "@/content/globals/cta.json";
+import type { CtaContent } from "@/content/blocks";
 import { Lines } from "./Sections";
 
 /** Closing call to action, placed between the case studies and the footer. */
-export function Cta() {
+export function Cta({ data: cta = defaultCta, id = "cta", titleId = "cta-title" }: { data?: CtaContent; id?: string; titleId?: string }) {
   return (
-    <section className="cta" id="cta" aria-labelledby="cta-title">
+    <section className="cta" id={id} aria-labelledby={titleId}>
       <div className="wrap cta-inner">
-        <h2 id="cta-title">
-          <Lines lines={cta.title} />
+        <h2 id={titleId}>
+          <Lines lines={cta.title.map(line => line.text)} />
         </h2>
         <p className="cta-question">{cta.question}</p>
         <p className="cta-body">{cta.body}</p>

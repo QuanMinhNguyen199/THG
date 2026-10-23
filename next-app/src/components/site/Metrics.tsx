@@ -2,15 +2,15 @@
 
 import { animate, type JSAnimation } from "animejs";
 import { useEffect, useRef } from "react";
-import { metrics } from "./content";
+import defaultMetrics from "@/content/globals/metrics.json";
+import type { Metric } from "@/content/blocks";
 import { useSite } from "./SiteContext";
 
-type Metric = (typeof metrics)[number];
 const format = (m: Metric, value: number) => String(Math.round(value)).padStart("pad" in m ? (m.pad ?? 1) : 1, "0");
 const finalText = (m: Metric) =>
-  `${"prefix" in m ? m.prefix : ""}${format(m, m.to)}${"suffix" in m ? m.suffix : ""}${"unit" in m ? m.unit : ""}`;
+  `${m.prefix ?? ""}${format(m, m.to)}${m.suffix ?? ""}${m.unit ?? ""}`;
 
-export function Metrics() {
+export function Metrics({ items: metrics = defaultMetrics, id = "metrics", label = "Các đặc tính GEOagents" }: { items?: Metric[]; id?: string; label?: string }) {
   const { pausedRef } = useSite();
   const section = useRef<HTMLElement>(null);
   const counters = useRef<(HTMLSpanElement | null)[]>([]);
@@ -76,10 +76,10 @@ export function Metrics() {
       stop();
       metrics.forEach((m, i) => show(i, m.to));
     };
-  }, [pausedRef]);
+  }, [pausedRef, metrics]);
 
   return (
-    <section ref={section} className="metrics wrap" id="metrics" aria-label="Các đặc tính GEOagents">
+    <section ref={section} className="metrics wrap" id={id} aria-label={label}>
       {metrics.map((m, i) => (
         <div key={m.label}>
           <strong>
