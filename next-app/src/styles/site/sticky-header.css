@@ -8,7 +8,7 @@
   left: 0;
   right: 0;
   width: auto;
-  z-index: 50;
+  z-index: var(--z-header);
   /* One height on every page and in both states, so the bar never jumps between tabs; only its
      colours change when it turns solid. */
   height: 64px;
@@ -55,7 +55,7 @@
   background: #172337;
 }
 .shared-page > header[data-solid] nav a:hover{
-  color: var(--red);
+  color: var(--red-text);
 }
 
 /* A thicker white marker stays visible against the moving hero image. */

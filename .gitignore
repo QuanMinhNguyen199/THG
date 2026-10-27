@@ -1,4 +1,4 @@
-.impeccable/review/
+.impeccable/
 *.tar.gz
 node_modules/
 qa.cjs
@@ -10,3 +10,4 @@ output/
 docs/
 JD/
 Logo/
+.claude/

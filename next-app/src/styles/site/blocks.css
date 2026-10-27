@@ -1,6 +1,6 @@
 /* Content blocks of the corporate pages (catalog.ts Block types, CorporatePages.tsx). */
 
-.corp-en { margin: 10px 0 0; font-size: 16px; font-style: italic; color: var(--muted); }
+.corp-en { margin: 10px 0 0; font-size: 16px; color: var(--muted); }
 .corp-en.is-head { margin-top: 16px; font-size: 18px; }
 .corp-block { padding: 56px 0; border-top: 1px solid var(--line); scroll-margin-top: 88px; }
 .corp-block > h2 { margin: 0 0 28px; font-family: var(--font-display), sans-serif; font-size: clamp(26px, 2.6vw, 38px); font-weight: 500; letter-spacing: -0.025em; color: var(--white); }
@@ -16,6 +16,21 @@
 .corp-tile.is-link:hover, .corp-tile.is-link:focus-visible { border-color: var(--red); transform: translateY(-3px); }
 .corp-tile.is-link .corp-more svg { transition: transform 0.2s; }
 .corp-tile.is-link:hover .corp-more svg { transform: translate(2px, -2px); }
+/* A section's pages: the first is a large lead panel, the rest stack beside it as compact rows. */
+@media (min-width: 900px) {
+  .corp-grid.has-feature { grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); }
+  .corp-grid.has-feature > :first-child {
+    grid-row: span var(--rest); justify-content: flex-end; min-height: 380px; padding: 40px;
+    border-color: color-mix(in srgb, var(--red) 45%, var(--card-line));
+    background: color-mix(in srgb, var(--red) 9%, var(--card));
+  }
+  .corp-grid.has-feature > :first-child strong { font-size: 36px; line-height: 1.15; letter-spacing: -0.02em; }
+  .corp-grid.has-feature > :first-child p { max-width: 40ch; font-size: 18px; color: color-mix(in srgb, var(--white) 78%, transparent); }
+  .corp-grid.has-feature > :first-child .corp-more { margin-top: 16px; }
+  .corp-grid.has-feature > :not(:first-child) { min-height: 0; gap: 8px; padding: 24px 28px; }
+  .corp-grid.has-feature > :not(:first-child) strong { font-size: 20px; }
+  .corp-grid.has-feature > :not(:first-child) .corp-more { margin-top: 8px; }
+}
 
 /* inline link in list rows */
 .corp-cell-link { display: inline-flex; align-items: center; gap: 6px; font-weight: 600; color: var(--accent-text, var(--red)); white-space: nowrap; }
@@ -23,11 +38,11 @@
 /* steps; with .is-flow a horizontal flow whose last step is red */
 .corp-steps { margin: 0; padding: 0; list-style: none; display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; counter-reset: s; }
 .corp-steps li { counter-increment: s; position: relative; padding: 24px; border: 1px solid var(--line); border-radius: 12px; }
-.corp-steps li::before { content: counter(s, decimal-leading-zero); display: block; margin-bottom: 14px; font-size: 13px; font-weight: 700; color: var(--red); }
+.corp-steps li::before { content: counter(s, decimal-leading-zero); display: block; margin-bottom: 14px; font-size: 13px; font-weight: 700; color: var(--red-text); }
 .corp-steps strong { display: block; font-size: 18px; line-height: 1.4; color: var(--white); }
 .corp-steps p { margin: 8px 0 0; font-size: 14px; line-height: 1.6; color: var(--muted); }
 .is-flow .corp-steps { grid-auto-flow: column; grid-auto-columns: 1fr; grid-template-columns: none; gap: 28px; }
-.is-flow .corp-steps li:not(:last-child)::after { content: "\2192"; position: absolute; right: -22px; top: 50%; transform: translateY(-50%); color: var(--red); font-size: 18px; }
+.is-flow .corp-steps li:not(:last-child)::after { content: "\2192"; position: absolute; right: -22px; top: 50%; transform: translateY(-50%); color: var(--red-text); font-size: 18px; }
 .is-flow .corp-steps li:last-child { background: var(--red); border-color: var(--red); }
 .is-flow .corp-steps li:last-child::before, .is-flow .corp-steps li:last-child strong, .is-flow .corp-steps li:last-child p { color: #fff; }
 .corp-note { margin: 20px 0 0; padding-left: 16px; border-left: 2px solid var(--red); font-size: 15px; line-height: 1.6; color: color-mix(in srgb, var(--white) 80%, transparent); }
@@ -103,6 +118,9 @@
 .contact-submit { display: flex; align-items: center; gap: 18px; }
 .contact-submit .button { margin-top: 0; }
 .contact-submit p { margin: 0; font-size: 14px; color: var(--muted); }
+.contact-submit p a { color: var(--white); text-decoration: underline; text-underline-offset: 3px; }
+.contact-form .field-error { font-size: 14px; font-weight: 500; color: var(--red-text); }
+.contact-form [aria-invalid=true] { border-color: var(--red-text); }
 .corp-contact-side h2 { margin: 0 0 20px; font-size: 20px; color: var(--white); }
 
 /* jobs: filter and cards; job description details */
@@ -138,7 +156,7 @@
 .jd-facts { margin: 0; display: grid; grid-template-columns: 1fr; gap: 18px 16px; }
 .jd-facts dt { font-size: 13px; color: var(--muted); }
 .jd-facts dd { margin: 4px 0 0; font-size: 16px; font-weight: 600; color: var(--white); }
-.jd-facts dd.is-pending { font-weight: 400; font-style: italic; color: var(--muted); }
+.jd-facts dd.is-pending { font-weight: 400; color: var(--muted); }
 .jd-apply.button { display: flex; justify-content: center; width: 100%; margin-top: 28px; min-height: 52px; background: var(--red); border-color: var(--red); color: #fff; font-size: 15px; font-weight: 600; }
 .jd-apply.button:hover { background: #c1152b; border-color: #c1152b; }
 .jd-how { margin: 14px 0 0; font-size: 14px; line-height: 1.6; color: var(--muted); }
@@ -167,10 +185,14 @@
 .partner-track .partner-mark { min-height: 110px; white-space: nowrap; }
 .partner-track .partner-mark img { width: calc(var(--logo-w) * var(--logo-k, 1)); max-width: none; }
 @keyframes partner-drift { to { transform: translateX(-50%); } }
+/* One colour for every logo, so no brand outshouts the others: light grey on dark, graphite on white. */
+[data-theme=tech] .home-partners .partner-mark img { filter: grayscale(1) brightness(1.7) contrast(0.9); opacity: 0.8; }
+[data-theme=industrial] .home-partners .partner-mark img { filter: grayscale(1) brightness(0.4) contrast(1.4); mix-blend-mode: multiply; opacity: 0.8; }
 @media (prefers-reduced-motion: reduce) {
   .partner-marquee { -webkit-mask-image: none; mask-image: none; }
   .partner-track { width: auto; animation: none; }
-  .partner-track ul { flex-wrap: wrap; justify-content: center; gap: 8px 40px; padding: 0; }
+  /* Without the drift, the logos sit in aligned columns instead of ragged centred rows. */
+  .partner-track ul { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 8px 32px; padding: 0; }
   .partner-track ul[aria-hidden] { display: none; }
 }
 
@@ -239,13 +261,13 @@
 .jd-contact dt { font-size: 13px; color: var(--muted); }
 .jd-contact dd { margin: 0; font-size: 15px; font-weight: 600; }
 .jd-contact a { color: var(--white); text-decoration: none; white-space: nowrap; }
-.jd-contact a:hover { color: var(--red); }
+.jd-contact a:hover { color: var(--red-text); }
 .jd-contact div:last-child { border-bottom: 0; }
 
 /* JD sections follow the Word document: numbered headings on a rule, as in the printed JD. */
 .jd-section + .jd-section { margin-top: 40px; }
 .jd-section h2 { display: flex; align-items: baseline; gap: 10px; margin: 0 0 14px; padding-bottom: 12px; border-bottom: 2px solid var(--white); font-size: 21px; font-weight: 700; letter-spacing: -0.01em; }
-.jd-num { min-width: 1.4em; color: var(--red); font-variant-numeric: tabular-nums; }
+.jd-num { min-width: 1.4em; color: var(--red-text); font-variant-numeric: tabular-nums; }
 .jd-section > p { margin: 0; font-size: 17px; line-height: 1.65; color: color-mix(in srgb, var(--white) 88%, transparent); }
 .jd-section > p a { color: var(--white); text-decoration: underline; text-underline-offset: 3px; }
 .jd-section li:first-child { border-top: 0; }

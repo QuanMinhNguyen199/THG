@@ -8,7 +8,8 @@ const forPages = process.env.npm_lifecycle_event === "build:pages";
 const basePath = forPages ? (process.env.PAGES_BASE_PATH ?? "/THG") : "";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  // The app has two root layouts, so unmatched URLs need app/global-not-found.tsx.
+  experimental: { globalNotFound: true },
   cacheComponents: true,
   partialPrefetching: true,
   ...(forPages && {

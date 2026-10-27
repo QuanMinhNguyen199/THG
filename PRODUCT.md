@@ -9,4 +9,4 @@ Preserve black/red identity, four organization layers, control pillars, applicat
 ## Evidence on Hand
 Two supplied reference screenshots. No original logo or illustration files supplied. Metrics are transcribed from the reference, not independently verified.
 ## Stack
-Static HTML, CSS and JavaScript; implementation choice for this session.
+Next.js 16 app in next-app/ with plain CSS, exported statically to GitHub Pages (`npm run build:pages`).

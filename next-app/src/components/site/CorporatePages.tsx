@@ -114,10 +114,15 @@ function BlockView({ block, index }: { block: Block; index: number }) {
   );
 
   switch (block.type) {
-    case "cards":
+    case "cards": {
+      // A grid of links (a section's pages) leads with its first page; plain cards stay equal.
+      const feature = block.items.length >= 3 && block.items.every((c) => c.href);
       return wrap(
         "is-cards",
-        <div className="corp-grid">
+        <div
+          className={`corp-grid${feature ? " has-feature" : ""}`}
+          style={feature ? ({ "--rest": block.items.length - 1 } as React.CSSProperties) : undefined}
+        >
           {block.items.map((c) => {
             const body = (
               <>
@@ -142,6 +147,7 @@ function BlockView({ block, index }: { block: Block; index: number }) {
           })}
         </div>,
       );
+    }
     case "table":
       return wrap("is-table-cards", <TableCards block={block} />);
     case "steps":

@@ -8,6 +8,8 @@ export type CaseTone = "white" | "navy" | "kraft" | "graphite";
 /** How the case is drawn and how it opens: a paper folder that opens like a book (TDN), a phone
  *  whose call plays out, a clipboard board whose columns unfold, or a server stack that separates. */
 export type CaseModel = "folder" | "call" | "board" | "stack";
+/** The subject drawn on a folder's paper (Applications.tsx); without one the paper shows rule lines. */
+export type PaperGlyphKind = "agents" | "pipeline" | "data" | "platform" | "web" | "flow" | "ledger";
 export type CaseData = {
   id: string;
   name: string;
@@ -29,6 +31,7 @@ export type CaseData = {
   script?: { who: "in" | "agent"; text: string }[];
   /** board: the columns and their cards. */
   board?: { col: string; cards: string[] }[];
+  glyph?: PaperGlyphKind;
   mock?: boolean;
 };
 
@@ -51,6 +54,7 @@ export const TDN: CaseData = {
   stamp: ["TAX", "360"],
   tone: "white",
   model: "folder",
+  glyph: "ledger",
 };
 
 // PTSC M&C project copy supplied by the user; other illustrative cases remain marked in data.

@@ -93,7 +93,7 @@ nav a:after {
   position: absolute;
   top: calc(100% + 12px);
   right: 0;
-  z-index: 60;
+  z-index: var(--z-popover);
   min-width: 190px;
   margin: 0;
   padding: 6px;
@@ -135,7 +135,7 @@ nav a:after {
 .lang-item.is-current { background: color-mix(in srgb, currentColor 8%, transparent); }
 a.lang-item:hover, a.lang-item:focus-visible { background: color-mix(in srgb, currentColor 8%, transparent); }
 .lang-item.is-soon { opacity: 0.55; cursor: default; }
-.lang-item small { font-size: 11px; font-weight: 500; }
+.lang-item small { font-size: 12px; font-weight: 500; }
 .contact-link:hover,
 .contact-link:focus-visible {
   border-color: currentColor;

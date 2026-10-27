@@ -36,6 +36,48 @@
 .home-core-still { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
 .home-core-hint { position: absolute; left: 20px; bottom: 16px; font-size: 12px; letter-spacing: 0.06em; color: #ffffff80; }
 
+/* Home four-tier picture (HomeTiers.tsx): thin graphite decks, the focused one lifted with a red
+   perimeter and one red unit; cables to the tier below light while it is in focus. */
+.home-tiers-stage { display: flex; flex-direction: column; justify-content: center; padding: 32px 32px 72px; background: var(--card); border-color: var(--card-line); }
+.tiers-art { display: block; width: 100%; height: 100%; max-height: 520px; }
+.tiers-cables path { fill: none; stroke: color-mix(in srgb, var(--white) 22%, transparent); stroke-width: 1.2; }
+.tiers-cables.is-lit path { stroke: var(--red-text); stroke-width: 1.6; stroke-dasharray: 6 8; animation: tiers-signal 1.4s linear infinite; }
+@keyframes tiers-signal { to { stroke-dashoffset: -28; } }
+.tiers-deck { transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1); }
+.tiers-deck.is-focus { transform: translateY(-8px); }
+.deck-top { fill: #1d1d20; stroke: #3a3a40; stroke-width: 1; transition: fill 0.3s, stroke 0.3s; }
+.deck-front { fill: #141416; }
+.deck-side { fill: #0f0f11; }
+.tiers-deck.is-focus .deck-top { fill: color-mix(in srgb, #c1152b 14%, #1d1d20); stroke: var(--red-text); stroke-width: 1.5; }
+.tiers-deck.is-focus .deck-front { fill: #c1152b; }
+.unit-top { fill: #2c2c31; stroke: #45454c; stroke-width: 0.8; transition: fill 0.3s, stroke 0.3s; }
+.unit-front { fill: #1a1a1d; }
+.unit-side { fill: #131315; }
+.tiers-deck.is-focus .unit-top { stroke: var(--red-text); }
+.tiers-unit.is-focal .unit-top { fill: #c1152b; stroke: #ff1644; }
+.tiers-unit.is-focal .unit-front { fill: #8f0f20; }
+.tiers-unit.is-focal .unit-side { fill: #6e0b18; }
+.tiers-caption { position: absolute; left: 24px; right: 24px; bottom: 20px; display: flex; align-items: baseline; gap: 12px; margin: 0; font-size: 15px; color: var(--muted); }
+.tiers-caption span { font-size: 12px; font-variant-numeric: tabular-nums; color: var(--muted); }
+.tiers-caption strong { font-size: 13px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--white); }
+.home-tiers li { transition: border-color 0.3s; }
+.home-tiers li.is-focus strong { color: var(--red-text); }
+/* Industrial: silver decks with pale unit tops on a light panel; the focused tier stays red. */
+[data-theme=industrial] .home-tiers-stage { background: #f5f3f0; border-color: var(--card-line); }
+[data-theme=industrial] .tiers-cables path { stroke: #12121229; }
+[data-theme=industrial] .deck-top { fill: #e4e4e7; stroke: #b9b9c0; }
+[data-theme=industrial] .deck-front { fill: #b4b4ba; }
+[data-theme=industrial] .deck-side { fill: #a0a0a7; }
+[data-theme=industrial] .tiers-deck.is-focus .deck-top { fill: color-mix(in srgb, #c1152b 8%, #e4e4e7); }
+[data-theme=industrial] .unit-top { fill: #f7f7f8; stroke: #c4c4ca; }
+[data-theme=industrial] .unit-front { fill: #cfcfd4; }
+[data-theme=industrial] .unit-side { fill: #bdbdc3; }
+@media (prefers-reduced-motion: reduce) {
+  .tiers-cables.is-lit path { animation: none; }
+  .tiers-deck { transition: none; }
+}
+body.motion-paused .tiers-cables.is-lit path { animation: none; }
+
 /* Simulated clip: a product window that plays out one task. */
 .demo-clip {
   position: relative; border-radius: 16px; overflow: hidden; border: 1px solid var(--line);
@@ -52,7 +94,7 @@
 .demo-msg.is-agent { background: #c1152b1f; border: 1px solid #c1152b40; }
 .demo-msg.is-human { align-self: flex-end; background: #ffffff14; }
 .demo-who { display: block; margin-bottom: 4px; font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: #ffffff80; }
-.demo-msg.is-agent .demo-who { color: #c1152b; }
+.demo-msg.is-agent .demo-who { color: #ff1644; }
 .demo-msg p { margin: 0; font-size: 15px; line-height: 1.55; }
 .demo-msg.is-busy p::after { content: ""; display: inline-block; width: 7px; height: 14px; margin-left: 4px; vertical-align: -2px; background: #c1152b; animation: demo-caret 0.9s steps(2) infinite; }
 @keyframes demo-caret { 50% { opacity: 0; } }
@@ -61,6 +103,18 @@
 .demo-approve { display: inline-block; margin-top: 10px; padding: 7px 14px; border-radius: 6px; background: var(--red); font-size: 13px; font-weight: 600; }
 .demo-progress { height: 2px; background: #ffffff14; }
 .demo-progress i { display: block; height: 100%; background: var(--red); transform-origin: left; transition: transform 0.6s; }
+/* Industrial: a light window on the white page, so the section does not read as a dark patch. */
+[data-theme=industrial] .demo-clip { background: #ffffff; color: #121212; border-color: var(--card-line); box-shadow: 0 30px 70px -40px #1a121040; }
+[data-theme=industrial] .demo-bar { border-bottom-color: var(--card-line); color: #555555; }
+[data-theme=industrial] .demo-bar i { background: #12121226; }
+[data-theme=industrial] .demo-msg { background: #f5f3f0; }
+[data-theme=industrial] .demo-msg.is-agent { background: #c1152b0f; border-color: #c1152b33; }
+[data-theme=industrial] .demo-msg.is-human { background: #ececec; }
+[data-theme=industrial] .demo-who { color: #555555; }
+[data-theme=industrial] .demo-msg.is-agent .demo-who { color: #c1152b; }
+[data-theme=industrial] .demo-tasks span { background: #12121210; }
+[data-theme=industrial] .demo-approve { color: #ffffff; }
+[data-theme=industrial] .demo-progress { background: var(--card-line); }
 
 /* Tiles: one per area of the site; picture tiles first. */
 .home-tiles { padding: 120px 0; border-top: 1px solid var(--line); }
@@ -85,6 +139,9 @@
 .home-tile ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 6px; }
 .home-tile li { font-size: 14px; line-height: 1.45; color: color-mix(in srgb, currentColor 72%, transparent); padding-left: 14px; position: relative; }
 .home-tile:not(.has-image) li { color: var(--muted); }
+/* Text tiles: title at the top, links at the foot, so no tile shows an empty upper half.
+   Only the wide GEOagents tile carries a picture; it is the one focal point of the grid. */
+.home-tile:not(.has-image) .home-tile-body { flex: 1; justify-content: space-between; gap: 24px; }
 .home-tile li::before { content: ""; position: absolute; left: 0; top: 0.55em; width: 5px; height: 5px; border-radius: 50%; background: var(--red); }
 
 @media (prefers-reduced-motion: reduce) {

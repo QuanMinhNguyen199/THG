@@ -1,9 +1,9 @@
-/* Floating back-to-top sphere, stacked just above the concept dock. */
+/* Floating back-to-top button: a flat disc inside a ring that fills with reading progress. */
 .to-top {
   position: fixed;
   right: 28px;
-  bottom: 96px;
-  z-index: 31;
+  bottom: 28px;
+  z-index: var(--z-to-top);
   width: 58px;
   height: 58px;
   padding: 0;
@@ -36,29 +36,31 @@
   stroke: var(--red);
   stroke-linecap: round;
 }
-/* A lit sphere: highlight up-left, shade down-right. */
 .to-top-sphere {
   position: absolute;
   inset: 6px;
   display: grid;
   place-items: center;
   border-radius: 50%;
-  background: radial-gradient(circle at 34% 28%, color-mix(in srgb, var(--red) 55%, #ffffff) 0%, var(--red) 46%, color-mix(in srgb, var(--red) 70%, #000000) 100%);
-  box-shadow: 0 10px 24px -8px color-mix(in srgb, var(--red) 70%, transparent), inset 0 -3px 8px rgba(0, 0, 0, 0.25);
-  transition: transform 0.25s;
+  border: 1px solid var(--card-line);
+  background: var(--card);
+  color: var(--white);
+  transition: background 0.3s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.3s cubic-bezier(0.22, 1, 0.36, 1), color 0.3s cubic-bezier(0.22, 1, 0.36, 1);
 }
 .to-top-sphere svg {
   width: 20px;
   height: 20px;
   fill: none;
-  stroke: #ffffff;
+  stroke: currentColor;
   stroke-width: 2;
   stroke-linecap: round;
   stroke-linejoin: round;
 }
 .to-top:hover .to-top-sphere,
 .to-top:focus-visible .to-top-sphere {
-  transform: translateY(-2px);
+  background: var(--red);
+  border-color: var(--red);
+  color: #ffffff;
 }
 .to-top:focus-visible {
   outline: 2px solid var(--red);
@@ -67,7 +69,7 @@
 @media (max-width: 720px) {
   .to-top {
     right: 16px;
-    bottom: 76px;
+    bottom: 16px;
     width: 52px;
     height: 52px;
   }

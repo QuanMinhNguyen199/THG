@@ -3,7 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useEffect, useId, useRef, type MouseEvent, type ReactNode, type SyntheticEvent } from "react";
 import Link from "next/link";
-import { TDN, type CaseData } from "./cases";
+import { TDN, type CaseData, type PaperGlyphKind } from "./cases";
 
 const EASE = "cubic-bezier(0.22, 1, 0.36, 1)";
 // Paper springing up off a fold: a little overshoot past upright, then settling.
@@ -25,6 +25,74 @@ function closedCard(isJob = false) {
   return { vertical, W, H, w: vertical ? W : W / 2, h: vertical && !isJob ? H / 2 : H };
 }
 
+/** A small line drawing of the paper's subject, in place of the generic rule lines, so papers on
+ *  one page are told apart at a glance. Ink lines with one red mark each. */
+const GLYPHS: Record<PaperGlyphKind, ReactNode> = {
+  // agents around a coordinating core
+  agents: (
+    <>
+      <path d="M60 24 32 10M60 24 32 38M60 24l28-14M60 24l28 14" />
+      <circle cx="32" cy="10" r="5" /><circle cx="32" cy="38" r="5" /><circle cx="88" cy="10" r="5" /><circle cx="88" cy="38" r="5" />
+      <circle className="is-red" cx="60" cy="24" r="8" />
+    </>
+  ),
+  // train, serve, monitor, and back again
+  pipeline: (
+    <>
+      <rect x="8" y="14" width="24" height="18" rx="2" /><rect x="48" y="14" width="24" height="18" rx="2" />
+      <rect className="is-red" x="88" y="14" width="24" height="18" rx="2" />
+      <path d="M32 23h16M72 23h16M100 32v8H20v-8" />
+    </>
+  ),
+  // a store feeding a chart
+  data: (
+    <>
+      <ellipse cx="24" cy="10" rx="14" ry="5" /><path d="M10 10v26c0 3 6 5 14 5s14-2 14-5V10M10 23c0 3 6 5 14 5s14-2 14-5" />
+      <path d="M46 24h12" />
+      <path d="M68 40h46M74 40V28M86 40V18M98 40V24" /><path className="is-red" d="M110 40V8" />
+    </>
+  ),
+  // racks with one live service
+  platform: (
+    <>
+      <rect x="30" y="4" width="60" height="11" rx="2" /><rect x="30" y="19" width="60" height="11" rx="2" /><rect x="30" y="34" width="60" height="11" rx="2" />
+      <path d="M38 9.5h14M38 24.5h14M38 39.5h14" />
+      <circle className="is-red" cx="82" cy="24.5" r="2.5" />
+    </>
+  ),
+  // a screen in front of its API
+  web: (
+    <>
+      <rect x="10" y="4" width="62" height="40" rx="3" /><path d="M10 13h62" />
+      <path className="is-red" d="M34 24l-7 6 7 6M48 24l7 6-7 6" />
+      <rect x="84" y="10" width="28" height="9" rx="2" /><rect x="84" y="23" width="28" height="9" rx="2" /><path d="M72 24h12" />
+    </>
+  ),
+  // need, decision, solution
+  flow: (
+    <>
+      <rect x="6" y="16" width="26" height="16" rx="2" />
+      <path className="is-red" d="M60 10l14 14-14 14-14-14Z" />
+      <rect x="88" y="16" width="26" height="16" rx="2" /><path d="M32 24h14M74 24h14" />
+    </>
+  ),
+  // reconciled rows, one flagged
+  ledger: (
+    <>
+      <path d="M8 6h104M8 18h104M8 30h104M8 42h104M44 6v36" />
+      <path className="is-red" d="M92 26l5 5 10-10" />
+    </>
+  ),
+};
+
+function PaperGlyph({ kind }: { kind: PaperGlyphKind }) {
+  return (
+    <svg className="paper-glyph" viewBox="0 0 120 48" aria-hidden="true">
+      {GLYPHS[kind]}
+    </svg>
+  );
+}
+
 /** The paper card: on the case and on the card's cover. Sized in cqw, so both render identically. */
 function Paper({ data }: { data: CaseData }) {
   return (
@@ -35,8 +103,14 @@ function Paper({ data }: { data: CaseData }) {
         <br />
         {data.headline[1]}
       </b>
-      <i className="paper-line" />
-      <i className="paper-line is-short" />
+      {data.glyph ? (
+        <PaperGlyph kind={data.glyph} />
+      ) : (
+        <>
+          <i className="paper-line" />
+          <i className="paper-line is-short" />
+        </>
+      )}
       <div className="paper-stamp">
         {data.stamp[0]}
         <br />

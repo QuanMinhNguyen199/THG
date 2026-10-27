@@ -2,7 +2,7 @@
 .brand{width:205px;flex-shrink:0}.brand .brand-logo{display:block;width:100%;height:auto}
 [data-theme]{--logo-accent:#c1152b;--logo-facet:#172337;--logo-star:#ffffff;--logo-ink:#172337}
 [data-theme=tech]{--logo-ink:#ffffff}
-.scroll-light{position:fixed;inset:0;z-index:5;pointer-events:none;overflow:hidden;contain:strict}
+.scroll-light{position:fixed;inset:0;z-index:var(--z-light);pointer-events:none;overflow:hidden;contain:strict}
 .scroll-light:before{content:'';position:absolute;left:0;right:0;top:0;height:28vh;transform:translateY(calc(var(--light-y,-15vh) - 50%));will-change:transform;background:linear-gradient(180deg,transparent,color-mix(in srgb,var(--red) 5%,transparent),transparent)}
 .scroll-light i{position:absolute;top:0;left:0;width:2px;height:100%;background:linear-gradient(180deg,transparent,var(--red),transparent);transform:scaleY(var(--page-progress,0));transform-origin:top;opacity:.6}
 [data-theme=tech]{--footer-word:#222}[data-theme=industrial]{--footer-word:#222}

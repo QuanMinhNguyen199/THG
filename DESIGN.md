@@ -53,3 +53,16 @@ Thin-floor preview measurement: production iframe 390×844, DPR 2, Chromium soft
 Selected thin modules now fill their top face with brand red in both CSS and WebGL. Related modules retain graphite faces with red outlines; matte material, thin geometry and signal performance settings are unchanged.
 
 Industrial overrides the graphite palette with silver-gray decks and pale module tops, darker edges and restrained shadows in both CSS and WebGL; selected tops remain brand red. WebGL uses supported MSAA up to 4 samples in the composer and a render pixel ratio of 1.5–2 for thin diagonal edges, including DPR 1 desktop previews. The output canvas does not duplicate multisampling; no extra blur or bloom pass is added.
+
+Readability pass (2026-10-27): red has two roles. `--red` (#c1152b) fills buttons and marks; white text on it reaches 6.2:1. `--red-text` is red used as text: #ff1644 on dark surfaces (4.7–5.1:1 on #0A0A0A–#151517) and #c1152b on white. Each zone that redefines `--red` also redefines `--red-text`. Text is at least 12px, spaced uppercase labels at least 11px; drawings with their own lettering (phone mockup, 3D deck faces, the miniature paper card) are excluded. No italics: pending values are marked by muted colour. Page-level stacking uses `--z-light`, `--z-header`, `--z-to-top`, `--z-popover` and `--z-skip`. The three-concept switcher is gone; the theme follows the system colour scheme (dark: Dark Tech, light: Industrial), and its unused CSS was removed. Unmatched URLs render `app/global-not-found.tsx` in the site frame. The contact form checks fields itself and shows Vietnamese messages under each field.
+
+Visual pass (2026-10-27):
+- Buttons share one shape: 8px radius (cards use 14px), 14px semibold label in sentence case, 48px minimum height; the closing CTA uses 15px. No uppercase button labels.
+- Home: the "4 tầng tổ chức" picture is `HomeTiers.tsx`, an SVG of four thin decks with 3, 3, 5 and 4 units. One tier is in focus at a time (lifted deck, red perimeter, one red focal unit, lit cables to the tier below). Focus cycles while on screen and follows the pointer over the tier list; pause and reduced motion hold it. It replaced the WebGL orb on the home page; `HomeCore` still serves `model.kind === "core"`.
+- Home tiles: only the wide GEOagents tile carries a picture; the other tiles are text, title at the top and links at the foot.
+- Partner strip: every logo is one colour (light grey on dark, graphite on white). Without motion the logos sit in aligned columns.
+- Section overviews whose cards are all links lead with the first card as a large tinted panel, the rest stacked beside it (900px and wider).
+- Folder papers carry a small subject drawing instead of rule lines (agents, pipeline, data, platform, web, flow, ledger), and papers in a row lie at different angles.
+- Back-to-top is a flat disc in the progress ring, red on hover.
+- Industrial: the CTA band is the red zone without an inner card; the home demo window and tier picture are light panels.
+- Supporting text that is read (section side notes, intros, project descriptions, footer contacts, hero description) is 15–16px on desktop, as on phones.

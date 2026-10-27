@@ -781,5 +781,7 @@ export type SectionKey = keyof typeof SECTIONS;
 /** A detail page by section and slug (one route folder per page under src/app/(site)/<section>/). */
 export const detail = (section: SectionKey, slug: string) => SECTIONS[section].pages.find((p) => p.slug === slug)!;
 export const job = (slug: string) => JOBS.find((j) => j.slug === slug)!;
+/** The page's meta description: its lead, or its headline and card line when it has no lead. */
+export const describe = (p: Page) => p.lead ?? [p.title, p.kind].filter(Boolean).join(" ");
 
 export const APPLY_EMAIL = "geotech@thehegeo.com";

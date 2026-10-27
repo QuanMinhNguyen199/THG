@@ -1,7 +1,7 @@
 /* Sitemap pages (Home, category pages): shared heading, in-page links, section blocks. */
 
 /* The page you are on, in the nav. */
-nav a[aria-current=page] { color: var(--red); }
+nav a[aria-current=page] { color: var(--red-text); }
 nav a[aria-current=page]:after { transform: scaleX(1); }
 
 /* Pages without a hero start below the fixed bar. */
@@ -60,3 +60,9 @@ nav a[aria-current=page]:after { transform: scaleX(1); }
   .page-head { padding: 40px 0 28px; }
   .page-section { padding: 40px 0; }
 }
+
+/* 404: the main paths as plain links under the explanation. */
+.not-found { padding-bottom: 96px; }
+.not-found-links { display: flex; flex-wrap: wrap; gap: 12px 32px; margin: 40px 0 0; padding: 0; list-style: none; font-size: 16px; font-weight: 600; }
+.not-found-links a { display: inline-flex; min-height: 44px; align-items: center; border-bottom: 1px solid var(--line); transition: color .3s cubic-bezier(.22,1,.36,1), border-color .3s cubic-bezier(.22,1,.36,1); }
+.not-found-links a:hover { color: var(--red-text); border-color: currentColor; }

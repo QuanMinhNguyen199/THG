@@ -1,17 +1,16 @@
-/* Closing CTA: centred, one red headline, one filled primary action in every concept. */
+/* Closing CTA: centred, one red headline, one filled primary action in every concept. In Industrial
+   the band itself is the red zone, so the content sits on it without a second card. */
 .cta{padding:120px 0 130px;border-top:1px solid var(--line);text-align:center;position:relative;overflow:hidden}
 .cta:before{content:'';position:absolute;left:50%;top:0;width:min(900px,90vw);height:100%;transform:translateX(-50%);background:radial-gradient(ellipse at 50% 30%,color-mix(in srgb,var(--red) 14%,transparent),transparent 65%);pointer-events:none}
 .cta-inner{position:relative;display:flex;flex-direction:column;align-items:center}
 .cta h2{font-family:var(--font-display),sans-serif;font-size:clamp(36px,4.6vw,64px);font-weight:600;line-height:1.12;letter-spacing:-.03em;color:var(--accent-text);margin:0;text-wrap:balance}
 .cta-question{font-size:clamp(16px,1.4vw,19px);font-weight:600;color:var(--white);margin:28px 0 0}
-.cta-body{font-size:14px;line-height:1.85;color:var(--muted);max-width:620px;margin:14px 0 0;text-wrap:pretty}
-.cta .cta-button{margin-top:44px;background:var(--red);border-color:var(--red);color:#fff;font-weight:600;letter-spacing:.06em;text-transform:uppercase;font-size:12px;padding:18px 26px}
+.cta-body{font-size:16px;line-height:1.75;color:var(--muted);max-width:620px;margin:14px 0 0;text-wrap:pretty}
+.cta .cta-button{margin-top:44px;background:var(--red);border-color:var(--red);color:#fff;font-size:15px;padding:14px 24px}
 .cta .cta-button:hover,.cta .cta-button:focus-visible{background:#c1152b;border-color:#c1152b;color:#fff}
-[data-theme=industrial] .cta .cta-button{border-radius:6px}
 [data-theme=industrial] .cta .cta-button:hover,[data-theme=industrial] .cta .cta-button:focus-visible{background:#fff;border-color:#fff;color:#c1152b}
-[data-theme=industrial] .cta-inner{padding:64px 32px;border:1px solid var(--line);background:linear-gradient(180deg,#b8142a,#a01023);box-shadow:0 30px 80px -40px var(--ambient-strong,transparent)}
 [data-theme=tech] .cta,[data-theme=industrial] .cta{background:transparent}
-@media(max-width:720px){.cta{padding:72px 0 80px}.cta-question{margin-top:22px}.cta .cta-button{width:100%;justify-content:center;gap:16px;padding:17px 18px;font-size:11px}[data-theme=industrial] .cta-inner{padding:44px 20px}}
+@media(max-width:720px){.cta{padding:72px 0 80px}.cta-question{margin-top:22px}.cta .cta-button{width:100%;justify-content:center;gap:16px;padding:14px 18px}}
 
 /* Applications with a single case: the card runs full width, visual left and details right. */
 .projects.is-single { grid-template-columns: 1fr; }
@@ -19,7 +18,7 @@
 .projects.is-single .project-visual { grid-row: 1 / 3; height: 380px; }
 .projects.is-single .project-info { padding-top: 0; align-self: end; }
 .projects.is-single .project-info h3 { font-size: 28px; }
-.projects.is-single .project-desc { align-self: start; font-size: 13px; max-width: 42ch; }
+.projects.is-single .project-desc { align-self: start; font-size: 15px; max-width: 46ch; }
 @media (max-width: 720px) {
   .projects.is-single .project { display: block; }
   .projects.is-single .project-visual { height: 290px; }
@@ -34,9 +33,12 @@
   container-type: inline-size;
   /* fits the frame both ways: at most 74% of its height and 70% of its width, rotation included */
   height: min(74cqh, calc(70cqw / var(--paper-r, 0.8)));
-  transform: rotate(-6deg);
+  transform: rotate(var(--paper-tilt, -6deg));
 }
-.projects.is-single .project:hover .document { transform: rotate(-3deg) translateY(-6px); }
+.projects.is-single .project:hover .document { transform: rotate(calc(var(--paper-tilt, -6deg) / 2)) translateY(-6px); }
+/* A row of folders: each paper lies at its own angle, so the grid does not repeat one pose. */
+.job-folders > li:nth-child(3n+2) { --paper-tilt: 4deg; }
+.job-folders > li:nth-child(3n) { --paper-tilt: -2deg; }
 .projects.is-single .project-visual { container-type: size; }
 /* Folder colours (cases.ts `tone`): paper, ink, rule lines, border and the stock inside the spread.
    The red top edge and the stamp stay the brand red on every tone. */
@@ -49,6 +51,10 @@
 .paper b { display: block; margin: 4.5cqw 0 6cqw; font-size: 8.4cqw; line-height: 1.35; font-weight: 500; }
 .paper-line { display: block; height: 0.5cqw; width: 85%; margin: 2.6cqw 0; background: #aaa0a4; }
 .paper-line.is-short { width: 55%; }
+/* The paper's subject drawing: ink lines, one red mark. */
+.paper-glyph { display: block; width: 62%; height: auto; margin: 0.5cqw 0 0; fill: none; stroke: var(--paper-ink, #251c20); stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; opacity: 0.7; }
+.paper-glyph .is-red { stroke: var(--paper-stamp, #c1152b); opacity: 1; }
+.paper-glyph circle.is-red { fill: var(--paper-stamp, #c1152b); }
 /* The paper is crisp white with a red top edge and a hairline border in both themes; on the light
    theme the panel also takes a cooler grey, so the two no longer blend. */
 [data-theme=industrial] .projects.is-single .project-visual { background: linear-gradient(160deg, #e9ecf0, #dde1e7); }
@@ -174,7 +180,7 @@
 .tdn-index { margin: 0 0 6px; font-size: 12px; color: #7d6e74; }
 .tdn-title h2 {
   margin: 0; font-family: var(--font-display), sans-serif; font-size: clamp(34px, 4vw, 52px);
-  line-height: 1; letter-spacing: -0.03em; color: var(--red); font-weight: 600;
+  line-height: 1; letter-spacing: -0.03em; color: var(--red-text); font-weight: 600;
 }
 .tdn-org { margin: 8px 0 0; font-size: 14px; color: #4a3d43; }
 .tdn-lead { margin: 0; font-size: 15px; line-height: 1.6; color: #251c20; }
@@ -207,14 +213,14 @@
   .at-sheet-1 { left: calc(50% - 49px); bottom: 81%; height: 224px; }
   .at-sheet-2 { left: calc(50% + 54px); }
   .tdn-sheet { padding: 10px 9px; gap: 6px; border-top-width: 4px; }
-  .tdn-sheet b { font-size: 11px; }
+  .tdn-sheet b { font-size: 12px; }
   .at-title { bottom: 54%; left: 5%; width: 90%; height: 150px; }
   .tdn-title h2 { font-size: 36px; }
   .at-about { bottom: 22%; left: 4%; width: 92%; height: 124px; }
   .tdn-about { padding: 12px 14px; }
   .tdn-lead { font-size: 13px; line-height: 1.55; }
   .at-note { display: none; }
-  .tdn-about-note { display: block; margin: 6px 0 0; font-size: 11.5px; line-height: 1.45; color: #5d5055; }
+  .tdn-about-note { display: block; margin: 6px 0 0; font-size: 12px; line-height: 1.45; color: #5d5055; }
   .at-seal { bottom: 5%; left: 6%; width: 60px; height: 60px; }
   .tdn-seal { font-size: 13px; }
   .at-actions { bottom: 5%; left: auto; right: 5%; width: 210px; height: 58px; }
@@ -271,7 +277,7 @@
 .job-brief-facts, .job-brief-points { margin: 0; }
 .job-brief dt { font-size: 13px; font-weight: 700; color: #6a5d4e; }
 .job-brief dd { margin: 4px 0 0; color: #251c20; }
-.job-brief dd.is-pending { color: #7a6c5d; font-style: italic; }
+.job-brief dd.is-pending { color: #7a6c5d; }
 /* The facts a candidate checks first, as a ruled row like the header of a printed form. */
 .job-brief-facts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); border-top: 2px solid #251c20; border-bottom: 1px solid #d6cbb8; }
 .job-brief-facts div { padding: 12px 12px 14px 0; }

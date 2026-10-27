@@ -2,7 +2,7 @@ import Link from "next/link";
 import type { PageBlock } from "@/content/blocks";
 import { asset } from "@/lib/asset";
 import { HomeHero } from "../site/HomeHero";
-import { HomeCore } from "../site/HomeCore";
+import { HomeTiers } from "../site/HomeTiers";
 import { HomeDemo } from "../site/HomeDemo";
 import { Metrics } from "../site/Metrics";
 import { Cta } from "../site/Cta";
@@ -36,7 +36,7 @@ function Block({ block }: { block: PageBlock }) {
           <ul className="home-tiers">{block.items.map((item, index) => <li key={index}><strong>{item.product}</strong><span>{item.label}</span></li>)}</ul>
           <Link className="home-link" href={block.href} scroll={false}>{block.linkLabel} <Arrow /></Link>
         </div>
-        <HomeCore />
+        <HomeTiers names={block.items} />
       </section>
     );
     case "agentDemo": return (

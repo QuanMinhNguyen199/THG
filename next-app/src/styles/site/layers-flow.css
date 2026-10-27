@@ -134,7 +134,7 @@
 .flow-detail-work { display: flex; gap: 28px; margin: 0; }
 .flow-detail-work dt { font-size: 12px; color: var(--muted); }
 .flow-detail-work dd { margin: 2px 0 0; font-family: var(--font-display), sans-serif; font-size: 26px; line-height: 1.1; color: var(--white); font-variant-numeric: tabular-nums; }
-.flow-detail-note { grid-column: 1 / -1; margin-top: 8px !important; font-size: 11px; color: var(--muted); opacity: 0.7; }
+.flow-detail-note { grid-column: 1 / -1; margin-top: 8px !important; font-size: 12px; color: var(--muted); opacity: 0.7; }
 
 .flow-chips { display: none; }
 .flow-tier { display: none; }
@@ -258,8 +258,8 @@
   /* Flat column: tier names in a plain stack; the picked tier opens into the unit label. */
   .s3-column { position: absolute; inset: 0 0 0 70%; display: flex; flex-direction: column; justify-content: center; gap: 8px; }
   .s3-tier { display: block; width: 100%; min-height: 28px; padding: 4px 0; background: none; text-align: left; font-size: 12px; color: var(--muted); }
-  .s3-tier span { font-size: 10px; margin-right: 4px; opacity: 0.8; }
-  .s3-row.is-active .s3-tier { color: var(--red); }
+  .s3-tier span { font-size: 12px; margin-right: 4px; opacity: 0.8; }
+  .s3-row.is-active .s3-tier { color: var(--red-text); }
   .s3-label {
     margin-top: 2px; padding: 8px 10px; border-radius: 8px;
     border: 1px solid color-mix(in srgb, var(--red) 60%, transparent);
@@ -271,8 +271,8 @@
   .s3-label dl { display: grid; gap: 4px; margin: 6px 0 0; }
   .s3-label dl > div { display: flex; align-items: baseline; gap: 5px; }
   .s3-label dd { order: -1; margin: 0; font-family: var(--font-display), sans-serif; font-size: 17px; line-height: 1; color: var(--white); font-variant-numeric: tabular-nums; }
-  .s3-label dt { font-size: 9.5px; line-height: 1.25; color: var(--muted); }
-  .s3-label small { display: block; margin-top: 6px; font-size: 9px; color: var(--muted); opacity: 0.75; }
+  .s3-label dt { font-size: 12px; line-height: 1.25; color: var(--muted); }
+  .s3-label small { display: block; margin-top: 6px; font-size: 12px; color: var(--muted); opacity: 0.75; }
 
   .flow-chips { display: flex; gap: 6px; overflow-x: auto; padding: 2px 0 4px; scrollbar-width: none; flex: none; }
   .flow-chips::-webkit-scrollbar { display: none; }
@@ -295,7 +295,7 @@
   .flow-more { display: block; flex: none; border-top: 1px solid var(--line); padding-top: 8px; font-size: 12px; }
   .flow-more summary { cursor: pointer; color: var(--white); list-style: none; display: flex; justify-content: space-between; min-height: 28px; align-items: center; }
   .flow-more summary::-webkit-details-marker { display: none; }
-  .flow-more summary::after { content: "+"; color: var(--red); font-size: 16px; }
+  .flow-more summary::after { content: "+"; color: var(--red-text); font-size: 16px; }
   .flow-more[open] summary::after { content: "−"; }
   .flow-more p { margin: 4px 0 0; line-height: 1.6; color: var(--white); opacity: 0.86; }
   .flow-more p span { color: var(--muted); }

@@ -12,7 +12,7 @@
 [data-theme=tech] main,[data-theme=tech] footer {position:relative;z-index:1}
 [data-theme=tech] .hero {background:transparent}
 [data-theme=tech] .control {background:color-mix(in srgb,var(--surface) 80%,transparent)}
-[data-theme=tech] h1 {color:var(--red)}
+[data-theme=tech] h1 {color:var(--red-text)}
 [data-theme=tech] .button {transition:background .35s,border-color .35s,box-shadow .45s,transform .35s}
 [data-theme=tech] .button:hover,[data-theme=tech] .button:focus-visible {box-shadow:0 0 18px var(--glow),0 0 60px var(--glow-soft);transform:translateY(-1px)}
 [data-theme=tech] nav a {transition:color .3s,text-shadow .3s}
@@ -31,7 +31,6 @@
 [data-theme=tech] .project:hover .project-arrow {text-shadow:0 0 16px var(--glow)}
 [data-theme=tech] .metrics strong {transition:text-shadow .45s}
 [data-theme=tech] .metrics>div:hover strong {text-shadow:0 0 26px var(--glow-soft)}
-[data-theme=tech] .theme-dock button[aria-pressed=true] {box-shadow:0 0 14px var(--glow-soft)}
 
 /* Corporate Motion Canvas — dark headings, red reserved for actions {color:var(--white)}
 /* Split word spans inherit color, so only the authored accent spans stay red. */

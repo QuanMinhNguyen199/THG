@@ -30,7 +30,7 @@
 .pm-bars i:nth-child(n+10) { background: var(--red); }
 @keyframes pm-bar { 50% { height: 95%; } }
 .pm-alert { display: inline-flex; align-items: center; gap: 8px; padding: 6px 10px; border-radius: 6px; background: var(--red); color: #fff; font-size: 12px; font-weight: 700; animation: pm-blink 1.6s steps(2) infinite; }
-.pm-alert::before { content: "!"; display: grid; place-items: center; width: 16px; height: 16px; border-radius: 50%; background: #fff; color: var(--red); font-size: 11px; }
+.pm-alert::before { content: "!"; display: grid; place-items: center; width: 16px; height: 16px; border-radius: 50%; background: #fff; color: var(--red-text); font-size: 12px; }
 @keyframes pm-blink { 50% { opacity: 0.55; } }
 .pm-legend { position: absolute; left: 18px; bottom: 16px; margin: 0; padding: 0; list-style: none; display: flex; gap: 16px; font-size: 12px; color: #c4cad3; }
 .pm-legend i { display: inline-block; width: 10px; height: 10px; margin-right: 6px; border-radius: 50%; vertical-align: -1px; }
@@ -92,7 +92,7 @@
 .pm-stack.is-on .pm-stack-labels li { opacity: 1; transform: none; }
 .pm-stack-labels li::before { content: ""; position: absolute; left: 0; top: 0.65em; width: 8px; height: 2px; background: var(--red); }
 .pm-stack-labels strong { display: block; font-size: 14px; color: #f2f1ef; }
-.pm-stack-labels span { display: block; margin-top: 2px; font-size: 11.5px; line-height: 1.4; color: #a9b1bd; }
+.pm-stack-labels span { display: block; margin-top: 2px; font-size: 12px; line-height: 1.4; color: #a9b1bd; }
 .pm-stack-labels li:first-child strong { color: #c1152b; }
 /* in a content block the stack sits on its own dark stage */
 .corp-block.is-layers .pm-stack { height: 440px; border-radius: 18px; background: radial-gradient(circle at 35% 50%, #c1152b22, transparent 60%), #0c0d10; border: 1px solid #ffffff14; }
