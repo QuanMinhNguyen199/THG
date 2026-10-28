@@ -9,7 +9,7 @@ const basePath = forPages ? (process.env.PAGES_BASE_PATH ?? "/THG") : "";
 
 const nextConfig: NextConfig = {
   // The app has two root layouts, so unmatched URLs need app/global-not-found.tsx.
-  experimental: { globalNotFound: true },
+  experimental: { globalNotFound: true, agentUpgrade: "security" },
   cacheComponents: true,
   partialPrefetching: true,
   ...(forPages && {
