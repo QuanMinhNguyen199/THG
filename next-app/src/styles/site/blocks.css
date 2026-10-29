@@ -185,9 +185,6 @@
 .partner-track .partner-mark { min-height: 110px; white-space: nowrap; }
 .partner-track .partner-mark img { width: calc(var(--logo-w) * var(--logo-k, 1)); max-width: none; }
 @keyframes partner-drift { to { transform: translateX(-50%); } }
-/* One colour for every logo, so no brand outshouts the others: light grey on dark, graphite on white. */
-[data-theme=tech] .home-partners .partner-mark img { filter: grayscale(1) brightness(1.7) contrast(0.9); opacity: 0.8; }
-[data-theme=industrial] .home-partners .partner-mark img { filter: grayscale(1) brightness(0.4) contrast(1.4); mix-blend-mode: multiply; opacity: 0.8; }
 @media (prefers-reduced-motion: reduce) {
   .partner-marquee { -webkit-mask-image: none; mask-image: none; }
   .partner-track { width: auto; animation: none; }
