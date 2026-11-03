@@ -104,8 +104,14 @@ Metrics) nằm trong nhóm thu gọn "Nâng cao". Schema trong `src/content/payl
 
 ## Kết nối Payload sau này
 
-Schema đã chuẩn bị tại `src/content/payload/`: `pages` (trang chủ), `corporate` (các trang doanh nghiệp)
-và `jobs` (tin tuyển dụng: seed mỗi dòng thành một bản ghi, route `tuyen-dung/[slug]` giữ nguyên) là collection; `header`, `footer`, `ways` và `geoagents` là Global. Theo
+**Đặc tả cho dev: [`CONTENT-SPEC.md`](CONTENT-SPEC.md).** Mỗi collection, Global, block và field (kiểu Payload,
+bắt buộc, ràng buộc, mô tả cho người nhập), và các section của từng trang theo thứ tự. Tài liệu sinh từ
+schema (`npm run content:spec`) nên luôn khớp với site; dùng nó để đối chiếu với block đã có bên CMS.
+File JSON trong `src/content` là **nội dung hiện tại** của site để nhập lại trong admin, không phải
+cấu trúc cố định: thứ tự, số lượng section của mỗi trang do người biên tập quyết định trong admin.
+
+Schema máy đọc ở `src/content/payload/`: `pages` (trang chủ), `corporate` (các trang doanh nghiệp)
+và `jobs` (tin tuyển dụng: mỗi dòng một bản ghi, route `tuyen-dung/[slug]` giữ nguyên) là collection; `header`, `footer`, `ways` và `geoagents` là Global. Theo
 [Blocks field](https://payloadcms.com/docs/fields/blocks) và
 [Collection config](https://payloadcms.com/docs/configuration/collections).
 JSON này là cấu hình collection/fields, không phải JSON Schema và không tự khởi động CMS.
@@ -133,9 +139,8 @@ JSON này là cấu hình collection/fields, không phải JSON Schema và khôn
 
    Nếu Users có khách hàng hoặc tài khoản công khai, thay điều kiện này bằng kiểm tra role.
    Thêm validation anchor/URL phía CMS theo các ràng buộc trong `validate.mjs`.
-3. Seed từ các file JSON theo `DOCS` trong `registry.ts`. Loại bỏ ID block cục bộ để Payload cấp ID theo adapter;
-   giữ `anchor` để không mất các liên kết trong trang. Seed theo slug và không ghi đè nội dung
-   biên tập đã tồn tại. Thực hiện thao tác này bằng script server được xác thực.
+3. Nhập nội dung trong admin theo mục 3 của `CONTENT-SPEC.md` (không chạy seed). Giữ các `anchor` đang
+   có link trỏ tới.
 4. Generate types bằng Payload, thay contract thủ công trong `src/content/blocks.ts` bằng
    types được sinh. Chuẩn hóa các field optional/null tại ranh giới nguồn dữ liệu nếu cần.
 5. Thay các import JSON trong `src/content/published.ts` bằng truy vấn Payload rồi đưa vào

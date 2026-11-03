@@ -113,3 +113,7 @@ test('postings need a well-formed slug, unique in the list', () => {
   added.jobs.push({ ...added.jobs[0], slug: 'new-role', title: 'New role' });
   assert.doesNotThrow(() => validateDocument(added, schema));
 });
+test('CONTENT-SPEC.md is what build-spec.mjs generates (run npm run content:spec)', async () => {
+  const { buildSpec } = await import('./build-spec.mjs');
+  assert.equal(readFileSync(new URL('../CONTENT-SPEC.md', import.meta.url), 'utf8').replace(/\r\n/g, '\n'), buildSpec());
+});
