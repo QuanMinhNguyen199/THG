@@ -52,12 +52,12 @@ function Block({ block }: { block: PageBlock }) {
     case "navigationTiles": return (
       <section className="wrap home-tiles" id={anchor} aria-labelledby={titleId}>
         <h2 id={titleId} className="home-tiles-title">{block.title} <span>{block.highlight}</span></h2>
-        <div className="home-grid">{block.items.map((tile, index) => (
+        <div className="home-grid">{block.tiles.map((tile, index) => (
           <Link key={index} href={tile.href} scroll={false} className={`home-tile ${tile.size === "wide" ? "is-wide" : ""}${tile.image ? " has-image" : ""}`}>
             {tile.image && <img src={/^(https?:)?\/\//.test(tile.image) ? tile.image : asset(tile.image)} alt="" loading="lazy" />}
             <span className="home-tile-body">
-              <span className="home-tile-head"><strong>{tile.label}</strong><Arrow /></span>
-              <ul>{tile.items.map((item, i) => <li key={i}>{item.text}</li>)}</ul>
+              <span className="home-tile-head"><strong>{tile.title}</strong><Arrow /></span>
+              <ul>{tile.lines.map((line, i) => <li key={i}>{line.text}</li>)}</ul>
             </span>
           </Link>
         ))}</div>

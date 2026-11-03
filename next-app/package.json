@@ -9,6 +9,7 @@
     "build:pages": "next build",
     "postinstall": "patch-package",
     "check:content": "node scripts/check-content.mjs",
+    "content:schema": "node scripts/build-collection.mjs",
     "prebuild": "npm run check:content",
     "prebuild:pages": "npm run check:content"
   },

@@ -1,23 +1,23 @@
 [
   {
-    "to": 4,
-    "pad": 2,
-    "label": "Tầng vận hành"
+    "value": 4,
+    "label": "Tầng vận hành",
+    "minDigits": 2
   },
   {
-    "to": 100,
+    "value": 100,
     "unit": "%",
     "label": "Chủ quyền dữ liệu"
   },
   {
-    "prefix": "Level ",
-    "to": 3,
+    "value": 3,
     "suffix": "+",
-    "label": "An toàn thông tin"
+    "label": "An toàn thông tin",
+    "prefix": "Level"
   },
   {
-    "to": 2,
-    "pad": 2,
-    "label": "Cấp độ kiểm soát"
+    "value": 2,
+    "label": "Cấp độ kiểm soát",
+    "minDigits": 2
   }
 ]
