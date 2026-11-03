@@ -1,0 +1,1255 @@
+{
+  "slug": "corporate",
+  "labels": {
+    "singular": "Trang doanh nghiệp",
+    "plural": "Các trang doanh nghiệp"
+  },
+  "fields": [
+    {
+      "name": "name",
+      "type": "text",
+      "label": "Tên trang",
+      "admin": {
+        "description": "Tên ngắn trên menu, thẻ và mục \"Xem thêm\"."
+      },
+      "required": true
+    },
+    {
+      "name": "kind",
+      "type": "text",
+      "label": "Dòng mô tả ngắn",
+      "admin": {
+        "description": "Tuỳ chọn. Hiện dưới tên trang trong menu và mục \"Xem thêm\"."
+      }
+    },
+    {
+      "name": "title",
+      "type": "textarea",
+      "label": "Tiêu đề lớn (H1)",
+      "admin": {
+        "description": "Câu tiêu đề ở đầu trang."
+      },
+      "required": true
+    },
+    {
+      "name": "en",
+      "type": "text",
+      "label": "Dòng tiếng Anh",
+      "admin": {
+        "description": "Tuỳ chọn, dưới tiêu đề lớn."
+      }
+    },
+    {
+      "name": "lead",
+      "type": "textarea",
+      "label": "Đoạn mở đầu",
+      "admin": {
+        "description": "Tuỳ chọn, dưới tiêu đề. Cũng là mô tả trang cho công cụ tìm kiếm."
+      }
+    },
+    {
+      "name": "image",
+      "type": "text",
+      "label": "Ảnh banner",
+      "admin": {
+        "description": "Tuỳ chọn. Đường dẫn ảnh, ví dụ /media/case-city.jpg. Trên trang tổng, ảnh của trang con đầu tiên làm thẻ lớn."
+      }
+    },
+    {
+      "name": "model",
+      "type": "blocks",
+      "maxRows": 1,
+      "label": "Hình minh hoạ cạnh tiêu đề",
+      "labels": {
+        "singular": "Hình",
+        "plural": "Hình"
+      },
+      "admin": {
+        "description": "Tuỳ chọn, tối đa một hình."
+      },
+      "blocks": [
+        {
+          "slug": "core",
+          "labels": {
+            "singular": "Lõi GEO Agent",
+            "plural": "Lõi GEO Agent"
+          },
+          "admin": {
+            "description": "Hình lõi chuyển động, không có chữ để sửa."
+          },
+          "fields": []
+        },
+        {
+          "slug": "bridge",
+          "labels": {
+            "singular": "Cây cầu bốn lớp",
+            "plural": "Cây cầu bốn lớp"
+          },
+          "admin": {
+            "description": "Bốn nhãn theo thứ tự trên cây cầu."
+          },
+          "fields": [
+            {
+              "name": "labels",
+              "type": "array",
+              "label": "Các nhãn",
+              "labels": {
+                "singular": "Nhãn",
+                "plural": "Nhãn"
+              },
+              "required": true,
+              "minRows": 4,
+              "maxRows": 4,
+              "fields": [
+                {
+                  "name": "text",
+                  "type": "text",
+                  "required": true,
+                  "label": "Nội dung"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "slug": "devices",
+          "labels": {
+            "singular": "Chuỗi thiết bị",
+            "plural": "Chuỗi thiết bị"
+          },
+          "admin": {
+            "description": "Các thiết bị theo thứ tự."
+          },
+          "fields": [
+            {
+              "name": "items",
+              "type": "array",
+              "label": "Các thiết bị",
+              "labels": {
+                "singular": "Thiết bị",
+                "plural": "Thiết bị"
+              },
+              "required": true,
+              "minRows": 1,
+              "fields": [
+                {
+                  "name": "text",
+                  "type": "text",
+                  "required": true,
+                  "label": "Nội dung"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "slug": "phone",
+          "labels": {
+            "singular": "Cuộc gọi",
+            "plural": "Cuộc gọi"
+          },
+          "admin": {
+            "description": "Một cuộc gọi mẫu giữa người gọi và Agent."
+          },
+          "fields": [
+            {
+              "name": "title",
+              "type": "text",
+              "label": "Tiêu đề",
+              "required": true
+            },
+            {
+              "name": "caller",
+              "type": "text",
+              "label": "Người gọi",
+              "required": true
+            },
+            {
+              "name": "script",
+              "type": "array",
+              "required": true,
+              "minRows": 1,
+              "label": "Lời thoại",
+              "labels": {
+                "singular": "Câu",
+                "plural": "Câu"
+              },
+              "fields": [
+                {
+                  "name": "who",
+                  "type": "select",
+                  "required": true,
+                  "label": "Ai nói",
+                  "options": [
+                    {
+                      "label": "Người gọi",
+                      "value": "in"
+                    },
+                    {
+                      "label": "Agent",
+                      "value": "agent"
+                    }
+                  ]
+                },
+                {
+                  "name": "text",
+                  "type": "textarea",
+                  "label": "Nội dung",
+                  "required": true
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "slug": "stack",
+          "labels": {
+            "singular": "Các tầng xếp chồng",
+            "plural": "Các tầng xếp chồng"
+          },
+          "admin": {
+            "description": "Các tầng từ trên xuống, mỗi tầng có thể có nhãn nhỏ."
+          },
+          "fields": [
+            {
+              "name": "layers",
+              "type": "array",
+              "required": true,
+              "minRows": 1,
+              "label": "Các tầng",
+              "labels": {
+                "singular": "Tầng",
+                "plural": "Tầng"
+              },
+              "fields": [
+                {
+                  "name": "label",
+                  "type": "text",
+                  "label": "Tên tầng",
+                  "required": true
+                },
+                {
+                  "name": "chips",
+                  "type": "array",
+                  "label": "Nhãn nhỏ",
+                  "labels": {
+                    "singular": "Nhãn",
+                    "plural": "Nhãn"
+                  },
+                  "fields": [
+                    {
+                      "name": "text",
+                      "type": "text",
+                      "required": true,
+                      "label": "Nội dung"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "blocks",
+      "type": "blocks",
+      "required": true,
+      "minRows": 1,
+      "label": "Các section của trang",
+      "labels": {
+        "singular": "Section",
+        "plural": "Section"
+      },
+      "admin": {
+        "description": "Thứ tự từ trên xuống ở đây là thứ tự trên trang."
+      },
+      "blocks": [
+        {
+          "slug": "cards",
+          "labels": {
+            "singular": "Thẻ",
+            "plural": "Thẻ"
+          },
+          "admin": {
+            "description": "Lưới thẻ. Từ ba thẻ trở lên mà thẻ nào cũng có link thì hiện thành hàng; khi thẻ đầu có ảnh thì thành một thẻ lớn có ảnh."
+          },
+          "fields": [
+            {
+              "name": "enabled",
+              "type": "checkbox",
+              "defaultValue": true,
+              "label": "Hiển thị section này",
+              "admin": {
+                "description": "Bỏ chọn để ẩn tạm section mà không mất nội dung."
+              }
+            },
+            {
+              "name": "title",
+              "type": "text",
+              "label": "Tiêu đề section",
+              "admin": {
+                "description": "Tuỳ chọn. Một section không có tiêu đề và chỉ có một đoạn văn hiện thành câu chốt chữ lớn."
+              }
+            },
+            {
+              "name": "items",
+              "type": "array",
+              "required": true,
+              "minRows": 1,
+              "label": "Các thẻ",
+              "labels": {
+                "singular": "Thẻ",
+                "plural": "Thẻ"
+              },
+              "fields": [
+                {
+                  "name": "title",
+                  "type": "text",
+                  "label": "Tên thẻ",
+                  "required": true
+                },
+                {
+                  "name": "body",
+                  "type": "textarea",
+                  "label": "Mô tả"
+                },
+                {
+                  "name": "href",
+                  "type": "text",
+                  "label": "Link",
+                  "admin": {
+                    "description": "Tuỳ chọn. Trang trong website bắt đầu bằng /, link ngoài bằng https://."
+                  }
+                },
+                {
+                  "name": "cta",
+                  "type": "text",
+                  "label": "Chữ trên link",
+                  "admin": {
+                    "description": "Ví dụ: Xem giải pháp."
+                  }
+                },
+                {
+                  "name": "image",
+                  "type": "text",
+                  "label": "Ảnh",
+                  "admin": {
+                    "description": "Tuỳ chọn, chỉ dùng cho thẻ đầu. Đường dẫn ảnh, ví dụ /media/case-city.jpg."
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "slug": "table",
+          "labels": {
+            "singular": "Bảng (hiện thành thẻ)",
+            "plural": "Bảng (hiện thành thẻ)"
+          },
+          "admin": {
+            "description": "Mỗi hàng thành một thẻ: ô đầu là tên thẻ, các ô sau có tên cột làm nhãn. Ô có link biến cả thẻ thành link."
+          },
+          "fields": [
+            {
+              "name": "enabled",
+              "type": "checkbox",
+              "defaultValue": true,
+              "label": "Hiển thị section này",
+              "admin": {
+                "description": "Bỏ chọn để ẩn tạm section mà không mất nội dung."
+              }
+            },
+            {
+              "name": "title",
+              "type": "text",
+              "label": "Tiêu đề section",
+              "admin": {
+                "description": "Tuỳ chọn. Một section không có tiêu đề và chỉ có một đoạn văn hiện thành câu chốt chữ lớn."
+              }
+            },
+            {
+              "name": "by",
+              "type": "select",
+              "label": "Cách chia thẻ",
+              "options": [
+                {
+                  "label": "Mỗi hàng một thẻ",
+                  "value": "row"
+                },
+                {
+                  "label": "Mỗi cột một thẻ",
+                  "value": "column"
+                }
+              ],
+              "admin": {
+                "description": "Để trống là mỗi hàng một thẻ."
+              }
+            },
+            {
+              "name": "head",
+              "type": "array",
+              "label": "Tên các cột",
+              "labels": {
+                "singular": "Cột",
+                "plural": "Cột"
+              },
+              "admin": {
+                "description": "Theo thứ tự từ trái sang. Khi chia mỗi cột một thẻ, để trống tên cột đầu thì cột đầu thành nhãn cho từng giá trị."
+              },
+              "required": true,
+              "minRows": 1,
+              "fields": [
+                {
+                  "name": "text",
+                  "type": "text",
+                  "label": "Tên cột"
+                }
+              ]
+            },
+            {
+              "name": "rows",
+              "type": "array",
+              "required": true,
+              "minRows": 1,
+              "label": "Các hàng",
+              "labels": {
+                "singular": "Hàng",
+                "plural": "Hàng"
+              },
+              "fields": [
+                {
+                  "name": "cells",
+                  "type": "array",
+                  "required": true,
+                  "minRows": 1,
+                  "label": "Các ô",
+                  "labels": {
+                    "singular": "Ô",
+                    "plural": "Ô"
+                  },
+                  "admin": {
+                    "description": "Cùng thứ tự với tên các cột."
+                  },
+                  "fields": [
+                    {
+                      "name": "text",
+                      "type": "text",
+                      "label": "Nội dung",
+                      "required": true
+                    },
+                    {
+                      "name": "href",
+                      "type": "text",
+                      "label": "Link",
+                      "admin": {
+                        "description": "Tuỳ chọn: ô có link biến cả thẻ thành link."
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "slug": "steps",
+          "labels": {
+            "singular": "Các bước",
+            "plural": "Các bước"
+          },
+          "admin": {
+            "description": "Các bước theo thứ tự."
+          },
+          "fields": [
+            {
+              "name": "enabled",
+              "type": "checkbox",
+              "defaultValue": true,
+              "label": "Hiển thị section này",
+              "admin": {
+                "description": "Bỏ chọn để ẩn tạm section mà không mất nội dung."
+              }
+            },
+            {
+              "name": "title",
+              "type": "text",
+              "label": "Tiêu đề section",
+              "admin": {
+                "description": "Tuỳ chọn. Một section không có tiêu đề và chỉ có một đoạn văn hiện thành câu chốt chữ lớn."
+              }
+            },
+            {
+              "name": "flow",
+              "type": "checkbox",
+              "label": "Hiện dạng luồng có mũi tên"
+            },
+            {
+              "name": "items",
+              "type": "array",
+              "required": true,
+              "minRows": 1,
+              "label": "Các bước",
+              "labels": {
+                "singular": "Bước",
+                "plural": "Bước"
+              },
+              "fields": [
+                {
+                  "name": "title",
+                  "type": "text",
+                  "label": "Tên bước",
+                  "required": true
+                },
+                {
+                  "name": "body",
+                  "type": "textarea",
+                  "label": "Mô tả"
+                }
+              ]
+            },
+            {
+              "name": "note",
+              "type": "textarea",
+              "label": "Ghi chú dưới các bước"
+            }
+          ]
+        },
+        {
+          "slug": "list",
+          "labels": {
+            "singular": "Danh sách",
+            "plural": "Danh sách"
+          },
+          "admin": {
+            "description": "Danh sách các dòng, mỗi dòng có thể có tiêu đề và link."
+          },
+          "fields": [
+            {
+              "name": "enabled",
+              "type": "checkbox",
+              "defaultValue": true,
+              "label": "Hiển thị section này",
+              "admin": {
+                "description": "Bỏ chọn để ẩn tạm section mà không mất nội dung."
+              }
+            },
+            {
+              "name": "title",
+              "type": "text",
+              "label": "Tiêu đề section",
+              "admin": {
+                "description": "Tuỳ chọn. Một section không có tiêu đề và chỉ có một đoạn văn hiện thành câu chốt chữ lớn."
+              }
+            },
+            {
+              "name": "items",
+              "type": "array",
+              "required": true,
+              "minRows": 1,
+              "label": "Các dòng",
+              "labels": {
+                "singular": "Dòng",
+                "plural": "Dòng"
+              },
+              "fields": [
+                {
+                  "name": "title",
+                  "type": "text",
+                  "label": "Tiêu đề dòng"
+                },
+                {
+                  "name": "body",
+                  "type": "textarea",
+                  "label": "Nội dung",
+                  "required": true
+                },
+                {
+                  "name": "href",
+                  "type": "text",
+                  "label": "Link",
+                  "admin": {
+                    "description": "Tuỳ chọn. Trang trong website bắt đầu bằng /, link ngoài bằng https://."
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "slug": "text",
+          "labels": {
+            "singular": "Đoạn văn",
+            "plural": "Đoạn văn"
+          },
+          "admin": {
+            "description": "Một hoặc nhiều đoạn văn, có thể kèm link."
+          },
+          "fields": [
+            {
+              "name": "enabled",
+              "type": "checkbox",
+              "defaultValue": true,
+              "label": "Hiển thị section này",
+              "admin": {
+                "description": "Bỏ chọn để ẩn tạm section mà không mất nội dung."
+              }
+            },
+            {
+              "name": "title",
+              "type": "text",
+              "label": "Tiêu đề section",
+              "admin": {
+                "description": "Tuỳ chọn. Một section không có tiêu đề và chỉ có một đoạn văn hiện thành câu chốt chữ lớn."
+              }
+            },
+            {
+              "name": "body",
+              "type": "array",
+              "label": "Các đoạn",
+              "labels": {
+                "singular": "Đoạn",
+                "plural": "Đoạn"
+              },
+              "required": true,
+              "minRows": 1,
+              "fields": [
+                {
+                  "name": "text",
+                  "type": "textarea",
+                  "required": true,
+                  "label": "Nội dung"
+                }
+              ]
+            },
+            {
+              "name": "linkLabel",
+              "type": "text",
+              "label": "Chữ trên link"
+            },
+            {
+              "name": "linkHref",
+              "type": "text",
+              "label": "Link",
+              "admin": {
+                "description": "Trang trong website bắt đầu bằng /, link ngoài bằng https://."
+              }
+            }
+          ]
+        },
+        {
+          "slug": "pills",
+          "labels": {
+            "singular": "Nhãn",
+            "plural": "Nhãn"
+          },
+          "admin": {
+            "description": "Hàng nhãn ngắn dạng viên thuốc."
+          },
+          "fields": [
+            {
+              "name": "enabled",
+              "type": "checkbox",
+              "defaultValue": true,
+              "label": "Hiển thị section này",
+              "admin": {
+                "description": "Bỏ chọn để ẩn tạm section mà không mất nội dung."
+              }
+            },
+            {
+              "name": "title",
+              "type": "text",
+              "label": "Tiêu đề section",
+              "admin": {
+                "description": "Tuỳ chọn. Một section không có tiêu đề và chỉ có một đoạn văn hiện thành câu chốt chữ lớn."
+              }
+            },
+            {
+              "name": "items",
+              "type": "array",
+              "label": "Các nhãn",
+              "labels": {
+                "singular": "Nhãn",
+                "plural": "Nhãn"
+              },
+              "required": true,
+              "minRows": 1,
+              "fields": [
+                {
+                  "name": "text",
+                  "type": "text",
+                  "required": true,
+                  "label": "Nội dung"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "slug": "timeline",
+          "labels": {
+            "singular": "Dòng thời gian",
+            "plural": "Dòng thời gian"
+          },
+          "admin": {
+            "description": "Các mốc theo năm; mốc cuối hiện màu đỏ."
+          },
+          "fields": [
+            {
+              "name": "enabled",
+              "type": "checkbox",
+              "defaultValue": true,
+              "label": "Hiển thị section này",
+              "admin": {
+                "description": "Bỏ chọn để ẩn tạm section mà không mất nội dung."
+              }
+            },
+            {
+              "name": "title",
+              "type": "text",
+              "label": "Tiêu đề section",
+              "admin": {
+                "description": "Tuỳ chọn. Một section không có tiêu đề và chỉ có một đoạn văn hiện thành câu chốt chữ lớn."
+              }
+            },
+            {
+              "name": "items",
+              "type": "array",
+              "required": true,
+              "minRows": 1,
+              "label": "Các mốc",
+              "labels": {
+                "singular": "Mốc",
+                "plural": "Mốc"
+              },
+              "fields": [
+                {
+                  "name": "year",
+                  "type": "text",
+                  "label": "Năm",
+                  "required": true
+                },
+                {
+                  "name": "label",
+                  "type": "text",
+                  "label": "Nội dung",
+                  "required": true
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "slug": "layers",
+          "labels": {
+            "singular": "Các tầng",
+            "plural": "Các tầng"
+          },
+          "admin": {
+            "description": "Sơ đồ các tầng xếp chồng, tầng đầu ở trên."
+          },
+          "fields": [
+            {
+              "name": "enabled",
+              "type": "checkbox",
+              "defaultValue": true,
+              "label": "Hiển thị section này",
+              "admin": {
+                "description": "Bỏ chọn để ẩn tạm section mà không mất nội dung."
+              }
+            },
+            {
+              "name": "title",
+              "type": "text",
+              "label": "Tiêu đề section",
+              "admin": {
+                "description": "Tuỳ chọn. Một section không có tiêu đề và chỉ có một đoạn văn hiện thành câu chốt chữ lớn."
+              }
+            },
+            {
+              "name": "items",
+              "type": "array",
+              "label": "Các tầng",
+              "labels": {
+                "singular": "Tầng",
+                "plural": "Tầng"
+              },
+              "required": true,
+              "minRows": 1,
+              "fields": [
+                {
+                  "name": "text",
+                  "type": "text",
+                  "required": true,
+                  "label": "Nội dung"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "slug": "partners",
+          "labels": {
+            "singular": "Đối tác",
+            "plural": "Đối tác"
+          },
+          "admin": {
+            "description": "Logo đối tác theo nhóm, lấy từ danh sách đối tác chung. Thêm đối tác hoặc logo cần nhờ dev."
+          },
+          "fields": [
+            {
+              "name": "enabled",
+              "type": "checkbox",
+              "defaultValue": true,
+              "label": "Hiển thị section này",
+              "admin": {
+                "description": "Bỏ chọn để ẩn tạm section mà không mất nội dung."
+              }
+            },
+            {
+              "name": "title",
+              "type": "text",
+              "label": "Tiêu đề section",
+              "admin": {
+                "description": "Tuỳ chọn. Một section không có tiêu đề và chỉ có một đoạn văn hiện thành câu chốt chữ lớn."
+              }
+            }
+          ]
+        },
+        {
+          "slug": "callout",
+          "labels": {
+            "singular": "Câu nổi bật",
+            "plural": "Câu nổi bật"
+          },
+          "admin": {
+            "description": "Một câu chữ lớn trong khung viền đỏ, có thể kèm đoạn giải thích."
+          },
+          "fields": [
+            {
+              "name": "enabled",
+              "type": "checkbox",
+              "defaultValue": true,
+              "label": "Hiển thị section này",
+              "admin": {
+                "description": "Bỏ chọn để ẩn tạm section mà không mất nội dung."
+              }
+            },
+            {
+              "name": "title",
+              "type": "text",
+              "label": "Tiêu đề section",
+              "admin": {
+                "description": "Tuỳ chọn. Một section không có tiêu đề và chỉ có một đoạn văn hiện thành câu chốt chữ lớn."
+              }
+            },
+            {
+              "name": "body",
+              "type": "textarea",
+              "label": "Câu nổi bật",
+              "required": true
+            },
+            {
+              "name": "detail",
+              "type": "textarea",
+              "label": "Đoạn giải thích",
+              "admin": {
+                "description": "Tuỳ chọn, chữ thường dưới câu nổi bật."
+              }
+            },
+            {
+              "name": "en",
+              "type": "text",
+              "label": "Dòng tiếng Anh",
+              "admin": {
+                "description": "Tuỳ chọn."
+              }
+            }
+          ]
+        },
+        {
+          "slug": "rings",
+          "labels": {
+            "singular": "Vòng tròn đồng tâm",
+            "plural": "Vòng tròn đồng tâm"
+          },
+          "admin": {
+            "description": "Câu tuyên bố bên trái, các vòng tròn bên phải nở dần từ trong ra; vòng trong cùng màu đỏ."
+          },
+          "fields": [
+            {
+              "name": "enabled",
+              "type": "checkbox",
+              "defaultValue": true,
+              "label": "Hiển thị section này",
+              "admin": {
+                "description": "Bỏ chọn để ẩn tạm section mà không mất nội dung."
+              }
+            },
+            {
+              "name": "title",
+              "type": "text",
+              "label": "Tiêu đề section",
+              "admin": {
+                "description": "Tuỳ chọn. Một section không có tiêu đề và chỉ có một đoạn văn hiện thành câu chốt chữ lớn."
+              }
+            },
+            {
+              "name": "statement",
+              "type": "text",
+              "label": "Câu tuyên bố",
+              "required": true
+            },
+            {
+              "name": "body",
+              "type": "textarea",
+              "label": "Đoạn mô tả",
+              "required": true
+            },
+            {
+              "name": "items",
+              "type": "array",
+              "label": "Các vòng",
+              "labels": {
+                "singular": "Vòng",
+                "plural": "Vòng"
+              },
+              "admin": {
+                "description": "Từ trong ra ngoài."
+              },
+              "required": true,
+              "minRows": 2,
+              "fields": [
+                {
+                  "name": "text",
+                  "type": "text",
+                  "required": true,
+                  "label": "Nội dung"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "slug": "values",
+          "labels": {
+            "singular": "Giá trị",
+            "plural": "Giá trị"
+          },
+          "admin": {
+            "description": "Một hàng chữ lớn, mỗi giá trị một ô."
+          },
+          "fields": [
+            {
+              "name": "enabled",
+              "type": "checkbox",
+              "defaultValue": true,
+              "label": "Hiển thị section này",
+              "admin": {
+                "description": "Bỏ chọn để ẩn tạm section mà không mất nội dung."
+              }
+            },
+            {
+              "name": "title",
+              "type": "text",
+              "label": "Tiêu đề section",
+              "admin": {
+                "description": "Tuỳ chọn. Một section không có tiêu đề và chỉ có một đoạn văn hiện thành câu chốt chữ lớn."
+              }
+            },
+            {
+              "name": "items",
+              "type": "array",
+              "label": "Các giá trị",
+              "labels": {
+                "singular": "Giá trị",
+                "plural": "Giá trị"
+              },
+              "required": true,
+              "minRows": 1,
+              "fields": [
+                {
+                  "name": "text",
+                  "type": "text",
+                  "required": true,
+                  "label": "Nội dung"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "slug": "case",
+          "labels": {
+            "singular": "Case study",
+            "plural": "Case study"
+          },
+          "admin": {
+            "description": "Hồ sơ case study có sẵn (nội dung case nằm trong code)."
+          },
+          "fields": [
+            {
+              "name": "enabled",
+              "type": "checkbox",
+              "defaultValue": true,
+              "label": "Hiển thị section này",
+              "admin": {
+                "description": "Bỏ chọn để ẩn tạm section mà không mất nội dung."
+              }
+            },
+            {
+              "name": "title",
+              "type": "text",
+              "label": "Tiêu đề section",
+              "admin": {
+                "description": "Tuỳ chọn. Một section không có tiêu đề và chỉ có một đoạn văn hiện thành câu chốt chữ lớn."
+              }
+            },
+            {
+              "name": "caseId",
+              "type": "select",
+              "required": true,
+              "label": "Case study",
+              "options": [
+                {
+                  "label": "Quản lý dự án công nghiệp (PTSC M&C)",
+                  "value": "quan-ly-du-an"
+                },
+                {
+                  "label": "Dịch vụ công",
+                  "value": "dich-vu-cong"
+                },
+                {
+                  "label": "AI Platform",
+                  "value": "ai-platform"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "slug": "project",
+          "labels": {
+            "singular": "Dự án",
+            "plural": "Dự án"
+          },
+          "admin": {
+            "description": "Hồ sơ một dự án: bài toán, giải pháp, kết quả."
+          },
+          "fields": [
+            {
+              "name": "enabled",
+              "type": "checkbox",
+              "defaultValue": true,
+              "label": "Hiển thị section này",
+              "admin": {
+                "description": "Bỏ chọn để ẩn tạm section mà không mất nội dung."
+              }
+            },
+            {
+              "name": "title",
+              "type": "text",
+              "label": "Tên dự án",
+              "required": true
+            },
+            {
+              "name": "client",
+              "type": "text",
+              "label": "Khách hàng",
+              "required": true
+            },
+            {
+              "name": "problem",
+              "type": "textarea",
+              "label": "Bài toán",
+              "required": true
+            },
+            {
+              "name": "solution",
+              "type": "array",
+              "label": "Giải pháp GEO Agent",
+              "labels": {
+                "singular": "Ý",
+                "plural": "Ý"
+              },
+              "required": true,
+              "minRows": 1,
+              "fields": [
+                {
+                  "name": "text",
+                  "type": "text",
+                  "required": true,
+                  "label": "Nội dung"
+                }
+              ]
+            },
+            {
+              "name": "result",
+              "type": "textarea",
+              "label": "Kết quả",
+              "required": true
+            },
+            {
+              "type": "collapsible",
+              "label": "Hồ sơ dự án (tuỳ chọn)",
+              "admin": {
+                "initCollapsed": true
+              },
+              "fields": [
+                {
+                  "name": "period",
+                  "type": "text",
+                  "label": "Thời gian thực hiện"
+                },
+                {
+                  "name": "status",
+                  "type": "text",
+                  "label": "Trạng thái triển khai"
+                },
+                {
+                  "name": "scope",
+                  "type": "text",
+                  "label": "Phạm vi thực hiện"
+                },
+                {
+                  "name": "role",
+                  "type": "text",
+                  "label": "Vai trò của THEHEGEO"
+                }
+              ]
+            },
+            {
+              "name": "linkLabel",
+              "type": "text",
+              "label": "Chữ trên link"
+            },
+            {
+              "name": "linkHref",
+              "type": "text",
+              "label": "Link",
+              "admin": {
+                "description": "Trang trong website bắt đầu bằng /, link ngoài bằng https://."
+              }
+            }
+          ]
+        },
+        {
+          "slug": "contact",
+          "labels": {
+            "singular": "Biểu mẫu liên hệ",
+            "plural": "Biểu mẫu liên hệ"
+          },
+          "admin": {
+            "description": "Biểu mẫu liên hệ và thông tin liên hệ. Email, điện thoại, địa chỉ sửa ở Footer."
+          },
+          "fields": [
+            {
+              "name": "enabled",
+              "type": "checkbox",
+              "defaultValue": true,
+              "label": "Hiển thị section này",
+              "admin": {
+                "description": "Bỏ chọn để ẩn tạm section mà không mất nội dung."
+              }
+            }
+          ]
+        },
+        {
+          "slug": "jobs",
+          "labels": {
+            "singular": "Danh sách vị trí",
+            "plural": "Danh sách vị trí"
+          },
+          "admin": {
+            "description": "Các vị trí đang tuyển. Sửa từng vị trí ở trang tin tuyển dụng đó."
+          },
+          "fields": [
+            {
+              "name": "enabled",
+              "type": "checkbox",
+              "defaultValue": true,
+              "label": "Hiển thị section này",
+              "admin": {
+                "description": "Bỏ chọn để ẩn tạm section mà không mất nội dung."
+              }
+            }
+          ]
+        },
+        {
+          "slug": "projectIndex",
+          "labels": {
+            "singular": "Danh sách dự án",
+            "plural": "Danh sách dự án"
+          },
+          "admin": {
+            "description": "Tự liệt kê mọi dự án trên các trang Use Case; sửa dự án ở trang Use Case đó."
+          },
+          "fields": [
+            {
+              "name": "enabled",
+              "type": "checkbox",
+              "defaultValue": true,
+              "label": "Hiển thị section này",
+              "admin": {
+                "description": "Bỏ chọn để ẩn tạm section mà không mất nội dung."
+              }
+            }
+          ]
+        },
+        {
+          "slug": "waysOfWorking",
+          "labels": {
+            "singular": "Cách chúng tôi làm việc (dùng chung)",
+            "plural": "Cách chúng tôi làm việc (dùng chung)"
+          },
+          "admin": {
+            "description": "Nội dung dùng chung cho trang Sứ mệnh và Tầm nhìn và trang Tuyển dụng: sửa ở một chỗ, cả hai trang cùng đổi."
+          },
+          "fields": [
+            {
+              "name": "enabled",
+              "type": "checkbox",
+              "defaultValue": true,
+              "label": "Hiển thị section này",
+              "admin": {
+                "description": "Bỏ chọn để ẩn tạm section mà không mất nội dung."
+              }
+            }
+          ],
+          "custom": {
+            "shared": "ways"
+          }
+        }
+      ]
+    },
+    {
+      "name": "cta",
+      "type": "array",
+      "label": "Nút cuối trang",
+      "labels": {
+        "singular": "Nút",
+        "plural": "Nút"
+      },
+      "admin": {
+        "description": "Nút đầu là nút chính, các nút sau là nút phụ."
+      },
+      "fields": [
+        {
+          "name": "label",
+          "type": "text",
+          "label": "Chữ trên nút",
+          "required": true
+        },
+        {
+          "name": "href",
+          "type": "text",
+          "label": "Link",
+          "admin": {
+            "description": "Để trống thì dẫn tới trang Liên hệ."
+          }
+        }
+      ]
+    }
+  ]
+}

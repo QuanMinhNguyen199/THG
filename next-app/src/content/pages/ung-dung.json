@@ -1,0 +1,44 @@
+{
+  "name": "Use Case",
+  "title": "Bài toán thật. Quy mô thật.",
+  "en": "Real problems. Real scale.",
+  "lead": "Các giải pháp GEO Agent đã được kiểm chứng thực tế tại các khối cơ quan Nhà nước và doanh nghiệp trọng yếu.",
+  "blocks": [
+    {
+      "id": "b1",
+      "blockType": "cards",
+      "items": [
+        {
+          "title": "HKD",
+          "body": "Trợ lý AI giúp hộ kinh doanh khai và nộp thuế.",
+          "href": "/ung-dung/hkd/",
+          "cta": "Xem chi tiết"
+        },
+        {
+          "title": "A360",
+          "body": "Nhìn mỗi doanh nghiệp từ 16 chiều để quản lý và dự báo thu ngân sách.",
+          "href": "/ung-dung/a360/",
+          "cta": "Xem chi tiết"
+        },
+        {
+          "title": "AI Platform",
+          "body": "Một nền tảng AI dùng chung cho nhiều cơ quan.",
+          "href": "/ung-dung/ai-platform/",
+          "cta": "Xem chi tiết"
+        },
+        {
+          "title": "Quản lý dự án công nghiệp",
+          "body": "Trợ lý AI tra cứu hồ sơ kỹ thuật và theo dõi công việc tại PTSC M&C.",
+          "href": "/ung-dung/quan-ly-du-an/",
+          "cta": "Xem chi tiết"
+        }
+      ]
+    }
+  ],
+  "cta": [
+    {
+      "label": "Đặt lịch demo",
+      "href": "/ve-thehegeo/lien-he/"
+    }
+  ]
+}

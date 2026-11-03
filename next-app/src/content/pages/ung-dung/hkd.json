@@ -1,0 +1,115 @@
+{
+  "name": "HKD",
+  "kind": "Trợ lý thuế cho hộ kinh doanh",
+  "title": "Hộ kinh doanh khai và nộp thuế cùng trợ lý AI.",
+  "en": "An AI assistant that helps household businesses file and pay taxes.",
+  "model": [
+    {
+      "id": "m1",
+      "blockType": "phone",
+      "title": "HKD",
+      "caller": "Trợ lý thuế",
+      "script": [
+        {
+          "who": "in",
+          "text": "Hộ kinh doanh của tôi cần khai thuế thế nào?"
+        },
+        {
+          "who": "agent",
+          "text": "Tôi lập tờ khai từ dữ liệu doanh thu của hộ."
+        },
+        {
+          "who": "agent",
+          "text": "Anh/chị xem và xác nhận trước khi gửi."
+        },
+        {
+          "who": "agent",
+          "text": "Tôi sẽ nhắc trước hạn nộp."
+        }
+      ]
+    }
+  ],
+  "blocks": [
+    {
+      "id": "b1",
+      "blockType": "text",
+      "title": "Bối cảnh",
+      "body": [
+        {
+          "text": "Từ ngày 1/1/2026, hộ kinh doanh không còn nộp thuế khoán mà chuyển sang tự khai, tự nộp thuế. Nhiều hộ lần đầu phải làm tờ khai và theo dõi hạn nộp."
+        }
+      ]
+    },
+    {
+      "id": "b2",
+      "blockType": "steps",
+      "title": "HKD làm gì",
+      "items": [
+        {
+          "title": "Trả lời bằng tiếng Việt",
+          "body": "Các câu hỏi thường gặp về nghĩa vụ thuế của hộ."
+        },
+        {
+          "title": "Hỗ trợ lập tờ khai",
+          "body": "Từ dữ liệu doanh thu của hộ."
+        },
+        {
+          "title": "Nhắc hạn và hướng dẫn nộp thuế"
+        }
+      ],
+      "note": "Nguyên tắc: chủ hộ xem và xác nhận trước khi gửi tờ khai."
+    },
+    {
+      "id": "b3",
+      "blockType": "table",
+      "title": "Mục tiêu",
+      "by": "column",
+      "head": [
+        {
+          "text": "Cho hộ kinh doanh"
+        },
+        {
+          "text": "Cho cơ quan thuế"
+        }
+      ],
+      "rows": [
+        {
+          "cells": [
+            {
+              "text": "Được hướng dẫn theo quy định mới bằng tiếng Việt dễ hiểu"
+            },
+            {
+              "text": "Giảm tải hỏi đáp lặp lại"
+            }
+          ]
+        },
+        {
+          "cells": [
+            {
+              "text": "Được nhắc trước hạn nộp"
+            },
+            {
+              "text": "Tỷ lệ khai đúng hạn cao hơn"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "b4",
+      "blockType": "text",
+      "title": "Đang triển khai",
+      "body": [
+        {
+          "text": "Thuế TP Hà Nội, trên ứng dụng iHanoi."
+        }
+      ]
+    }
+  ],
+  "cta": [
+    {
+      "label": "Đặt lịch demo",
+      "href": "/ve-thehegeo/lien-he/"
+    }
+  ]
+}

@@ -1,6 +1,6 @@
 import home from "./pages/home.json";
 import type { PageDocument } from "./blocks";
-import collection from "./payload/pages.collection.json";
+import collection from "./payload/pages.json";
 import { validateDocument } from "./validate.mjs";
 
 /** Content source boundary: later replace the local lookup with a published Payload query.

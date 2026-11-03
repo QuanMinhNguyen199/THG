@@ -1,10 +1,15 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { readFileSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
 import { validateDocument } from '../src/content/validate.mjs';
+import { PARTNER_LOGOS, PARTNER_NAMES } from '../src/components/site/sections/partners.ts';
+import { DOCS, buildContent } from '../src/content/registry.ts';
+import { SCHEMAS } from './build-collection.mjs';
 const read = path => JSON.parse(readFileSync(new URL(path, import.meta.url), 'utf8'));
-const schema = read('../src/content/payload/pages.collection.json');
+const schema = read('../src/content/payload/pages.json');
 const sample = () => read('../src/content/pages/home.json');
+// Every stored document by key, as the site builds its content from them.
+const stored = () => Object.fromEntries(DOCS.filter(d => existsSync(new URL(`../${d.file}`, import.meta.url))).map(d => [d.key, read(`../${d.file}`)]));
 test('allows reordering, disabling, and repeating a block with a distinct ID and anchor', () => {
   const page = sample();
   page.layout.reverse();
@@ -59,6 +64,27 @@ test('every field an editor sees has a Vietnamese label', () => {
     if (field.fields) walk(field.fields, key);
     field.blocks?.forEach(block => { if (!block.labels?.singular) missing.push(`${key}.${block.slug}`); walk(block.fields, `${key}.${block.slug}`); });
   });
-  walk(schema.fields, schema.slug);
+  for (const generated of Object.values(SCHEMAS)) walk(generated.fields, generated.slug);
+  assert.deepEqual(missing, []);
+});
+test('every schema in payload/ is what build-collection.mjs generates (run npm run content:schema)', () => {
+  for (const [name, generated] of Object.entries(SCHEMAS))
+    assert.deepEqual(read(`../src/content/payload/${name}.json`), JSON.parse(JSON.stringify(generated)), name);
+});
+test('every partner logo belongs to a listed partner, and only known partners lack a logo', () => {
+  // Shown by name until a logo is supplied; a name missing here is usually a typo.
+  const withoutLogo = ['TMS'];
+  assert.deepEqual(Object.keys(PARTNER_LOGOS).filter(name => !PARTNER_NAMES.includes(name)), []);
+  assert.deepEqual(PARTNER_NAMES.filter(name => !PARTNER_LOGOS[name]), withoutLogo);
+});
+test('each home navigation tile lists every page of its section', () => {
+  const tiles = sample().layout.find(block => block.blockType === 'navigationTiles').tiles;
+  const missing = [];
+  for (const section of Object.values(buildContent(stored()).sections)) {
+    const tile = tiles.find(t => t.href === section.base);
+    if (!tile) continue;
+    for (const page of section.pages)
+      if (!tile.lines.some(line => line.text.startsWith(page.name))) missing.push(`${tile.title}: ${page.name}`);
+  }
   assert.deepEqual(missing, []);
 });

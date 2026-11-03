@@ -1,0 +1,43 @@
+{
+  "name": "Về THEHEGEO",
+  "title": "Mỗi công nghệ của chúng tôi sinh ra từ một nhu cầu thật ở hiện trường.",
+  "en": "Every technology we build was born from a real need in the field.",
+  "lead": "Thành lập ngày 09/05/2006, Thehegeo bắt đầu với địa chất, địa hình và thu thập dữ liệu bằng cảm biến cho công trình xây dựng, rồi quan trắc cầu dây văng, cảng biển, tuyến metro. Hai mươi năm sau, chúng tôi đưa AI Agent vào bộ máy.",
+  "blocks": [
+    {
+      "id": "b1",
+      "blockType": "timeline",
+      "title": "Hành trình",
+      "items": [
+        {
+          "year": "2006",
+          "label": "GIS"
+        },
+        {
+          "year": "2012",
+          "label": "Data Logger"
+        },
+        {
+          "year": "2016",
+          "label": "Đầu tư AI"
+        },
+        {
+          "year": "2017",
+          "label": "TranspoX"
+        },
+        {
+          "year": "2018",
+          "label": "CiviX"
+        },
+        {
+          "year": "2019",
+          "label": "VEDAX AI Platform"
+        },
+        {
+          "year": "2026",
+          "label": "GEO Agent"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,89 @@
+{
+  "hero": {
+    "title": "GEO",
+    "highlight": "agents",
+    "subtitle": "WORKFORCE FOR MISSION-CRITICAL OPERATIONS",
+    "description": "Đội ngũ AI đồng hành cùng tổ chức. Dữ liệu và quyết định vẫn thuộc về bạn.",
+    "primaryLabel": "Khám phá GEOagents",
+    "secondaryLabel": "Đặt lịch tư vấn",
+    "secondaryHref": "/ve-thehegeo/lien-he/"
+  },
+  "metrics": {
+    "label": "Các đặc tính GEOagents",
+    "items": [
+      {
+        "value": 4,
+        "label": "Tầng vận hành",
+        "minDigits": 2
+      },
+      {
+        "value": 100,
+        "unit": "%",
+        "label": "Chủ quyền dữ liệu"
+      },
+      {
+        "value": 3,
+        "suffix": "+",
+        "label": "An toàn thông tin",
+        "prefix": "Level"
+      },
+      {
+        "value": 2,
+        "label": "Cấp độ kiểm soát",
+        "minDigits": 2
+      }
+    ]
+  },
+  "architecture": {
+    "title": "Một hệ thống.",
+    "highlight": "4 tầng tổ chức.",
+    "intro": "Từ định hướng đến hành động.",
+    "introLine2": "Mỗi tầng một vai trò. Cùng một mục tiêu.",
+    "captionLeft": "GEO AGENT / LUỒNG XỬ LÝ",
+    "captionRight": "HUMAN × INTELLIGENCE",
+    "layers": [
+      {
+        "tab": "Quản trị",
+        "product": "GEO Governance",
+        "body": "Tổng hợp báo cáo, tham mưu, đề xuất hỗ trợ các quyết định quản trị. Đóng vai trò như trợ lý."
+      },
+      {
+        "tab": "Quản lý",
+        "product": "GEO Management",
+        "body": "Theo dõi và bóc tách nhiệm vụ, phân công quản lý đảm bảo hiện thực hóa quyết định quản trị."
+      },
+      {
+        "tab": "Thực thi",
+        "product": "GEO Operations",
+        "body": "Đóng vai trò như co-worker làm việc với các cán bộ thực thi."
+      },
+      {
+        "tab": "Dịch vụ",
+        "product": "GEO Service",
+        "body": "Kết nối các hệ thống thông tin rời rạc và chăm sóc khách hàng, hỗ trợ người dân."
+      }
+    ]
+  },
+  "applications": {
+    "title": "Trí tuệ đi vào",
+    "highlight": "thực tiễn.",
+    "intro": "GEOagents trong những bài toán",
+    "introLine2": "vận hành chuyên biệt."
+  },
+  "careers": {
+    "title": "Tuyển dụng",
+    "highlight": "cùng THEHEGEO.",
+    "body": "Cùng xây dựng GEO Agent: trợ lý AI làm việc bên trong cơ quan, doanh nghiệp, chạy tại chỗ và để con người duyệt mọi bước quan trọng.",
+    "apply": "Gửi CV và một vài dòng về việc bạn muốn làm. Chúng tôi sẽ liên hệ lại khi có vị trí phù hợp.",
+    "action": "Gửi CV qua email",
+    "subject": "Ứng tuyển THEHEGEO"
+  },
+  "cta": {
+    "title": "Sẵn sàng đưa AI Agent vào",
+    "highlight": "bộ máy vận hành?",
+    "question": "Nhiệm vụ vận hành nào anh/chị muốn cải thiện ngay hôm nay?",
+    "body": "Hãy gửi cho chúng tôi một bài toán cụ thể. Đội ngũ chuyên gia Thehegeo sẽ xây dựng bản Demo GEO Agent chạy trực tiếp trên dữ liệu mẫu của quý cơ quan/doanh nghiệp.",
+    "action": "Gửi yêu cầu tư vấn & đặt lịch",
+    "href": "/ve-thehegeo/lien-he/"
+  }
+}

@@ -59,7 +59,12 @@ button, input, select, textarea { font: inherit; color: inherit; }
 .has-problem > input, .has-problem > select, .has-problem > textarea { border-color: #b4122a; box-shadow: 0 0 0 3px #b4122a22; }
 
 /* groups, arrays, blocks */
-.cms details > summary { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 10px; cursor: pointer; list-style-position: inside; }
+.cms details > summary { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 10px; cursor: pointer; list-style: none; }
+.cms details > summary::-webkit-details-marker { display: none; }
+/* The flex summary drops the browser's marker: draw a chevron that turns down when open. */
+.cms details > summary::before { content: ""; flex: none; align-self: center; width: 7px; height: 7px; margin: 0 4px 0 2px; border-right: 2px solid currentColor; border-bottom: 2px solid currentColor; transform: rotate(-45deg); transition: transform 0.15s; opacity: 0.7; }
+.cms details[open] > summary::before { transform: rotate(45deg); }
+@media (prefers-reduced-motion: reduce) { .cms details > summary::before { transition: none; } }
 .cms-group { margin: 4px 0 16px; padding: 8px 12px; border: 1px dashed #b9bdc6; border-radius: 6px; }
 .cms-group > summary { font-size: 13px; font-weight: 600; color: var(--muted); }
 .cms-group .cms-disclosure-body { padding-top: 12px; }
@@ -80,11 +85,13 @@ button, input, select, textarea { font: inherit; color: inherit; }
 .cms-tools button { min-width: 36px; padding: 4px 8px; font-size: 13px; }
 .cms-add { font-weight: 600; }
 
-.cms-blocks > h2 { margin: 8px 0 2px; font-size: 17px; }
+.cms-blocks > h3 { margin: 8px 0 2px; font-size: 16px; }
 .cms-blocks > .cms-help { margin-bottom: 10px; }
 .cms-block { display: grid; grid-template-columns: minmax(0, 1fr); gap: 6px; }
 .cms-block-panel { padding: 12px 14px; border: 1px solid var(--line); border-left: 4px solid var(--ink); border-radius: 6px; background: var(--panel); }
 .cms-block.is-hidden .cms-block-panel { border-left-color: #9aa0aa; background: #f7f7f8; }
+/* The section the preview is showing. */
+.cms-block.is-active .cms-block-panel { border-color: var(--accent); border-left-color: var(--accent); box-shadow: 0 0 0 3px #c1152b1f; }
 .cms-block-panel > summary .cms-row-name { font-size: 15px; }
 .cms-block-panel .cms-disclosure-body { padding-top: 14px; }
 .cms-block .cms-tools { justify-content: flex-end; }
@@ -94,6 +101,22 @@ button, input, select, textarea { font: inherit; color: inherit; }
 .cms-add-block { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 14px; padding: 12px; border: 1px dashed #b9bdc6; border-radius: 6px; }
 .cms-add-block label { font-weight: 600; font-size: 14px; }
 .cms-add-block select { min-height: 36px; padding: 6px 8px; border: 1px solid #b9bdc6; border-radius: 6px; background: #fff; max-width: 100%; }
+
+/* The three areas of a page: header and footer (shared by every page) around the page's own content. */
+.cms-area { margin: 0 0 14px; border: 1px solid var(--line); border-radius: 8px; background: var(--panel); }
+.cms-area > summary { padding: 12px 14px; }
+.cms-area > .cms-disclosure-body { padding: 4px 14px 14px; border-top: 1px solid var(--line); }
+.cms-area[open] > summary { background: #f7f7f8; border-radius: 8px 8px 0 0; }
+.cms-area-title { font-size: 16px; font-weight: 700; }
+.cms-area-note { font-size: 13px; color: var(--muted); }
+.cms-area.is-static { padding: 12px 14px; }
+.cms-area.is-static .cms-area-title { margin: 0 0 10px; }
+.cms-outline-note { margin: 0; padding: 10px 12px; border: 1px solid #e8c27a; border-radius: 6px; background: #fff7e6; font-size: 14px; color: #5c3d00; }
+
+/* A shared section, edited in place: framed so it reads as content other pages show too. */
+.cms-shared { margin-top: 6px; padding: 12px; border: 1px dashed #6b8bd6; border-radius: 6px; background: #f4f7fe; }
+.cms-shared-label { margin: 0 0 12px; font-size: 13px; font-weight: 600; color: #23408e; }
+.cms-badge.is-shared { background: #e3eafc; color: #23408e; }
 
 @media (max-width: 1000px) {
   /* Narrow screens: one normal page, the status pinned on top so the problem stays in view. */
@@ -109,3 +132,8 @@ button, input, select, textarea { font: inherit; color: inherit; }
   .cms-row:not(.is-inline) .cms-tools { align-self: flex-end; }
 }
 @media (prefers-reduced-motion: reduce) { * { scroll-behavior: auto !important; } }
+
+/* A part of a page (the GEOagents sections): framed, its name as the legend. */
+.cms-part { margin: 0 0 16px; padding: 10px 14px 4px; border: 1px solid var(--line); border-left: 4px solid var(--ink); border-radius: 6px; background: #fff; }
+.cms-part > legend { padding: 0 6px; font-weight: 700; font-size: 15px; }
+.cms-part:focus-within { border-color: var(--accent); border-left-color: var(--accent); }

@@ -1,0 +1,46 @@
+{
+  "title": "Data Engineer / Analytics Engineer",
+  "code": "DATA",
+  "family": "Data Engineering",
+  "summary": "Xây dựng Data Pipeline, Lakehouse, Data Mart và dashboard phân tích.",
+  "intro": "TheHeGeo đang xây dựng nền tảng Data, AI, Agent và các sản phẩm chuyển đổi số quy mô lớn cho doanh nghiệp và cơ quan chính phủ.",
+  "location": "Giảng Võ, Hà Nội",
+  "duties": [
+    {
+      "text": "Xây dựng Data Pipeline và Lakehouse."
+    },
+    {
+      "text": "Thiết kế Bronze/Silver/Gold."
+    },
+    {
+      "text": "Data Mart, Feature Dataset, Data Quality."
+    },
+    {
+      "text": "Phân tích dữ liệu và dashboard."
+    }
+  ],
+  "requirements": [
+    {
+      "text": "SQL, Python"
+    },
+    {
+      "text": "Spark, Airflow"
+    },
+    {
+      "text": "Data Modeling"
+    },
+    {
+      "text": "Data Governance"
+    }
+  ],
+  "plus": [
+    {
+      "text": "Kinh nghiệm AI/LLM, Kubernetes, hệ thống phân tán, GovTech hoặc Enterprise Platform."
+    }
+  ],
+  "benefits": [
+    {
+      "text": "Mức thu nhập cạnh tranh, thưởng theo hiệu quả, tham gia các dự án AI/Data quy mô lớn, môi trường công nghệ hiện đại."
+    }
+  ]
+}

@@ -1,0 +1,47 @@
+{
+  "title": "Fullstack Engineer",
+  "focus": "Backend & Frontend",
+  "code": "FULLSTACK",
+  "family": "Software Engineering",
+  "summary": "Phát triển Backend APIs, Microservices và Dashboard/Portal, tích hợp AI Services.",
+  "intro": "TheHeGeo đang xây dựng nền tảng Data, AI, Agent và các sản phẩm chuyển đổi số quy mô lớn cho doanh nghiệp và cơ quan chính phủ.",
+  "location": "Giảng Võ, Hà Nội",
+  "duties": [
+    {
+      "text": "Backend APIs và Microservices."
+    },
+    {
+      "text": "Frontend Dashboard/Portal."
+    },
+    {
+      "text": "Realtime với WebSocket/SSE."
+    },
+    {
+      "text": "Tích hợp AI Services."
+    }
+  ],
+  "requirements": [
+    {
+      "text": "Golang hoặc Node.js"
+    },
+    {
+      "text": "ReactJS/Next.js"
+    },
+    {
+      "text": "Zustand, TanStack Query"
+    },
+    {
+      "text": "Tailwind CSS, shadcn/ui"
+    }
+  ],
+  "plus": [
+    {
+      "text": "Kinh nghiệm AI/LLM, Kubernetes, hệ thống phân tán, GovTech hoặc Enterprise Platform."
+    }
+  ],
+  "benefits": [
+    {
+      "text": "Mức thu nhập cạnh tranh, thưởng theo hiệu quả, tham gia các dự án AI/Data quy mô lớn, môi trường công nghệ hiện đại."
+    }
+  ]
+}

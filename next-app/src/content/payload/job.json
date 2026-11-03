@@ -1,0 +1,189 @@
+{
+  "slug": "job",
+  "labels": {
+    "singular": "Tin tuyển dụng",
+    "plural": "Tin tuyển dụng"
+  },
+  "fields": [
+    {
+      "name": "title",
+      "type": "text",
+      "label": "Tên vị trí",
+      "admin": {
+        "description": "Như JD ghi."
+      },
+      "required": true
+    },
+    {
+      "name": "focus",
+      "type": "text",
+      "label": "Mảng chuyên môn",
+      "admin": {
+        "description": "Tuỳ chọn, ví dụ: LLM, Agents & Workflow."
+      }
+    },
+    {
+      "name": "code",
+      "type": "text",
+      "label": "Mã vị trí",
+      "admin": {
+        "description": "Mã ngắn trên tem hồ sơ và tiêu đề email ứng tuyển."
+      },
+      "required": true
+    },
+    {
+      "name": "family",
+      "type": "text",
+      "label": "Nhóm nghề",
+      "admin": {
+        "description": "Dùng để lọc ở trang Tuyển dụng."
+      },
+      "required": true
+    },
+    {
+      "name": "summary",
+      "type": "textarea",
+      "label": "Tóm tắt một dòng",
+      "admin": {
+        "description": "Hiện trên thẻ vị trí."
+      },
+      "required": true
+    },
+    {
+      "name": "intro",
+      "type": "textarea",
+      "label": "Giới thiệu",
+      "required": true
+    },
+    {
+      "name": "duties",
+      "type": "array",
+      "label": "Mô tả công việc",
+      "labels": {
+        "singular": "Ý",
+        "plural": "Ý"
+      },
+      "required": true,
+      "minRows": 1,
+      "fields": [
+        {
+          "name": "text",
+          "type": "text",
+          "required": true,
+          "label": "Nội dung"
+        }
+      ]
+    },
+    {
+      "name": "requirements",
+      "type": "array",
+      "label": "Yêu cầu",
+      "labels": {
+        "singular": "Ý",
+        "plural": "Ý"
+      },
+      "required": true,
+      "minRows": 1,
+      "fields": [
+        {
+          "name": "text",
+          "type": "text",
+          "required": true,
+          "label": "Nội dung"
+        }
+      ]
+    },
+    {
+      "name": "plus",
+      "type": "array",
+      "label": "Điểm cộng",
+      "labels": {
+        "singular": "Ý",
+        "plural": "Ý"
+      },
+      "required": true,
+      "minRows": 1,
+      "fields": [
+        {
+          "name": "text",
+          "type": "text",
+          "required": true,
+          "label": "Nội dung"
+        }
+      ]
+    },
+    {
+      "name": "benefits",
+      "type": "array",
+      "label": "Quyền lợi",
+      "labels": {
+        "singular": "Ý",
+        "plural": "Ý"
+      },
+      "required": true,
+      "minRows": 1,
+      "fields": [
+        {
+          "name": "text",
+          "type": "text",
+          "required": true,
+          "label": "Nội dung"
+        }
+      ]
+    },
+    {
+      "name": "location",
+      "type": "text",
+      "label": "Địa điểm làm việc",
+      "required": true
+    },
+    {
+      "name": "subject",
+      "type": "text",
+      "label": "Tiêu đề email ứng tuyển",
+      "admin": {
+        "description": "Tuỳ chọn. Để trống thì dùng \"[Mã vị trí] Ứng tuyển Tên vị trí\"."
+      }
+    },
+    {
+      "name": "skills",
+      "type": "array",
+      "label": "Kỹ năng chính (nhãn)",
+      "labels": {
+        "singular": "Nhãn",
+        "plural": "Nhãn"
+      },
+      "admin": {
+        "description": "Tuỳ chọn. Để trống thì dùng phần Yêu cầu."
+      },
+      "fields": [
+        {
+          "name": "text",
+          "type": "text",
+          "required": true,
+          "label": "Nội dung"
+        }
+      ]
+    },
+    {
+      "name": "areas",
+      "type": "array",
+      "label": "Mảng công việc (nhãn)",
+      "labels": {
+        "singular": "Nhãn",
+        "plural": "Nhãn"
+      },
+      "admin": {
+        "description": "Tuỳ chọn."
+      },
+      "fields": [
+        {
+          "name": "text",
+          "type": "text",
+          "required": true,
+          "label": "Nội dung"
+        }
+      ]
+    }
+  ]
+}

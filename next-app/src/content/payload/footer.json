@@ -1,0 +1,66 @@
+{
+  "slug": "footer",
+  "label": "Footer",
+  "fields": [
+    {
+      "name": "tagline",
+      "type": "text",
+      "label": "Khẩu hiệu, dòng 1",
+      "required": true
+    },
+    {
+      "name": "taglineHighlight",
+      "type": "text",
+      "label": "Khẩu hiệu, dòng 2",
+      "admin": {
+        "description": "Hiện màu nhạt hơn dòng 1."
+      },
+      "required": true
+    },
+    {
+      "name": "email",
+      "type": "text",
+      "label": "Email liên hệ",
+      "admin": {
+        "description": "Cũng dùng cho biểu mẫu liên hệ và menu trên điện thoại."
+      },
+      "required": true
+    },
+    {
+      "name": "phone",
+      "type": "text",
+      "label": "Số điện thoại",
+      "admin": {
+        "description": "Hiện như gõ; link gọi điện được tạo từ các chữ số."
+      },
+      "required": true
+    },
+    {
+      "name": "address",
+      "type": "text",
+      "label": "Địa chỉ",
+      "required": true
+    },
+    {
+      "name": "copyright",
+      "type": "text",
+      "label": "Dòng bản quyền",
+      "required": true
+    },
+    {
+      "name": "motto",
+      "type": "text",
+      "label": "Câu cuối trang",
+      "required": true
+    },
+    {
+      "name": "wordmark",
+      "type": "text",
+      "label": "Chữ lớn cuối trang",
+      "admin": {
+        "description": "Chữ lớn trồi lên khi cuộn tới cuối trang."
+      },
+      "required": true
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "name": "Đối tác và Khách hàng",
+  "title": "Những đơn vị đã cùng làm việc với Thehegeo.",
+  "en": "Organizations we have worked with.",
+  "blocks": [
+    {
+      "id": "b1",
+      "blockType": "partners"
+    }
+  ]
+}

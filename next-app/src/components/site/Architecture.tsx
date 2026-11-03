@@ -2,13 +2,16 @@
 
 import { animate } from "animejs";
 import { useCallback, useEffect, useRef, useState, type KeyboardEvent } from "react";
-import { layers } from "./content";
+import { useContent } from "../cms/EditorBridge";
 import { FlowDiagram } from "./FlowDiagram";
 import { useSite } from "./SiteContext";
 
-const FLOORS = layers.length;
+// The diagram draws four tiers (FlowDiagram), so the content always has four.
+const FLOORS = 4;
 export function Architecture() {
   const { paused, pausedRef } = useSite();
+  const copy = useContent().geoagents.architecture;
+  const { layers } = copy;
   const [active, setActive] = useState(0);
   const activeRef = useRef(0);
   const direction = useRef(1);
@@ -128,20 +131,20 @@ export function Architecture() {
         <div className="architecture-art is-flow" data-floor={layer.floor}>
           <FlowDiagram active={active} onSelect={goTo} running={inView && !paused} />
           <div className="art-caption">
-            <span>GEO AGENT / LUỒNG XỬ LÝ</span>
-            <span>HUMAN × INTELLIGENCE</span>
+            <span>{copy.captionLeft}</span>
+            <span>{copy.captionRight}</span>
           </div>
         </div>
         <div className="architecture-copy">
           <h2>
-            Một hệ thống.{" "}
+            {copy.title}{" "}
             <br />
-            <span>4 tầng tổ chức.</span>
+            <span>{copy.highlight}</span>
           </h2>
           <p className="intro">
-            Từ định hướng đến hành động.
+            {copy.intro}
             <br />
-            Mỗi tầng một vai trò. Cùng một mục tiêu.
+            {copy.introLine2}
           </p>
           {/* The four tiers as one readable list: each row names the tier and its GEO product; the
               tier in view opens under its name with its headline and description, full width. */}

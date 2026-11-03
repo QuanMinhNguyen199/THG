@@ -1,0 +1,234 @@
+{
+  "name": "A360",
+  "kind": "Phân tích doanh nghiệp 360 độ",
+  "title": "Nhìn mỗi doanh nghiệp từ 16 chiều.",
+  "en": "See every enterprise from 16 angles.",
+  "lead": "A360 giúp cơ quan thuế quản lý doanh nghiệp thường xuyên, đánh giá rủi ro thuế và hỗ trợ dự báo số thu ngân sách, dựa trên bộ chỉ số 4 tầng, 16 chiều.",
+  "model": [
+    {
+      "id": "m1",
+      "blockType": "stack",
+      "layers": [
+        {
+          "label": "Sức khỏe tài chính",
+          "chips": [
+            {
+              "text": "ROA"
+            },
+            {
+              "text": "ROE"
+            },
+            {
+              "text": "Thanh khoản"
+            },
+            {
+              "text": "Đòn bẩy"
+            }
+          ]
+        },
+        {
+          "label": "Rủi ro thuế",
+          "chips": [
+            {
+              "text": "Thuế suất hiệu dụng"
+            },
+            {
+              "text": "GTGT"
+            },
+            {
+              "text": "TNDN"
+            },
+            {
+              "text": "Chênh lệch tờ khai"
+            }
+          ]
+        },
+        {
+          "label": "Đối chiếu hồ sơ",
+          "chips": [
+            {
+              "text": "BCTC"
+            },
+            {
+              "text": "Tờ khai GTGT"
+            },
+            {
+              "text": "Tờ khai TNDN"
+            },
+            {
+              "text": "Hồ sơ theo MST"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "blocks": [
+    {
+      "id": "b1",
+      "blockType": "list",
+      "title": "Ba việc A360 làm",
+      "items": [
+        {
+          "title": "Dự thu ngân sách",
+          "body": "Hỗ trợ dự báo số thu."
+        },
+        {
+          "title": "Quản lý",
+          "body": "Theo dõi sức khỏe tài chính doanh nghiệp: hiệu quả sinh lời, thanh khoản, đòn bẩy."
+        },
+        {
+          "title": "Kiểm tra",
+          "body": "Đánh giá rủi ro thuế, gợi ý doanh nghiệp nên ưu tiên kiểm tra."
+        }
+      ]
+    },
+    {
+      "id": "b2",
+      "blockType": "table",
+      "title": "Quản lý và Kiểm tra",
+      "by": "column",
+      "head": [
+        {
+          "text": ""
+        },
+        {
+          "text": "Quản lý"
+        },
+        {
+          "text": "Kiểm tra"
+        }
+      ],
+      "rows": [
+        {
+          "cells": [
+            {
+              "text": "Câu hỏi"
+            },
+            {
+              "text": "Doanh nghiệp đang khỏe hay yếu đi?"
+            },
+            {
+              "text": "Doanh nghiệp nào cần kiểm tra trước?"
+            }
+          ]
+        },
+        {
+          "cells": [
+            {
+              "text": "Tần suất"
+            },
+            {
+              "text": "Thường xuyên"
+            },
+            {
+              "text": "Theo kỳ hoặc khi có dấu hiệu"
+            }
+          ]
+        },
+        {
+          "cells": [
+            {
+              "text": "Kết quả"
+            },
+            {
+              "text": "Bức tranh sức khỏe doanh nghiệp"
+            },
+            {
+              "text": "Danh sách ưu tiên, kèm lý do"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "b3",
+      "blockType": "table",
+      "title": "Các tầng chỉ số",
+      "head": [
+        {
+          "text": "Tầng"
+        },
+        {
+          "text": "Bốn chiều"
+        },
+        {
+          "text": "Trả lời câu hỏi"
+        }
+      ],
+      "rows": [
+        {
+          "cells": [
+            {
+              "text": "1 · Sức khỏe tài chính"
+            },
+            {
+              "text": "ROA · ROE · Thanh khoản · Đòn bẩy"
+            },
+            {
+              "text": "Doanh nghiệp đang làm ăn ra sao?"
+            }
+          ]
+        },
+        {
+          "cells": [
+            {
+              "text": "2 · Rủi ro thuế"
+            },
+            {
+              "text": "Thuế suất hiệu dụng · GTGT · TNDN · Chênh lệch tờ khai"
+            },
+            {
+              "text": "Số thuế khai có hợp lý không?"
+            }
+          ]
+        },
+        {
+          "cells": [
+            {
+              "text": "3 · Đối chiếu hồ sơ"
+            },
+            {
+              "text": "Báo cáo tài chính · Tờ khai GTGT · Tờ khai TNDN · Hồ sơ liên quan theo mã số thuế"
+            },
+            {
+              "text": "Các nguồn dữ liệu có khớp nhau không?"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "b4",
+      "blockType": "text",
+      "title": "Nguyên tắc",
+      "body": [
+        {
+          "text": "Cán bộ thuế hỏi bằng tiếng Việt qua GEO Agent. A360 đối chiếu báo cáo tài chính, tờ khai GTGT, TNDN theo mã số thuế; luôn tách bạch dữ kiện và nhận định, không bịa số liệu. Cán bộ là người kết luận."
+        }
+      ]
+    },
+    {
+      "id": "b5",
+      "blockType": "project",
+      "title": "Hệ thống AI DN360",
+      "client": "Cục Thuế Thành phố Hà Nội",
+      "problem": "Phân tích sức khỏe tài chính và phát hiện rủi ro thuế tự động cho hàng chục nghìn doanh nghiệp.",
+      "solution": [
+        {
+          "text": "Tự động đọc, bóc tách và đối chiếu dữ liệu báo cáo tài chính, thuế GTGT, TNDN theo mã số thuế."
+        },
+        {
+          "text": "Tách bạch dữ kiện thực tế và nhận định đề xuất; cảnh báo các điểm bất thường (Red Flags)."
+        }
+      ],
+      "result": "Giảm 80% thời gian tra cứu thủ công; hỗ trợ cán bộ Thuế truy vấn thông tin bằng tiếng Việt tự nhiên với độ chính xác cao."
+    }
+  ],
+  "cta": [
+    {
+      "label": "Đặt lịch demo",
+      "href": "/ve-thehegeo/lien-he/"
+    }
+  ]
+}

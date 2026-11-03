@@ -1,9 +1,14 @@
+"use client";
+
 import Link from "next/link";
-import defaultCta from "@/content/globals/cta.json";
+import { useContent } from "../cms/EditorBridge";
 import type { CtaContent } from "@/content/blocks";
 
 /** Closing call to action, placed between the case studies and the footer. */
-export function Cta({ data: cta = defaultCta, id = "cta", titleId = "cta-title" }: { data?: CtaContent; id?: string; titleId?: string }) {
+/** Without data it shows the GEOagents page's call to action (pages/geoagents.json). */
+export function Cta({ data, id = "cta", titleId = "cta-title" }: { data?: CtaContent; id?: string; titleId?: string }) {
+  const own = useContent().geoagents.cta;
+  const cta = data ?? own;
   return (
     <section className="cta" id={id} aria-labelledby={titleId}>
       <div className="wrap cta-inner">

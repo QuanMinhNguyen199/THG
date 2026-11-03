@@ -1,0 +1,11 @@
+{
+  "name": "Liên hệ",
+  "title": "Liên hệ",
+  "lead": "Cho chúng tôi biết bài toán anh/chị muốn giải. Đội ngũ Thehegeo sẽ liên hệ lại.",
+  "blocks": [
+    {
+      "id": "b1",
+      "blockType": "contact"
+    }
+  ]
+}
