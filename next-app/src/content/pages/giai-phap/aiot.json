@@ -1,0 +1,160 @@
+{
+  "name": "Giải pháp AIoT",
+  "kind": "Quan trắc môi trường, địa chất, hạ tầng",
+  "title": "Đo những công trình không được phép sai.",
+  "en": "Measuring structures that cannot fail.",
+  "lead": "Hệ thống quan trắc biến đổi môi trường, tai biến địa chất và hạ tầng giao thông như cầu, đường, metro, cảng, sân bay: từ cảm biến tại hiện trường đến cảnh báo trên màn hình, theo thời gian thực.",
+  "model": [
+    {
+      "id": "m1",
+      "blockType": "bridge",
+      "labels": [
+        {
+          "text": "Cảm biến"
+        },
+        {
+          "text": "Datalogger"
+        },
+        {
+          "text": "Nền tảng dữ liệu thời gian thực"
+        },
+        {
+          "text": "Cảnh báo sớm"
+        }
+      ]
+    }
+  ],
+  "blocks": [
+    {
+      "id": "b1",
+      "blockType": "text",
+      "title": "Bài toán",
+      "body": [
+        {
+          "text": "Công trình lớn cần biết sớm những thay đổi về độ nghiêng, ứng suất, áp lực, trước khi nó thành sự cố."
+        }
+      ]
+    },
+    {
+      "id": "b2",
+      "blockType": "cards",
+      "title": "Lĩnh vực quan trắc",
+      "items": [
+        {
+          "title": "Môi trường",
+          "body": "Theo dõi biến đổi môi trường."
+        },
+        {
+          "title": "Tai biến địa chất",
+          "body": "Theo dõi dấu hiệu tai biến địa chất quanh công trình và khu vực."
+        },
+        {
+          "title": "Hạ tầng giao thông",
+          "body": "Cầu, đường, metro, cảng, sân bay."
+        }
+      ]
+    },
+    {
+      "id": "b3",
+      "blockType": "steps",
+      "title": "Hệ thống gồm bốn lớp",
+      "items": [
+        {
+          "title": "Cảm biến",
+          "body": "Đo nghiêng, ứng suất, áp lực, gắn trên kết cấu."
+        },
+        {
+          "title": "Datalogger",
+          "body": "Đọc dữ liệu cảm biến, đẩy lên cloud và datalake."
+        },
+        {
+          "title": "Nền tảng dữ liệu thời gian thực",
+          "body": "Lưu, phân tích và hiển thị."
+        },
+        {
+          "title": "Cảnh báo sớm",
+          "body": "Sức khỏe kết cấu từ phân tích dữ liệu lớn."
+        }
+      ]
+    },
+    {
+      "id": "b4",
+      "blockType": "list",
+      "title": "Giao thông và đô thị thông minh",
+      "items": [
+        {
+          "title": "TranspoX",
+          "body": "Giao thông thông minh."
+        },
+        {
+          "title": "CiviX",
+          "body": "An ninh đô thị."
+        },
+        {
+          "body": "Nền tảng phân tích dữ liệu giao thông bằng camera và GPS."
+        }
+      ]
+    },
+    {
+      "id": "b5",
+      "blockType": "table",
+      "title": "Công trình tiêu biểu",
+      "head": [
+        {
+          "text": "Nhóm"
+        },
+        {
+          "text": "Công trình, dự án"
+        }
+      ],
+      "rows": [
+        {
+          "cells": [
+            {
+              "text": "Cầu"
+            },
+            {
+              "text": "Cầu Cần Thơ · Cầu Vàm Cống · Cầu Bạch Đằng"
+            }
+          ]
+        },
+        {
+          "cells": [
+            {
+              "text": "Đường sắt đô thị và đường bộ"
+            },
+            {
+              "text": "Metro số 1 TP.HCM · Đường vành đai ven biển phía Nam"
+            }
+          ]
+        },
+        {
+          "cells": [
+            {
+              "text": "Cảng"
+            },
+            {
+              "text": "Cảng Phước An"
+            }
+          ]
+        },
+        {
+          "cells": [
+            {
+              "text": "Giao thông và đô thị quốc tế"
+            },
+            {
+              "text": "Smart lamppost · Hongkong Telecom · Camera giao thông ACTi · Phân tích giao thông TMS"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "cta": [
+    {
+      "label": "Trao đổi về công trình của anh/chị",
+      "href": "/ve-thehegeo/lien-he/"
+    }
+  ]
+}

@@ -1,6 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import { useContent } from "../cms/EditorBridge";
 import { useEffect, useId, useRef, type MouseEvent, type ReactNode, type SyntheticEvent } from "react";
 import Link from "next/link";
 import { TDN, type CaseData, type PaperGlyphKind } from "./cases";
@@ -139,19 +140,20 @@ function Piece({ at, className, children, label }: { at: string; className: stri
 
 /** `bare`: the project card alone, for pages that give it their own heading (Use Case). */
 export function Applications({ bare = false }: { bare?: boolean }) {
+  const copy = useContent().geoagents.applications;
   return (
     <section className={bare ? "applications is-bare" : "applications wrap"} id={bare ? undefined : "applications"}>
       {!bare && (
         <div className="section-heading">
           <h2>
-            Trí tuệ đi vào
+            {copy.title}
             <br />
-            <span>thực tiễn.</span>
+            <span>{copy.highlight}</span>
           </h2>
           <p>
-            GEOagents trong những bài toán
+            {copy.intro}
             <br />
-            vận hành chuyên biệt.
+            {copy.introLine2}
           </p>
         </div>
       )}

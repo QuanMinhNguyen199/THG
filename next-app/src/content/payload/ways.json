@@ -1,0 +1,37 @@
+{
+  "slug": "ways",
+  "label": "Cách chúng tôi làm việc",
+  "fields": [
+    {
+      "name": "title",
+      "type": "text",
+      "label": "Tiêu đề section",
+      "required": true
+    },
+    {
+      "name": "items",
+      "type": "array",
+      "required": true,
+      "minRows": 1,
+      "label": "Các nguyên tắc",
+      "labels": {
+        "singular": "Nguyên tắc",
+        "plural": "Nguyên tắc"
+      },
+      "fields": [
+        {
+          "name": "title",
+          "type": "text",
+          "label": "Tên nguyên tắc",
+          "required": true
+        },
+        {
+          "name": "body",
+          "type": "textarea",
+          "label": "Mô tả",
+          "required": true
+        }
+      ]
+    }
+  ]
+}

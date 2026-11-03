@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { JOBS, applyHref, type Job } from "./catalog";
+import { useContent } from "../cms/EditorBridge";
+import { applyHref, type Job } from "./catalog";
 import { ProjectCase } from "./Applications";
 import type { CaseData, PaperGlyphKind } from "./cases";
 
@@ -54,6 +55,8 @@ function JobBrief({ job }: { job: Job }) {
 }
 
 export function JobList() {
+  // The postings as the content gives them (the content editor's drafts, in its preview).
+  const { jobs: JOBS } = useContent();
   const families = [...new Set(JOBS.map(j => j.family))];
   const [family, setFamily] = useState(ALL);
   const shown = family === ALL ? JOBS : JOBS.filter(j => j.family === family);

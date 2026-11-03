@@ -9,7 +9,7 @@
 // with only the moving lights, so the running signals never force the filtered board to repaint.
 
 import { useEffect, useId, useRef, useState, type CSSProperties, type KeyboardEvent, type PointerEvent } from "react";
-import { layers } from "./content";
+import { useContent } from "../cms/EditorBridge";
 import { FlowStack3D } from "./FlowStack3D";
 import { HOP, START, WAVES, litTiming, seedOf, timing } from "./flowSignals";
 
@@ -75,6 +75,7 @@ const linkPath = (c: number, a: number, b: number) =>
   curve(GEO[c].x + GEO[c].w + 4, GEO[c].centers[a], GEO[c + 1].x - 4, GEO[c + 1].centers[b]);
 
 export function FlowDiagram({ active, onSelect, running }: { active: number; onSelect: (tier: number) => void; running: boolean }) {
+  const { layers } = useContent().geoagents.architecture;
   const uid = useId().replace(/:/g, "");
   const [pick, setPick] = useState<Pick>({ col: active, i: FIRST });
   const board = useRef<HTMLDivElement>(null);

@@ -1,0 +1,31 @@
+{
+  "nav": [
+    {
+      "label": "Trang chủ",
+      "href": "/"
+    },
+    {
+      "label": "GEOagents",
+      "href": "/geoagents/"
+    },
+    {
+      "label": "Giải pháp",
+      "href": "/giai-phap/",
+      "menu": "giai-phap"
+    },
+    {
+      "label": "Use Case",
+      "href": "/ung-dung/",
+      "menu": "ung-dung"
+    },
+    {
+      "label": "Về THEHEGEO",
+      "href": "/ve-thehegeo/",
+      "menu": "ve-thehegeo"
+    },
+    {
+      "label": "Tuyển dụng",
+      "href": "/tuyen-dung/"
+    }
+  ]
+}

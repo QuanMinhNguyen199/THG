@@ -1,0 +1,17 @@
+{
+  "name": "Kinh nghiệm dự án",
+  "title": "Kinh nghiệm dự án",
+  "lead": "Các dự án GEO Agent tại cơ quan Nhà nước và doanh nghiệp: bài toán, giải pháp triển khai và kết quả đạt được.",
+  "blocks": [
+    {
+      "id": "b1",
+      "blockType": "projectIndex"
+    }
+  ],
+  "cta": [
+    {
+      "label": "Trao đổi về dự án của anh/chị",
+      "href": "/ve-thehegeo/lien-he/"
+    }
+  ]
+}

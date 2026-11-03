@@ -6,6 +6,7 @@ Two routes, each with its own root layout (route groups), so their CSS never mix
 |---|---|---|
 | `/` | `src/app/(site)` + `src/components/site` | The landing page, ported from the static site in `../dist` with the same markup, CSS and behaviour (three concepts, canvas art, Anime.js motion). |
 | `/motion-lab` | `src/app/(lab)` + `src/components/{hero,layers,pillars}` | GSAP / React Three Fiber prototype kept for comparison. |
+| `/soan-noi-dung` | `src/app/(cms)` + `src/components/cms` | A mock of the Payload editor for every page. The site itself is the preview; the form follows the page it shows (header, page content, footer), built from `src/content/payload/`. Published with the site for content testing, unlinked and `noindex`; it saves nothing to the site (drafts stay in the browser; `npm run content:apply` writes a downloaded draft file into `src/content`). See `PAYLOAD.md`. |
 
 ### Landing page structure (`/`)
 

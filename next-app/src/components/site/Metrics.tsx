@@ -2,15 +2,21 @@
 
 import { animate, type JSAnimation } from "animejs";
 import { useEffect, useRef } from "react";
-import defaultMetrics from "@/content/globals/metrics.json";
 import type { Metric } from "@/content/blocks";
 import { useSite } from "./SiteContext";
+import { useContent } from "../cms/EditorBridge";
 
-const format = (m: Metric, value: number) => String(Math.round(value)).padStart("pad" in m ? (m.pad ?? 1) : 1, "0");
+const format = (m: Metric, value: number) => String(Math.round(value)).padStart(m.minDigits ?? 1, "0");
+// Editors type "Level", not "Level ": a prefix ending in a letter gets its space here, a symbol does not.
+const lead = (m: Metric) => (m.prefix ? m.prefix.trim() + (/\p{L}$/u.test(m.prefix.trim()) ? " " : "") : "");
 const finalText = (m: Metric) =>
-  `${m.prefix ?? ""}${format(m, m.to)}${m.suffix ?? ""}${m.unit ?? ""}`;
+  `${lead(m)}${format(m, m.value)}${m.suffix ?? ""}${m.unit ?? ""}`;
 
-export function Metrics({ items: metrics = defaultMetrics, id = "metrics", label = "Các đặc tính GEOagents" }: { items?: Metric[]; id?: string; label?: string }) {
+/** Without items it shows the GEOagents page's metrics (pages/geoagents.json). */
+export function Metrics({ items, id = "metrics", label: name }: { items?: Metric[]; id?: string; label?: string }) {
+  const { metrics: own } = useContent().geoagents;
+  const metrics = items ?? own.items;
+  const label = name ?? own.label;
   const { pausedRef } = useSite();
   const section = useRef<HTMLElement>(null);
   const counters = useRef<(HTMLSpanElement | null)[]>([]);
@@ -39,24 +45,24 @@ export function Metrics({ items: metrics = defaultMetrics, id = "metrics", label
     const play = () => {
       stop();
       played = true;
-      if (still()) return metrics.forEach((m, i) => show(i, m.to));
+      if (still()) return metrics.forEach((m, i) => show(i, m.value));
       running = metrics.map((m, i) => {
         const counter = { value: 0 };
         show(i, 0);
         return animate(counter, {
-          value: m.to,
+          value: m.value,
           duration: 1600,
           delay: i * 140,
           ease: "outExpo",
           onUpdate: () => show(i, counter.value),
-          onComplete: () => show(i, m.to),
+          onComplete: () => show(i, m.value),
         });
       });
     };
     const reset = () => {
       stop();
       played = false;
-      metrics.forEach((m, i) => show(i, still() ? m.to : 0));
+      metrics.forEach((m, i) => show(i, still() ? m.value : 0));
     };
 
     const observer = new IntersectionObserver(
@@ -74,7 +80,7 @@ export function Metrics({ items: metrics = defaultMetrics, id = "metrics", label
     return () => {
       observer.disconnect();
       stop();
-      metrics.forEach((m, i) => show(i, m.to));
+      metrics.forEach((m, i) => show(i, m.value));
     };
   }, [pausedRef, metrics]);
 
@@ -86,16 +92,16 @@ export function Metrics({ items: metrics = defaultMetrics, id = "metrics", label
             {/* Screen readers get the final value, never the intermediate counts. */}
             <span className="sr-only">{finalText(m)}</span>
             <span aria-hidden="true">
-              {"prefix" in m && m.prefix}
+              {lead(m)}
               <span
                 ref={(node) => {
                   counters.current[i] = node;
                 }}
               >
-                {format(m, m.to)}
+                {format(m, m.value)}
               </span>
-              {"suffix" in m && m.suffix}
-              {"unit" in m && <small>{m.unit}</small>}
+              {m.suffix}
+              {m.unit && <small>{m.unit}</small>}
             </span>
           </strong>
           <span>{m.label}</span>

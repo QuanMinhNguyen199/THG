@@ -1,0 +1,36 @@
+{
+  "name": "Quản lý dự án công nghiệp",
+  "kind": "Trợ lý AI cho hồ sơ kỹ thuật và tiến độ",
+  "title": "Kho tài liệu kỹ thuật trở thành tri thức của dự án.",
+  "lead": "GEO Agent hỗ trợ tra cứu quy chuẩn, hồ sơ thiết kế và theo dõi các mốc công việc trong dự án công nghiệp.",
+  "blocks": [
+    {
+      "id": "b1",
+      "blockType": "project",
+      "title": "Trợ lý AI Quản lý Dự án Công nghiệp",
+      "client": "Tổng công ty PTSC M&C",
+      "problem": "Quản trị và truy vấn kho tài liệu kỹ thuật, bản vẽ công trình dầu khí đồ sộ.",
+      "solution": [
+        {
+          "text": "Tích hợp kho tri thức RAG tra cứu chính xác quy chuẩn, hồ sơ thiết kế và tiến độ công trình."
+        },
+        {
+          "text": "Cảnh báo mâu thuẫn kỹ thuật và đôn đốc các mốc công việc quan trọng theo quy trình Human-in-the-Loop."
+        }
+      ],
+      "result": "Rút ngắn thời gian tìm kiếm hồ sơ từ hàng giờ xuống dưới 5 giây; triển khai On-premise, dữ liệu được xử lý và lưu trữ trong hạ tầng của đơn vị."
+    },
+    {
+      "id": "b2",
+      "blockType": "case",
+      "title": "Trợ lý AI trong dự án",
+      "caseId": "quan-ly-du-an"
+    }
+  ],
+  "cta": [
+    {
+      "label": "Đặt lịch demo",
+      "href": "/ve-thehegeo/lien-he/"
+    }
+  ]
+}

@@ -1,0 +1,125 @@
+{
+  "name": "AI Platform",
+  "kind": "Nền tảng AI dùng chung",
+  "title": "Một nền tảng AI cho nhiều cơ quan.",
+  "en": "One AI platform, many agencies.",
+  "lead": "Cán bộ có GEO Agent. Văn bản có bộ nhớ. Đơn vị đổi mới có nơi để thử nghiệm.",
+  "model": [
+    {
+      "id": "m1",
+      "blockType": "stack",
+      "layers": [
+        {
+          "label": "Giám sát vận hành"
+        },
+        {
+          "label": "Bảo mật và quản trị"
+        },
+        {
+          "label": "Quy trình và công cụ"
+        },
+        {
+          "label": "Nền tảng Agent"
+        },
+        {
+          "label": "Nền tảng LLM"
+        },
+        {
+          "label": "Cổng mô hình"
+        },
+        {
+          "label": "Dữ liệu và tri thức dùng chung"
+        }
+      ]
+    }
+  ],
+  "blocks": [
+    {
+      "id": "b1",
+      "blockType": "table",
+      "title": "Bốn thành phần",
+      "head": [
+        {
+          "text": "Thành phần"
+        },
+        {
+          "text": "Người dùng nhận được gì"
+        }
+      ],
+      "rows": [
+        {
+          "cells": [
+            {
+              "text": "GEO Agent cho cán bộ"
+            },
+            {
+              "text": "Giao việc, theo dõi, đôn đốc, báo cáo từ văn bản"
+            }
+          ]
+        },
+        {
+          "cells": [
+            {
+              "text": "Đọc và tìm kiếm văn bản"
+            },
+            {
+              "text": "Tìm theo ý, không chỉ theo từ khóa; đọc, tóm tắt, trích nhiệm vụ"
+            }
+          ]
+        },
+        {
+          "cells": [
+            {
+              "text": "Bộ nhớ liên kết tài liệu"
+            },
+            {
+              "text": "Nối các văn bản, hồ sơ liên quan; trả lời có ngữ cảnh xuyên nhiều tài liệu"
+            }
+          ]
+        },
+        {
+          "cells": [
+            {
+              "text": "Cổng LLM API"
+            },
+            {
+              "text": "Một cổng chung tới nhiều mô hình AI; các đơn vị đổi mới sáng tạo thử nghiệm sản phẩm mới trên hạ tầng chung, có phân quyền và giám sát"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "b2",
+      "blockType": "text",
+      "title": "Sân chơi đổi mới sáng tạo",
+      "body": [
+        {
+          "text": "Cổng LLM API mở cho các đơn vị đổi mới sáng tạo xây ứng dụng mới, không phải tự dựng hạ tầng AI riêng."
+        }
+      ]
+    },
+    {
+      "id": "b3",
+      "blockType": "project",
+      "title": "Nền tảng AI dùng chung (iHanoi / Tax OS)",
+      "client": "UBND Thành phố Hà Nội",
+      "problem": "Xây dựng hạ tầng AI tập trung phục vụ đa cơ quan hành chính và tương tác với người dân.",
+      "solution": [
+        {
+          "text": "Triển khai mô hình 4 tầng vận hành: tự động phân loại phản ánh của người dân, bóc tách văn bản chỉ đạo và hỗ trợ dịch vụ công."
+        },
+        {
+          "text": "Đảm bảo an toàn thông tin Cấp độ 3+ và đáp ứng tiêu chuẩn AI Chủ quyền (Sovereign AI) trên Private Cloud."
+        }
+      ],
+      "result": "Chuẩn hóa luồng xử lý văn bản liên cơ quan và nâng cao tốc độ phản hồi dịch vụ hành chính công 24/7."
+    }
+  ],
+  "cta": [
+    {
+      "label": "Đặt lịch demo",
+      "href": "/ve-thehegeo/lien-he/"
+    }
+  ]
+}

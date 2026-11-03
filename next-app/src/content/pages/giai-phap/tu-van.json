@@ -1,0 +1,33 @@
+{
+  "name": "Tư vấn công nghệ",
+  "kind": "Trung tâm dữ liệu AI, an toàn thông tin, chuyển đổi số",
+  "title": "Tư vấn công nghệ cho cơ quan và doanh nghiệp.",
+  "lead": "Thehegeo tư vấn ba mảng: thiết kế trung tâm dữ liệu AI, an ninh – an toàn thông tin và chuyển đổi số.",
+  "blocks": [
+    {
+      "id": "b1",
+      "blockType": "cards",
+      "title": "Ba mảng tư vấn",
+      "items": [
+        {
+          "title": "Thiết kế trung tâm dữ liệu AI",
+          "body": "Tư vấn thiết kế hạ tầng tính toán, lưu trữ và mạng để vận hành AI tại chỗ."
+        },
+        {
+          "title": "An ninh – An toàn thông tin",
+          "body": "Tư vấn bảo đảm an ninh, an toàn thông tin cho hệ thống và dữ liệu."
+        },
+        {
+          "title": "Chuyển đổi số",
+          "body": "Tư vấn lộ trình chuyển đổi số cho cơ quan và doanh nghiệp."
+        }
+      ]
+    }
+  ],
+  "cta": [
+    {
+      "label": "Trao đổi về nhu cầu tư vấn",
+      "href": "/ve-thehegeo/lien-he/"
+    }
+  ]
+}

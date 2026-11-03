@@ -1,0 +1,21 @@
+{
+  "title": "Cách chúng tôi làm việc",
+  "items": [
+    {
+      "title": "Kết quả trước",
+      "body": "Đo bằng sản phẩm bàn giao, kết quả, tác động và chất lượng, không bằng số giờ hay số cuộc họp."
+    },
+    {
+      "title": "Viết ra trước",
+      "body": "Nếu chưa được viết ra, nó chưa tồn tại."
+    },
+    {
+      "title": "AI trước",
+      "body": "AI là công cụ làm việc hằng ngày. Kết quả AI luôn được con người kiểm tra."
+    },
+    {
+      "title": "An toàn trước",
+      "body": "Bảo mật là trách nhiệm của mọi người. Không xử lý dữ liệu khách hàng khi chưa được phê duyệt."
+    }
+  ]
+}

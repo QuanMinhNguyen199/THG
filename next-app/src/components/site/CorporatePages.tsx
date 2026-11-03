@@ -4,7 +4,10 @@ import Link from "next/link";
 import { asset } from "@/lib/asset";
 import { CaseShowcase } from "./CaseShowcase";
 import { MOCK_CASES } from "./cases";
-import { HR_EMAIL, HR_PHONE, JOBS, SECTIONS, applyHref, type Block, type Cell, type Job, type Page, type SectionKey } from "./catalog";
+import { HR_EMAIL, HR_PHONE, applyHref, type Block, type Cell, type Job, type Page, type SectionKey } from "./catalog";
+import { Editable } from "../cms/Editable";
+import { CONTENT } from "@/content/published";
+import type { Content } from "@/content/registry";
 import { ContactForm } from "./ContactForm";
 import { ContactList } from "./Contacts";
 import { JobList } from "./JobList";
@@ -107,7 +110,7 @@ function BlockView({ block, index }: { block: Block; index: number }) {
   const id = `b${index}`;
   const head = "title" in block && block.title ? <h2 id={`${id}-t`}>{block.title}</h2> : null;
   const wrap = (cls: string, body: React.ReactNode, anchor?: string) => (
-    <section id={anchor} className={`wrap corp-block ${cls}`} aria-labelledby={head ? `${id}-t` : undefined}>
+    <section id={anchor} className={`wrap corp-block ${cls}`} aria-labelledby={head ? `${id}-t` : undefined} data-block={block.key}>
       {head}
       {body}
     </section>
@@ -115,17 +118,51 @@ function BlockView({ block, index }: { block: Block; index: number }) {
 
   switch (block.type) {
     case "cards": {
-      // A grid of links (a section's pages) leads with its first page; plain cards stay equal.
-      const feature = block.items.length >= 3 && block.items.every((c) => c.href);
+      // A section's pages (three or more links) lead with a large card only when the first has an
+      // image to fill it; without one they read as equal rows. Plain cards stay an equal grid.
+      const links = block.items.length >= 3 && block.items.every((c) => c.href);
+      const feature = links && !!block.items[0].image;
+      if (links && !feature)
+        return wrap(
+          "is-rows",
+          <ul className="corp-rows">
+            {block.items.map((c) => {
+              const body = (
+                <>
+                  <strong>{c.title}</strong>
+                  {c.body && <p>{c.body}</p>}
+                  {c.cta && (
+                    <span className="corp-more">
+                      {c.cta} <Arrow />
+                    </span>
+                  )}
+                </>
+              );
+              return (
+                <li key={c.title}>
+                  {c.href ? (
+                    <Go href={c.href} className="corp-row is-link">
+                      {body}
+                    </Go>
+                  ) : (
+                    <div className="corp-row">{body}</div>
+                  )}
+                </li>
+              );
+            })}
+          </ul>,
+        );
       return wrap(
         "is-cards",
         <div
           className={`corp-grid${feature ? " has-feature" : ""}`}
           style={feature ? ({ "--rest": block.items.length - 1 } as React.CSSProperties) : undefined}
         >
-          {block.items.map((c) => {
+          {block.items.map((c, i) => {
+            const image = feature && i === 0 ? c.image : undefined;
             const body = (
               <>
+                {image && <img className="corp-tile-image" src={/^https?:\/\//.test(image) ? image : asset(image)} alt="" loading="lazy" />}
                 <strong>{c.title}</strong>
                 {c.body && <p>{c.body}</p>}
                 {c.cta && (
@@ -136,7 +173,7 @@ function BlockView({ block, index }: { block: Block; index: number }) {
               </>
             );
             return c.href ? (
-              <Go key={c.title} href={c.href} className="corp-tile is-link">
+              <Go key={c.title} href={c.href} className={`corp-tile is-link${image ? " has-image" : ""}`}>
                 {body}
               </Go>
             ) : (
@@ -242,8 +279,36 @@ function BlockView({ block, index }: { block: Block; index: number }) {
         "is-callout",
         <div className="corp-callout">
           <p>{block.body}</p>
+          {block.detail && <p className="corp-callout-detail">{block.detail}</p>}
           {block.en && <p className="corp-en">{block.en}</p>}
         </div>,
+      );
+    case "rings":
+      return wrap(
+        "is-rings",
+        <div className="corp-rings">
+          <div className="corp-rings-copy">
+            <p className="corp-rings-statement">{block.statement}</p>
+            <p className="corp-rings-body">{block.body}</p>
+          </div>
+          {/* Innermost first, so the list reads in the same order as the rings grow. */}
+          <ol className="corp-rings-chart" style={{ "--n": block.items.length } as React.CSSProperties}>
+            {block.items.map((label, i) => (
+              <li key={label} style={{ "--i": i } as React.CSSProperties}>
+                <span>{label}</span>
+              </li>
+            ))}
+          </ol>
+        </div>,
+      );
+    case "values":
+      return wrap(
+        "is-values",
+        <ul className="corp-values">
+          {block.items.map((v) => (
+            <li key={v}>{v}</li>
+          ))}
+        </ul>,
       );
     case "project":
       return wrap(
@@ -276,7 +341,7 @@ function BlockView({ block, index }: { block: Block; index: number }) {
       return wrap("is-case applications is-bare", <CaseShowcase data={MOCK_CASES[block.id]} />, "ptsc");
     case "contact":
       return (
-        <section className="wrap corp-block is-contact">
+        <section className="wrap corp-block is-contact" data-block={block.key}>
           <ContactForm />
           <aside className="corp-contact-side">
             <h2>Thông tin liên hệ</h2>
@@ -320,12 +385,14 @@ function PageCta({ cta }: { cta: Page["cta"] }) {
   if (!cta) return null;
   return (
     <section className="wrap corp-cta">
-      <Go href={cta.href ?? "/ve-thehegeo/lien-he/"} className="button">
-        {cta.label}
-        <svg viewBox="0 0 24 24" aria-hidden="true">
-          <path d="M5 12h14m-6-6 6 6-6 6" />
-        </svg>
-      </Go>
+      {[cta].flat().map((action, i) => (
+        <Go key={action.label} href={action.href ?? "/ve-thehegeo/lien-he/"} className={i ? "button is-secondary" : "button"}>
+          {action.label}
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M5 12h14m-6-6 6 6-6 6" />
+          </svg>
+        </Go>
+      ))}
     </section>
   );
 }
@@ -340,9 +407,14 @@ function Blocks({ page }: { page: Page }) {
   );
 }
 
+// Each page renderer takes the site's content. Without it, it renders the published content inside an
+// Editable, which swaps in the content editor's draft when the page shows in its preview; the draft
+// renderer passes its own content, so it does not wrap again.
+
 /** A section's landing page, with its own heading and blocks. */
-export function SectionOverview({ section }: { section: SectionKey }) {
-  const s = SECTIONS[section];
+export function SectionOverview({ section, content }: { section: SectionKey; content?: Content }) {
+  if (!content) return <Editable target={{ kind: "overview", section }}><SectionOverview section={section} content={CONTENT} /></Editable>;
+  const s = content.sections[section];
   return (
     <>
       <BlockMotion />
@@ -350,7 +422,8 @@ export function SectionOverview({ section }: { section: SectionKey }) {
       <Blocks page={s.home} />
       {/* Về THEHEGEO lands on the company story; its own pages follow as cards. */}
       {section === "ve-thehegeo" && (
-        <BlockView index={99} block={{ type: "cards", items: s.pages.map((p) => ({ title: p.name, href: `${s.base}${p.slug}/`, cta: "Xem" })) }} />
+        // A page's own banner image doubles as its card image, so adding one brings the large card back.
+        <BlockView index={99} block={{ type: "cards", items: s.pages.map((p) => ({ title: p.name, href: `${s.base}${p.slug}/`, cta: "Xem", image: p.image })) }} />
       )}
       <PageCta cta={s.home.cta} />
     </>
@@ -358,8 +431,9 @@ export function SectionOverview({ section }: { section: SectionKey }) {
 }
 
 /** A detail page: heading, blocks, call to action, and the other pages of its section. */
-export function Detail({ section, page }: { section: SectionKey; page: Page }) {
-  const s = SECTIONS[section];
+export function Detail({ section, page, content }: { section: SectionKey; page: Page; content?: Content }) {
+  if (!content) return <Editable target={{ kind: "detail", section, slug: page.slug }}><Detail section={section} page={page} content={CONTENT} /></Editable>;
+  const s = content.sections[section];
   const siblings = s.pages.filter((p) => p.slug !== page.slug);
   return (
     <>
@@ -389,7 +463,8 @@ export function Detail({ section, page }: { section: SectionKey; page: Page }) {
 }
 
 /** The recruitment landing page. */
-export function JobsPage({ page }: { page: Page }) {
+export function JobsPage({ page, content }: { page: Page; content?: Content }) {
+  if (!content) return <Editable target={{ kind: "jobs" }}><JobsPage page={page} content={CONTENT} /></Editable>;
   return (
     <>
       <BlockMotion />
@@ -404,13 +479,14 @@ export function JobsPage({ page }: { page: Page }) {
  * tuyển, numbered as the document numbers them), with a card beside it holding the hiring facts and
  * the apply action that stays in view while reading. Other open roles close it. Content: catalog.ts.
  */
-export function JobDetail({ job }: { job: Job }) {
+export function JobDetail({ job, content }: { job: Job; content?: Content }) {
+  if (!content) return <Editable target={{ kind: "job", slug: job.slug }}><JobDetail job={job} content={CONTENT} /></Editable>;
   const apply = applyHref(job);
   const facts: [string, string][] = [
     ["Vị trí", job.family],
     ["Địa điểm", job.location],
   ];
-  const others = JOBS.filter((j) => j.slug !== job.slug);
+  const others = content.jobs.filter((j) => j.slug !== job.slug);
   // "Kubernetes & ảo hóa: …" items lead with their area in bold.
   const item = (text: string) => {
     const m = text.match(/^([^:]{2,48}):\s(.+)$/);

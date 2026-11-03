@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useRef, useState, type MouseEvent, type PointerEvent, type ReactNode } from "react";
 import Link from "next/link";
 import { asset } from "@/lib/asset";
-import { cta } from "./content";
+import { useContent } from "../cms/EditorBridge";
 import { useSite } from "./SiteContext";
 
 const PauseIcon = () => (
@@ -34,6 +34,7 @@ const INTERACTIVE = "a,button";
  */
 export function Hero({ children, className = "", id = "geoagents", autoplay = false, video: film, videoSmall: filmSmall, poster }: { children?: ReactNode; className?: string; id?: string; autoplay?: boolean; /** One MP4 in place of the GEOagents film set. */ video?: string; /** A lighter MP4 of the same film for phones. */ videoSmall?: string; poster?: string } = {}) {
   const { paused: motionPaused } = useSite();
+  const { hero } = useContent().geoagents;
   const section = useRef<HTMLElement>(null);
   const video = useRef<HTMLVideoElement>(null);
   const cursor = useRef<HTMLDivElement>(null);
@@ -220,21 +221,19 @@ export function Hero({ children, className = "", id = "geoagents", autoplay = fa
 
           <div className="hero-copy">
             <h1>
-              GEO<span>agents</span>
+              {hero.title}<span>{hero.highlight}</span>
             </h1>
-            <p className="hero-subtitle">WORKFORCE FOR MISSION-CRITICAL OPERATIONS</p>
-            <p className="hero-description">
-              Đội ngũ AI đồng hành cùng tổ chức. Dữ liệu và quyết định vẫn thuộc về bạn.
-            </p>
+            <p className="hero-subtitle">{hero.subtitle}</p>
+            <p className="hero-description">{hero.description}</p>
             <div className="hero-actions">
               <a className="button" href="#architecture">
-                Khám phá GEOagents{" "}
+                {hero.primaryLabel}{" "}
                 <svg viewBox="0 0 24 24">
                   <path d="M4 12h15m-6-6 6 6-6 6" />
                 </svg>
               </a>
-              <Link className="button button-ghost" href={cta.href} scroll={false}>
-                Đặt lịch tư vấn
+              <Link className="button button-ghost" href={hero.secondaryHref} scroll={false}>
+                {hero.secondaryLabel}
               </Link>
             </div>
           </div>

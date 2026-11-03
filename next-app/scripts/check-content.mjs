@@ -1,14 +1,21 @@
+// Validates every content document (registry.ts) against its schema, then builds the site's content
+// from them, so a build never starts from content the site cannot render. Runs before every build.
 import { readFileSync } from 'node:fs';
 import { validateDocument } from '../src/content/validate.mjs';
-const read = path => JSON.parse(readFileSync(new URL(path, import.meta.url), 'utf8'));
-const schema = read('../src/content/payload/pages.collection.json');
-const home = read('../src/content/pages/home.json');
-validateDocument(home, schema);
-const blocks = schema.fields.find(field => field.name === 'layout').blocks;
-for (const [name, value] of [
-  ['cta', read('../src/content/globals/cta.json')],
-  ['metrics', { label: 'Metrics', items: read('../src/content/globals/metrics.json') }],
-]) {
-  validateDocument(value, { slug: name, fields: blocks.find(block => block.slug === name).fields });
+import { DOCS, buildContent } from '../src/content/registry.ts';
+
+const root = new URL('../', import.meta.url);
+const read = path => JSON.parse(readFileSync(new URL(path, root), 'utf8'));
+
+const raw = {};
+for (const doc of DOCS) {
+  const data = read(doc.file);
+  try {
+    validateDocument(data, read(`src/content/payload/${doc.schema}.json`));
+  } catch (e) {
+    throw new Error(`${doc.file}: ${e.message}`);
+  }
+  raw[doc.key] = data;
 }
-console.log(`Content valid: ${home.layout.length} home blocks and shared defaults.`);
+buildContent(raw);
+console.log(`Content valid: ${Object.keys(raw).length} documents.`);

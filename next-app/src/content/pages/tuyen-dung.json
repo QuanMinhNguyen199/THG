@@ -1,0 +1,56 @@
+{
+  "name": "Tuyển dụng",
+  "title": "Còn rất nhiều bài toán lớn phía trước.",
+  "en": "The biggest problems are still ahead.",
+  "lead": "Mỗi việc ở Thehegeo gắn với một cơ quan, một công trình có thật. Chúng tôi tìm người muốn thấy công việc của mình chạy trong bộ máy nhà nước và trên những công trình lớn của Việt Nam.",
+  "blocks": [
+    {
+      "id": "b1",
+      "blockType": "pills",
+      "title": "Bài toán chúng tôi giải",
+      "items": [
+        {
+          "text": "AI Agent cho bộ máy"
+        },
+        {
+          "text": "AI cho thuế và ngân sách"
+        },
+        {
+          "text": "Quan trắc công trình"
+        },
+        {
+          "text": "Thiết bị và AI tại biên"
+        }
+      ]
+    },
+    {
+      "id": "b2",
+      "blockType": "waysOfWorking"
+    },
+    {
+      "id": "b3",
+      "blockType": "steps",
+      "title": "Những ngày đầu tiên",
+      "flow": true,
+      "items": [
+        {
+          "title": "15 ngày đầu",
+          "body": "Hiểu sản phẩm và khách hàng."
+        },
+        {
+          "title": "45 ngày đầu",
+          "body": "Có kết quả đầu tiên."
+        },
+        {
+          "title": "Năm đầu",
+          "body": "Chọn hướng phát triển."
+        }
+      ],
+      "note": "Hai hướng ngang nhau: chuyên gia hoặc quản lý. Không ai bị ép phải làm trưởng nhóm."
+    },
+    {
+      "id": "b4",
+      "blockType": "jobs"
+    }
+  ]
+}

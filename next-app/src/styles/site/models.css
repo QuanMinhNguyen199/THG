@@ -100,12 +100,16 @@
 /* ── Blocks rising in, steps lighting in turn, the timeline drawing itself ── */
 .corp-motion .corp-block, .corp-motion .corp-cta, .corp-motion .corp-siblings { opacity: 0; transform: translateY(28px); transition: opacity 0.7s, transform 0.8s cubic-bezier(0.22, 1, 0.36, 1); }
 .corp-motion .is-in { opacity: 1; transform: none; }
-.corp-motion .corp-block :is(.corp-tile, .corp-steps li, .fact-cards > li, .corp-list li, .corp-pills li, .corp-partners li, .job-list li) { opacity: 0; transform: translateY(14px); transition: opacity 0.5s, transform 0.6s cubic-bezier(0.22, 1, 0.36, 1); }
-.corp-motion .corp-block.is-in :is(.corp-tile, .corp-steps li, .fact-cards > li, .corp-list li, .corp-pills li, .corp-partners li, .job-list li) { opacity: 1; transform: none; }
-.corp-motion .corp-block.is-in :is(.corp-tile, .corp-steps li, .fact-cards > li, .corp-list li, .corp-pills li, .job-list li):nth-child(2) { transition-delay: 0.08s; }
-.corp-motion .corp-block.is-in :is(.corp-tile, .corp-steps li, .fact-cards > li, .corp-list li, .corp-pills li, .job-list li):nth-child(3) { transition-delay: 0.16s; }
-.corp-motion .corp-block.is-in :is(.corp-tile, .corp-steps li, .fact-cards > li, .corp-list li, .corp-pills li, .job-list li):nth-child(4) { transition-delay: 0.24s; }
-.corp-motion .corp-block.is-in :is(.corp-tile, .corp-steps li, .fact-cards > li, .corp-list li, .corp-pills li, .job-list li):nth-child(n+5) { transition-delay: 0.32s; }
+.corp-motion .corp-block :is(.corp-tile, .corp-steps li, .fact-cards > li, .corp-list li, .corp-pills li, .corp-values li, .corp-rows li, .corp-partners li, .job-list li) { opacity: 0; transform: translateY(14px); transition: opacity 0.5s, transform 0.6s cubic-bezier(0.22, 1, 0.36, 1); }
+.corp-motion .corp-block.is-in :is(.corp-tile, .corp-steps li, .fact-cards > li, .corp-list li, .corp-pills li, .corp-values li, .corp-rows li, .corp-partners li, .job-list li) { opacity: 1; transform: none; }
+.corp-motion .corp-block.is-in :is(.corp-tile, .corp-steps li, .fact-cards > li, .corp-list li, .corp-pills li, .corp-values li, .corp-rows li, .job-list li):nth-child(2) { transition-delay: 0.08s; }
+.corp-motion .corp-block.is-in :is(.corp-tile, .corp-steps li, .fact-cards > li, .corp-list li, .corp-pills li, .corp-values li, .corp-rows li, .job-list li):nth-child(3) { transition-delay: 0.16s; }
+.corp-motion .corp-block.is-in :is(.corp-tile, .corp-steps li, .fact-cards > li, .corp-list li, .corp-pills li, .corp-values li, .corp-rows li, .job-list li):nth-child(4) { transition-delay: 0.24s; }
+.corp-motion .corp-block.is-in :is(.corp-tile, .corp-steps li, .fact-cards > li, .corp-list li, .corp-pills li, .corp-values li, .corp-rows li, .job-list li):nth-child(n+5) { transition-delay: 0.32s; }
+
+/* rings: each grows out from the centre, innermost first */
+.corp-motion .corp-rings-chart li { opacity: 0; transform: translate(-50%, -50%) scale(0.3); transition: opacity 0.5s, transform 1s cubic-bezier(0.22, 1, 0.36, 1); transition-delay: calc(0.15s + var(--i, 0) * 0.22s); }
+.corp-motion .is-in .corp-rings-chart li { opacity: 1; transform: translate(-50%, -50%); }
 
 /* flow steps: a light passes from step to step, the arrows carry it */
 .is-flow .corp-steps li { overflow: visible; }

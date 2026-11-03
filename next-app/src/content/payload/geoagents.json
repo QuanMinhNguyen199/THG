@@ -1,0 +1,397 @@
+{
+  "slug": "geoagents",
+  "label": "Trang GEOagents",
+  "fields": [
+    {
+      "name": "hero",
+      "type": "group",
+      "label": "Phần đầu trang (video)",
+      "admin": {
+        "description": "Video và hiệu ứng nằm trong code; ở đây sửa chữ."
+      },
+      "custom": {
+        "selector": "#geoagents"
+      },
+      "fields": [
+        {
+          "name": "title",
+          "type": "text",
+          "label": "Tên, phần đầu",
+          "admin": {
+            "description": "Ví dụ: GEO."
+          },
+          "required": true
+        },
+        {
+          "name": "highlight",
+          "type": "text",
+          "label": "Tên, phần sau (màu nhấn)",
+          "admin": {
+            "description": "Ví dụ: agents. Nối liền ngay sau phần đầu."
+          },
+          "required": true
+        },
+        {
+          "name": "subtitle",
+          "type": "text",
+          "label": "Dòng phụ",
+          "admin": {
+            "description": "Gõ như muốn hiện (đang viết in hoa)."
+          },
+          "required": true
+        },
+        {
+          "name": "description",
+          "type": "textarea",
+          "label": "Mô tả",
+          "required": true
+        },
+        {
+          "name": "primaryLabel",
+          "type": "text",
+          "label": "Chữ trên nút chính",
+          "admin": {
+            "description": "Nút dẫn xuống phần bốn tầng."
+          },
+          "required": true
+        },
+        {
+          "name": "secondaryLabel",
+          "type": "text",
+          "label": "Chữ trên nút phụ",
+          "required": true
+        },
+        {
+          "name": "secondaryHref",
+          "type": "text",
+          "label": "Link nút phụ",
+          "admin": {
+            "description": "Trang trong website bắt đầu bằng /."
+          },
+          "required": true
+        }
+      ]
+    },
+    {
+      "name": "metrics",
+      "type": "group",
+      "label": "Dải số liệu",
+      "custom": {
+        "selector": ".metrics"
+      },
+      "fields": [
+        {
+          "name": "label",
+          "type": "text",
+          "label": "Tên dải cho trình đọc màn hình",
+          "admin": {
+            "description": "Không hiện trên trang."
+          },
+          "required": true
+        },
+        {
+          "name": "items",
+          "type": "array",
+          "required": true,
+          "minRows": 1,
+          "label": "Các số liệu",
+          "labels": {
+            "singular": "Số liệu",
+            "plural": "Số liệu"
+          },
+          "fields": [
+            {
+              "name": "value",
+              "type": "number",
+              "required": true,
+              "label": "Giá trị số",
+              "admin": {
+                "description": "Con số cuối cùng hiển thị, ví dụ 100."
+              }
+            },
+            {
+              "name": "label",
+              "type": "text",
+              "required": true,
+              "label": "Mô tả dưới số",
+              "admin": {
+                "description": "Ví dụ: Chủ quyền dữ liệu."
+              }
+            },
+            {
+              "name": "prefix",
+              "type": "text",
+              "label": "Chữ trước số",
+              "admin": {
+                "description": "Tuỳ chọn, ví dụ \"Level\". Khoảng cách với số được thêm tự động."
+              }
+            },
+            {
+              "name": "suffix",
+              "type": "text",
+              "label": "Ký hiệu sau số (cùng cỡ)",
+              "admin": {
+                "description": "Tuỳ chọn, ví dụ \"+\" để thành 3+."
+              }
+            },
+            {
+              "name": "unit",
+              "type": "text",
+              "label": "Đơn vị sau số (chữ nhỏ)",
+              "admin": {
+                "description": "Tuỳ chọn, ví dụ \"%\". Hiển thị nhỏ hơn con số."
+              }
+            },
+            {
+              "name": "minDigits",
+              "type": "number",
+              "min": 1,
+              "max": 12,
+              "label": "Số chữ số tối thiểu",
+              "admin": {
+                "description": "Tuỳ chọn. Nhập 2 thì số 4 hiển thị thành 04. Để trống nếu không cần."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "architecture",
+      "type": "group",
+      "label": "Bốn tầng tổ chức",
+      "admin": {
+        "description": "Sơ đồ chuyển động nằm trong code; ở đây sửa chữ và tên các tầng."
+      },
+      "custom": {
+        "selector": "#architecture"
+      },
+      "fields": [
+        {
+          "name": "title",
+          "type": "text",
+          "label": "Tiêu đề, dòng 1",
+          "required": true
+        },
+        {
+          "name": "highlight",
+          "type": "text",
+          "label": "Tiêu đề, dòng 2 (màu nhấn)",
+          "required": true
+        },
+        {
+          "name": "intro",
+          "type": "text",
+          "label": "Giới thiệu, dòng 1",
+          "required": true
+        },
+        {
+          "name": "introLine2",
+          "type": "text",
+          "label": "Giới thiệu, dòng 2",
+          "required": true
+        },
+        {
+          "name": "captionLeft",
+          "type": "text",
+          "label": "Chú thích dưới sơ đồ, bên trái",
+          "required": true
+        },
+        {
+          "name": "captionRight",
+          "type": "text",
+          "label": "Chú thích dưới sơ đồ, bên phải",
+          "required": true
+        },
+        {
+          "name": "layers",
+          "type": "array",
+          "required": true,
+          "minRows": 4,
+          "maxRows": 4,
+          "label": "Bốn tầng",
+          "labels": {
+            "singular": "Tầng",
+            "plural": "Tầng"
+          },
+          "admin": {
+            "description": "Sơ đồ vẽ đúng bốn tầng, từ Quản trị đến Dịch vụ."
+          },
+          "fields": [
+            {
+              "name": "tab",
+              "type": "text",
+              "label": "Tên tầng",
+              "admin": {
+                "description": "Ví dụ: Quản trị."
+              },
+              "required": true
+            },
+            {
+              "name": "product",
+              "type": "text",
+              "label": "Tên sản phẩm",
+              "admin": {
+                "description": "Ví dụ: GEO Governance."
+              },
+              "required": true
+            },
+            {
+              "name": "body",
+              "type": "textarea",
+              "label": "Mô tả tầng",
+              "required": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "applications",
+      "type": "group",
+      "label": "Ứng dụng thực tiễn",
+      "admin": {
+        "description": "Hồ sơ case study bên dưới nằm trong code."
+      },
+      "custom": {
+        "selector": "#applications"
+      },
+      "fields": [
+        {
+          "name": "title",
+          "type": "text",
+          "label": "Tiêu đề, dòng 1",
+          "required": true
+        },
+        {
+          "name": "highlight",
+          "type": "text",
+          "label": "Tiêu đề, dòng 2 (màu nhấn)",
+          "required": true
+        },
+        {
+          "name": "intro",
+          "type": "text",
+          "label": "Giới thiệu, dòng 1",
+          "required": true
+        },
+        {
+          "name": "introLine2",
+          "type": "text",
+          "label": "Giới thiệu, dòng 2",
+          "required": true
+        }
+      ]
+    },
+    {
+      "name": "careers",
+      "type": "group",
+      "label": "Tuyển dụng",
+      "custom": {
+        "selector": "#careers"
+      },
+      "fields": [
+        {
+          "name": "title",
+          "type": "text",
+          "label": "Tiêu đề, dòng 1",
+          "required": true
+        },
+        {
+          "name": "highlight",
+          "type": "text",
+          "label": "Tiêu đề, dòng 2 (màu nhấn)",
+          "required": true
+        },
+        {
+          "name": "body",
+          "type": "textarea",
+          "label": "Mô tả",
+          "required": true
+        },
+        {
+          "name": "apply",
+          "type": "textarea",
+          "label": "Lời mời ứng tuyển",
+          "required": true
+        },
+        {
+          "name": "action",
+          "type": "text",
+          "label": "Chữ trên nút",
+          "admin": {
+            "description": "Nút gửi email tới địa chỉ ở Footer."
+          },
+          "required": true
+        },
+        {
+          "name": "subject",
+          "type": "text",
+          "label": "Tiêu đề email ứng tuyển",
+          "required": true
+        }
+      ]
+    },
+    {
+      "name": "cta",
+      "type": "group",
+      "label": "Kêu gọi liên hệ (cuối trang)",
+      "custom": {
+        "selector": ".cta"
+      },
+      "fields": [
+        {
+          "name": "title",
+          "type": "text",
+          "required": true,
+          "label": "Tiêu đề",
+          "admin": {
+            "description": "Dòng 1 của tiêu đề lớn."
+          }
+        },
+        {
+          "name": "highlight",
+          "type": "text",
+          "required": true,
+          "label": "Dòng 2",
+          "admin": {
+            "description": "Dòng 2 của tiêu đề lớn, cùng màu với dòng 1."
+          }
+        },
+        {
+          "name": "question",
+          "type": "text",
+          "required": true,
+          "label": "Câu hỏi",
+          "admin": {
+            "description": "Dòng in đậm dưới tiêu đề."
+          }
+        },
+        {
+          "name": "body",
+          "type": "textarea",
+          "required": true,
+          "label": "Đoạn mô tả"
+        },
+        {
+          "name": "action",
+          "type": "text",
+          "required": true,
+          "label": "Chữ trên nút",
+          "admin": {
+            "description": "Nên bắt đầu bằng động từ, ví dụ: Gửi yêu cầu tư vấn."
+          }
+        },
+        {
+          "name": "href",
+          "type": "text",
+          "required": true,
+          "label": "Link của nút",
+          "admin": {
+            "description": "Trang trong website bắt đầu bằng /, ví dụ /geoagents/. Link ngoài bắt đầu bằng https://."
+          }
+        }
+      ]
+    }
+  ]
+}
