@@ -11,6 +11,7 @@
     "check:content": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/check-content.mjs",
     "test:content": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --test scripts/content.test.mjs",
     "content:schema": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/build-collection.mjs",
+    "content:spec": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/build-spec.mjs",
     "content:media": "node scripts/build-media.mjs",
     "content:apply": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/apply-content.mjs",
     "prebuild": "npm run check:content",
