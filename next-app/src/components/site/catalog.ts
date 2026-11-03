@@ -5,7 +5,9 @@
 export type Link = { href: string; label: string };
 export type Cell = string | { text: string; href: string };
 export type Block =
-  | { type: "cards"; title?: string; items: { title: string; body?: string; href?: string; cta?: string }[] }
+  /** Three or more linked cards (a section's pages) read as rows; once the first has an `image`,
+   *  they become a large lead card with that image beside compact cards. */
+  | { type: "cards"; title?: string; items: { title: string; body?: string; href?: string; cta?: string; image?: string }[] }
   /** Shown as cards: one per row (its first cell is the title, the others are labelled by `head`),
    *  or one per column with `by: "column"`. A card with a link cell opens that link. */
   | { type: "table"; title?: string; head: string[]; rows: Cell[][]; by?: "column" }
@@ -16,7 +18,12 @@ export type Block =
   | { type: "timeline"; title?: string; items: { year: string; label: string }[] }
   | { type: "layers"; title?: string; items: string[] }
   | { type: "partners"; title?: string; groups: { group: string; names: string[] }[] }
-  | { type: "callout"; title?: string; body: string; en?: string }
+  /** A statement set large, with an optional plain paragraph under it. */
+  | { type: "callout"; title?: string; body: string; detail?: string; en?: string }
+  /** A statement beside concentric rings growing from the first item (innermost, red) outwards. */
+  | { type: "rings"; title?: string; statement: string; body: string; items: string[] }
+  /** Short values set as one row of large words. */
+  | { type: "values"; title?: string; items: string[] }
   | { type: "case"; title?: string; id: string }
   | {
       type: "project";
@@ -39,6 +46,8 @@ export type Model =
   | { kind: "phone"; title: string; caller: string; script: { who: "in" | "agent"; text: string }[] }
   | { kind: "stack"; layers: { label: string; chips?: string[] }[] };
 
+type Action = { label: string; href?: string };
+
 export type Page = {
   slug: string;
   /** Menu and card name. */
@@ -49,7 +58,8 @@ export type Page = {
   en?: string;
   lead?: string;
   blocks: Block[];
-  cta?: { label: string; href?: string };
+  /** One action, or several: the first is the main button, the rest are secondary. */
+  cta?: Action | Action[];
   image?: string;
   model?: Model;
 };
@@ -513,32 +523,40 @@ export const ABOUT: Page[] = [
   {
     slug: "su-menh-tam-nhin",
     name: "Sứ mệnh và Tầm nhìn",
-    title: "Sứ mệnh và Tầm nhìn",
+    title: "Xây nền tảng. Kiến tạo tương lai.",
+    lead: "Chúng tôi không chỉ xây phần mềm. Chúng tôi xây những nền tảng, giải pháp và hạ tầng công nghệ có khả năng vận hành trong thế giới thực.",
     blocks: [
       {
         type: "callout",
         title: "Sứ mệnh",
         body: "Giúp những hệ thống mà hàng triệu người dựa vào vận hành đúng, mỗi ngày.",
-        en: "To keep the systems millions of people rely on running right, every day.",
+        detail: "Cầu, cảng, tuyến metro, bộ máy hành chính: đó là những hệ thống rất nhiều người dựa vào mỗi ngày mà không cần nghĩ tới. Việc của Thehegeo là mang công nghệ phù hợp nhất đến cho chính phủ và doanh nghiệp, để những hệ thống đó vận hành đúng và mang lại lợi ích thật cho người dân.",
       },
       {
-        type: "callout",
+        type: "rings",
         title: "Tầm nhìn",
-        body: "Đưa AI Agent từ một cơ quan đến cả ngành, cả thành phố, rồi cả quốc gia.",
-        en: "From one agency to a whole sector, a whole city, and then a nation.",
+        statement: "Từ một doanh nghiệp đến quy mô quốc gia.",
+        body: "Từng nền tảng và giải pháp hôm nay là một bước hướng tới năng lực AI có thể phục vụ doanh nghiệp, chính quyền, ngành và quốc gia.",
+        items: ["Doanh nghiệp", "Ngành", "Thành phố", "Quốc gia"],
+      },
+      {
+        type: "values",
+        title: "Giá trị cốt lõi",
+        items: ["Chính trực", "Chủ động và chịu trách nhiệm", "Hợp tác", "Học hỏi liên tục", "Đổi mới sáng tạo"],
       },
       {
         type: "cards",
         title: "Cách chúng tôi làm việc",
         items: [
-          { title: "Kết quả trước", body: "Đo bằng việc đã xong, không bằng giờ đã làm." },
-          { title: "Viết ra trước", body: "Mọi việc quan trọng đều có tài liệu." },
-          { title: "AI trước", body: "Dùng AI trong chính công việc hằng ngày." },
-          { title: "An toàn trước", body: "Dữ liệu khách hàng chỉ được xử lý khi đã được phép." },
+          { title: "Kết quả trước", body: "Đo bằng sản phẩm bàn giao, kết quả, tác động và chất lượng, không bằng số giờ hay số cuộc họp." },
+          { title: "Viết ra trước", body: "Nếu chưa được viết ra, nó chưa tồn tại." },
+          { title: "AI trước", body: "AI là công cụ làm việc hằng ngày. Kết quả AI luôn được con người kiểm tra." },
+          { title: "An toàn trước", body: "Bảo mật là trách nhiệm của mọi người. Không xử lý dữ liệu khách hàng khi chưa được phê duyệt." },
         ],
       },
       { type: "text", body: ["AI hỗ trợ quyết định. Con người làm chủ quyết định."] },
     ],
+    cta: { label: "Liên hệ", href: CONTACT },
   },
   {
     slug: "doi-tac",

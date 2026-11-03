@@ -115,17 +115,51 @@ function BlockView({ block, index }: { block: Block; index: number }) {
 
   switch (block.type) {
     case "cards": {
-      // A grid of links (a section's pages) leads with its first page; plain cards stay equal.
-      const feature = block.items.length >= 3 && block.items.every((c) => c.href);
+      // A section's pages (three or more links) lead with a large card only when the first has an
+      // image to fill it; without one they read as equal rows. Plain cards stay an equal grid.
+      const links = block.items.length >= 3 && block.items.every((c) => c.href);
+      const feature = links && !!block.items[0].image;
+      if (links && !feature)
+        return wrap(
+          "is-rows",
+          <ul className="corp-rows">
+            {block.items.map((c) => {
+              const body = (
+                <>
+                  <strong>{c.title}</strong>
+                  {c.body && <p>{c.body}</p>}
+                  {c.cta && (
+                    <span className="corp-more">
+                      {c.cta} <Arrow />
+                    </span>
+                  )}
+                </>
+              );
+              return (
+                <li key={c.title}>
+                  {c.href ? (
+                    <Go href={c.href} className="corp-row is-link">
+                      {body}
+                    </Go>
+                  ) : (
+                    <div className="corp-row">{body}</div>
+                  )}
+                </li>
+              );
+            })}
+          </ul>,
+        );
       return wrap(
         "is-cards",
         <div
           className={`corp-grid${feature ? " has-feature" : ""}`}
           style={feature ? ({ "--rest": block.items.length - 1 } as React.CSSProperties) : undefined}
         >
-          {block.items.map((c) => {
+          {block.items.map((c, i) => {
+            const image = feature && i === 0 ? c.image : undefined;
             const body = (
               <>
+                {image && <img className="corp-tile-image" src={/^https?:\/\//.test(image) ? image : asset(image)} alt="" loading="lazy" />}
                 <strong>{c.title}</strong>
                 {c.body && <p>{c.body}</p>}
                 {c.cta && (
@@ -136,7 +170,7 @@ function BlockView({ block, index }: { block: Block; index: number }) {
               </>
             );
             return c.href ? (
-              <Go key={c.title} href={c.href} className="corp-tile is-link">
+              <Go key={c.title} href={c.href} className={`corp-tile is-link${image ? " has-image" : ""}`}>
                 {body}
               </Go>
             ) : (
@@ -242,8 +276,36 @@ function BlockView({ block, index }: { block: Block; index: number }) {
         "is-callout",
         <div className="corp-callout">
           <p>{block.body}</p>
+          {block.detail && <p className="corp-callout-detail">{block.detail}</p>}
           {block.en && <p className="corp-en">{block.en}</p>}
         </div>,
+      );
+    case "rings":
+      return wrap(
+        "is-rings",
+        <div className="corp-rings">
+          <div className="corp-rings-copy">
+            <p className="corp-rings-statement">{block.statement}</p>
+            <p className="corp-rings-body">{block.body}</p>
+          </div>
+          {/* Innermost first, so the list reads in the same order as the rings grow. */}
+          <ol className="corp-rings-chart" style={{ "--n": block.items.length } as React.CSSProperties}>
+            {block.items.map((label, i) => (
+              <li key={label} style={{ "--i": i } as React.CSSProperties}>
+                <span>{label}</span>
+              </li>
+            ))}
+          </ol>
+        </div>,
+      );
+    case "values":
+      return wrap(
+        "is-values",
+        <ul className="corp-values">
+          {block.items.map((v) => (
+            <li key={v}>{v}</li>
+          ))}
+        </ul>,
       );
     case "project":
       return wrap(
@@ -320,12 +382,14 @@ function PageCta({ cta }: { cta: Page["cta"] }) {
   if (!cta) return null;
   return (
     <section className="wrap corp-cta">
-      <Go href={cta.href ?? "/ve-thehegeo/lien-he/"} className="button">
-        {cta.label}
-        <svg viewBox="0 0 24 24" aria-hidden="true">
-          <path d="M5 12h14m-6-6 6 6-6 6" />
-        </svg>
-      </Go>
+      {[cta].flat().map((action, i) => (
+        <Go key={action.label} href={action.href ?? "/ve-thehegeo/lien-he/"} className={i ? "button is-secondary" : "button"}>
+          {action.label}
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M5 12h14m-6-6 6 6-6 6" />
+          </svg>
+        </Go>
+      ))}
     </section>
   );
 }
@@ -350,7 +414,8 @@ export function SectionOverview({ section }: { section: SectionKey }) {
       <Blocks page={s.home} />
       {/* Về THEHEGEO lands on the company story; its own pages follow as cards. */}
       {section === "ve-thehegeo" && (
-        <BlockView index={99} block={{ type: "cards", items: s.pages.map((p) => ({ title: p.name, href: `${s.base}${p.slug}/`, cta: "Xem" })) }} />
+        // A page's own banner image doubles as its card image, so adding one brings the large card back.
+        <BlockView index={99} block={{ type: "cards", items: s.pages.map((p) => ({ title: p.name, href: `${s.base}${p.slug}/`, cta: "Xem", image: p.image })) }} />
       )}
       <PageCta cta={s.home.cta} />
     </>
