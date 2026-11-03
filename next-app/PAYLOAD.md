@@ -25,7 +25,7 @@ tuyển dụng (`sections/jobs.ts`), chữ hướng dẫn nhỏ trên giao diệ
 
 ## Chỉnh nội dung
 
-Mở `/soan-noi-dung` (khi dev, hoặc trên GitHub Pages: `/THG/soan-noi-dung/`). Bên phải là chính
+Mở `/soan-noi-dung` (khi chạy `npm run dev`, hoặc trên bản đang deploy). Bên phải là chính
 website; bên trái đổi theo trang đang xem, chia ba vùng: **Header** và **Footer** (dùng chung mọi
 trang) quanh **Nội dung trang**. Form dựng từ schema trong `src/content/payload/`, báo lỗi theo
 `validate.mjs`, và bản xem trước hiện ngay mọi bản nháp hợp lệ. Mở một section hay bấm vào một ô
@@ -41,6 +41,12 @@ npm run content:apply -- đường/dẫn/noi-dung-ban-nhap.json
 
 Lệnh chỉ ghi khi mọi tài liệu trong file đều hợp lệ và site vẫn dựng được nội dung; xem lại bằng
 `git diff` rồi build. Trang soạn không có link từ site và gắn `noindex`, nhưng ai có đường dẫn đều mở được.
+
+> **Trước khi chạy trên domain chính thức:** `/soan-noi-dung` (route `src/app/(cms)`) sẽ công khai
+> cho bất kỳ ai có đường dẫn. Trang không ghi được gì vào website, nhưng là một "trang quản trị" lộ
+> trên domain công ty. Chặn nó ở server (đăng nhập hoặc chỉ mở cho mạng nội bộ), hoặc gỡ route khỏi
+> bản deploy. Khi `/admin` của Payload chạy, gỡ hẳn route này cùng `src/components/cms/ContentEditor.tsx`
+> và `fields.tsx`; giữ `EditorBridge`, `Editable`, `DraftView` cho Live Preview.
 
 Khi sửa tay file JSON:
 
@@ -65,10 +71,10 @@ Chạy trong thư mục `next-app`:
 ```sh
 npm run check:content
 npm run test:content
-npm run build:pages
+npm run build
 ```
 
-Cả `build` và `build:pages` kiểm tra mọi tài liệu trước khi build: field thiếu hoặc sai kiểu, block
+`build` (và `build:pages`, bản xuất tĩnh cũ cho GitHub Pages) kiểm tra mọi tài liệu trước khi build: field thiếu hoặc sai kiểu, block
 không được hỗ trợ, ID/anchor trùng, đường dẫn không hợp lệ, và việc site dựng được nội dung từ
 chúng. `npm run test:content` còn báo khi: schema trong `payload/` chưa sinh lại sau khi sửa script,
 có field thiếu nhãn tiếng Việt, tên đối tác không có logo (trừ tên được ghi rõ là chưa có logo),
@@ -117,20 +123,87 @@ JSON này là cấu hình collection/fields, không phải JSON Schema và khôn
 4. Generate types bằng Payload, thay contract thủ công trong `src/content/blocks.ts` bằng
    types được sinh. Chuẩn hóa các field optional/null tại ranh giới nguồn dữ liệu nếu cần.
 5. Thay các import JSON trong `src/content/published.ts` bằng truy vấn Payload rồi đưa vào
-   `buildContent()`, chỉ lấy
-   `_status = published` ở trang công khai. Với Local API, dùng `overrideAccess: false`
-   khi cần thực thi access control. Chuyển caller sang async nếu nguồn dữ liệu yêu cầu.
-6. Tích hợp draft preview riêng có xác thực, rồi thêm publish hook để làm mới cache hoặc
-   kích hoạt build. Không trả draft cho khách truy cập website công khai.
+   `buildContent()`, chỉ lấy `_status = published` ở trang công khai. Với Local API, dùng
+   `overrideAccess: false` khi cần thực thi access control. Chuyển caller sang async nếu nguồn dữ
+   liệu yêu cầu.
+6. Bật Live Preview (`admin.livePreview`) cho các collection và Global. Hàm `url` trả về đường dẫn
+   trang của tài liệu (`path` trong `DOCS`; Global Header/Footer xem trên trang chủ). Nối dữ liệu
+   Payload gửi qua `postMessage` vào `EditorBridge` (xem mục dưới). Thêm hook `afterChange` khi xuất
+   bản để gọi `revalidatePath` cho trang của tài liệu (Header/Footer/`ways`: mọi trang dùng chúng),
+   nên nội dung mới lên ngay, không cần build lại. Không trả draft cho khách truy cập website công khai.
 7. Thêm Media (ảnh, logo đối tác), chuyển case study và danh sách đối tác sang collection, thêm SEO.
    Trang soạn giả lập `/soan-noi-dung` khi đó được thay bằng `/admin` và Live Preview của Payload.
 
+## Trang soạn giả lập so với Payload
+
+`/soan-noi-dung` là bản mẫu trải nghiệm soạn nội dung. Bảng dưới đối chiếu từng tính năng với Payload
+để ước lượng phần có sẵn và phần phải tự viết. Nguồn ở cuối mục; tra cứu ngày 03/11/2026.
+
+| Tính năng ở trang soạn | Payload | Cách làm | Mức chắc chắn |
+|---|---|---|---|
+| Form từ schema: nhãn, mô tả, block, array, group, nhóm "Nâng cao" thu gọn | Có sẵn | Dùng thẳng các schema trong `src/content/payload/` (cấu trúc field của Payload) | Theo docs |
+| Xem trước bên cạnh, cập nhật khi gõ, chọn kích thước máy tính/điện thoại | Có sẵn (Live Preview) | Admin mở frontend trong iframe, gửi dữ liệu qua `postMessage` mỗi lần đổi; breakpoint cấu hình được | Theo docs |
+| Header, Footer dùng chung | Có sẵn (Global) | Global `header`, `footer` | Theo docs |
+| Bản nháp, phiên bản, xuất bản | Có sẵn, tốt hơn bản giả lập | `versions.drafts`; thay cho lưu trình duyệt + `content:apply` | Theo docs |
+| Một màn hình sửa cả Header, Nội dung trang, Footer | Không có sẵn | Payload sửa từng tài liệu; Header/Footer ở màn hình Global riêng. Muốn gộp phải viết custom admin view | Suy luận từ mô hình tài liệu |
+| Bấm link trong khung xem trước thì form đổi sang trang đó | Không có sẵn | Live Preview gắn với tài liệu đang mở; docs không nói về điều hướng trong iframe. Cần component nhận `cms:page` từ frontend rồi mở tài liệu tương ứng | Docs không đề cập |
+| Mở section / bấm vào ô thì xem trước cuộn tới và viền section | Không có sẵn | Custom field component gửi `postMessage` sang frontend, như `cms:part` trong `ContentEditor.tsx` | Suy luận, cần thử |
+| Sửa section dùng chung ("Cách chúng tôi làm việc") ngay trong trang | Không có sẵn | Cách chuẩn: relationship tới Global `ways`, sửa ở màn hình Global. Sửa tại chỗ cần custom component | Suy luận |
+| Báo lỗi tiếng Việt, chỉ đúng field | Một phần | Hàm `validate` của từng field trả câu tiếng Việt (chuyển các câu trong `fields.tsx`). Giao diện admin có bản tiếng Việt hay không: chưa kiểm tra | Cần xác nhận |
+| Bấm thẳng lên trang để sửa (click-to-edit) | Chưa dùng được | Visual Editor của Payload đang "Coming Soon", thuộc gói Enterprise. Có plugin cộng đồng (payload-better-editor, payload-visual-editor), chưa đánh giá | Theo trang Enterprise |
+
+**Phần frontend tận dụng được.** Trang soạn đã hiển thị bản nháp hoàn toàn phía trình duyệt:
+`EditorBridge` nhận dữ liệu qua `postMessage`, `buildContent()` dựng nội dung, `Editable`/`DraftView` và
+`useContent()` render bằng component thật. Live Preview của Payload cũng gửi dữ liệu theo cách đó,
+nên nhiều khả năng chỉ cần đổi định dạng message trong `EditorBridge` (giả thuyết, cần kiểm bằng bản
+thử). `EditorBridge` chỉ nhận message cùng origin; Payload chạy cùng app dưới cùng domain (mục
+Hosting) nên điều kiện này giữ nguyên. Nếu sau này tách admin sang domain khác, chỉ thêm đúng origin
+của admin vào danh sách cho phép, không mở cho mọi origin.
+
+**Đề xuất triển khai.**
+
+1. Dựng server và database trên domain theo mục Hosting, cài Payload cùng app Next.js.
+2. Làm bản thử: Payload + collection `corporate` + Global `footer`, bật Live Preview trỏ vào site.
+   Kiểm chứng: Live Preview hiển thị đúng site qua `EditorBridge`; công sức viết component cuộn tới
+   section; người viết content có chấp nhận sửa Header/Footer ở màn hình riêng không.
+3. Chỉ làm ba phần tự viết (một màn hình ba vùng, đi theo trang đang xem, cuộn tới section) khi
+   bản thử cho thấy người viết cần. Viết hết sẽ biến admin thành CMS riêng, mất lợi thế của Payload.
+
+**Câu hỏi còn mở.** Admin Payload có tiếng Việt chưa; plugin click-to-edit cộng đồng có ổn định và
+tương thích phiên bản không; thời điểm phát hành và giá của Visual Editor.
+
+Nguồn:
+[Live Preview](https://payloadcms.com/docs/live-preview/overview) ·
+[Visual Editor (Enterprise)](https://payloadcms.com/enterprise/visual-editor) ·
+[Blocks field](https://payloadcms.com/docs/fields/blocks) ·
+[payload-better-editor](https://www.pkgstats.com/pkg:payload-better-editor) ·
+[payload-visual-editor](https://awesome.ecosyste.ms/projects/github.com%2Fpemedia%2Fpayload-visual-editor) ·
+[DXP Scorecard: Payload](https://dxp-scorecard.pages.dev/platform/payload-cms)
+
 ## Hosting
 
-- Nếu tiếp tục GitHub Pages: chạy Payload ở backend riêng, lấy nội dung lúc build;
-  publish trong CMS cần kích hoạt build/deploy lại. `/admin` không chạy trong static export.
-- Nếu chạy Next.js trên server: có thể tích hợp Payload cùng app và thêm revalidation,
-  preview. Chưa bật tự động vì dự án hiện vẫn hỗ trợ xuất tĩnh.
+**Đã chốt:** đội dev deploy site qua domain riêng, không dùng GitHub Pages. Giả định (cần dev xác
+nhận): site chạy Next.js trên server (`npm run build` rồi `npm run start`, hoặc nền tảng tương đương),
+Payload cài cùng app, cùng domain, với một database và nơi lưu media.
+
+Hệ quả:
+
+- **Xuất bản:** hook `afterChange` gọi `revalidatePath`, nội dung mới lên gần như ngay; không phải
+  build lại như bản xuất tĩnh.
+- **Live Preview:** admin `/admin` và site cùng origin. Bản nháp hiển thị qua `EditorBridge` như
+  trang soạn hiện tại; có thể dùng thêm render phía server với Draft Mode nếu cần.
+- **Cấu hình build:** `npm run build` (không đặt `output: "export"`) đã là bản chạy server: bật
+  `cacheComponents`, không có `basePath`. Nhánh `forPages` trong `next.config.ts` và lệnh
+  `build:pages` chỉ phục vụ GitHub Pages.
+- **Môi trường:** biến môi trường cho database, secret của Payload và storage media đặt trên server,
+  không đưa vào repo.
+
+Việc cần làm khi domain chạy ổn (chưa làm, chờ dev xác nhận):
+
+- Tắt workflow `.github/workflows/pages.yml`: hiện mỗi lần push lên `main` vẫn deploy lên GitHub
+  Pages (`https://quanminhnguyen199.github.io/THG/`), song song với domain.
+- Gỡ nhánh `forPages` trong `next.config.ts`, lệnh `build:pages` và phần GitHub Pages trong README.
+- Chặn hoặc gỡ `/soan-noi-dung` trên domain (xem mục Chỉnh nội dung).
 
 ## Thêm loại block mới
 
