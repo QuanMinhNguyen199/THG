@@ -60,7 +60,7 @@ Visual pass (2026-10-27):
 - Buttons share one shape: 8px radius (cards use 14px), 14px semibold label in sentence case, 48px minimum height; the closing CTA uses 15px. No uppercase button labels.
 - Home: the "4 tầng tổ chức" picture is `HomeTiers.tsx`, an SVG of four thin decks with 3, 3, 5 and 4 units. One tier is in focus at a time (lifted deck, red perimeter, one red focal unit, lit cables to the tier below). Focus cycles while on screen and follows the pointer over the tier list; pause and reduced motion hold it. It replaced the WebGL orb on the home page; `HomeCore` still serves `model.kind === "core"`.
 - Home tiles: only the wide GEOagents tile carries a picture; the other tiles are text, title at the top and links at the foot.
-- Partner strip: every logo is one colour (light grey on dark, graphite on white). Without motion the logos sit in aligned columns.
+- Partner strip: logos keep their original brand colours. Without motion the logos sit in aligned columns.
 - Section overviews whose cards are all links lead with the first card as a large tinted panel, the rest stacked beside it (900px and wider).
 - Folder papers carry a small subject drawing instead of rule lines (agents, pipeline, data, platform, web, flow, ledger), and papers in a row lie at different angles.
 - Back-to-top is a flat disc in the progress ring, red on hover.
