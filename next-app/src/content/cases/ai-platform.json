@@ -1,0 +1,29 @@
+{
+  "name": "AI Platform",
+  "org": "THEHEGEO",
+  "index": "04 / NỀN TẢNG",
+  "summary": "Nền tảng để triển khai và vận hành các GEO Agent trong tổ chức.",
+  "description": "Nền tảng để triển khai, kết nối dữ liệu và vận hành các GEO Agent tại chỗ, trong phạm vi quyền truy cập của tổ chức.",
+  "note": "Dữ liệu ở lại trong tổ chức. Con người duyệt các bước quan trọng.",
+  "kicker": "Nền tảng",
+  "checks": [
+    {
+      "text": "Triển khai Agent"
+    },
+    {
+      "text": "Kết nối dữ liệu"
+    },
+    {
+      "text": "Phân quyền"
+    }
+  ],
+  "checkFoot": "Chạy tại chỗ",
+  "tag": "AI / PLATFORM",
+  "headline": "Một nền tảng.",
+  "headlineLine2": "Nhiều Agent.",
+  "stamp": "AI",
+  "stampLine2": "OS",
+  "tone": "graphite",
+  "model": "stack",
+  "mock": true
+}

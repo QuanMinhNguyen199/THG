@@ -3,7 +3,7 @@ export type Metric = { value: number; label: string; minDigits?: number | null; 
 export type CtaContent = { title: string; highlight: string; question: string; body: string; action: string; href: string };
 type Base = { id: string; enabled?: boolean | null; anchor?: string | null };
 export type PageBlock = Base & (
-  | { blockType: "homeHero"; heading: string }
+  | ({ blockType: "homeHero"; heading: string } & Film)
   | { blockType: "metrics"; label: string; items: Metric[] }
   | { blockType: "partners"; title: string; items: { name: string }[]; linkLabel: string; href: string }
   | { blockType: "coreShowcase"; kicker: string; title: string; highlight: string; items: { product: string; label: string }[]; linkLabel: string; href: string }
@@ -11,4 +11,6 @@ export type PageBlock = Base & (
   | { blockType: "navigationTiles"; title: string; highlight: string; tiles: { title: string; href: string; size: "normal" | "wide"; image?: string | null; lines: { text: string }[] }[] }
   | ({ blockType: "cta" } & CtaContent)
 );
+/** A hero's film; each left empty keeps the default (Hero.tsx). */
+export type Film = { video?: string | null; videoSmall?: string | null; poster?: string | null };
 export type PageDocument = { slug: string; title: string; layout: PageBlock[] };

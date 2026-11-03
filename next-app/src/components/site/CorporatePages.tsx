@@ -2,8 +2,7 @@
 // the page's own call to action. Section landing pages, detail pages and job descriptions all use it.
 import Link from "next/link";
 import { asset } from "@/lib/asset";
-import { CaseShowcase } from "./CaseShowcase";
-import { MOCK_CASES } from "./cases";
+import { CaseById } from "./CaseShowcase";
 import { HR_EMAIL, HR_PHONE, applyHref, type Block, type Cell, type Job, type Page, type SectionKey } from "./catalog";
 import { Editable } from "../cms/Editable";
 import { CONTENT } from "@/content/published";
@@ -338,7 +337,7 @@ function BlockView({ block, index }: { block: Block; index: number }) {
         </div>,
       );
     case "case":
-      return wrap("is-case applications is-bare", <CaseShowcase data={MOCK_CASES[block.id]} />, "ptsc");
+      return wrap("is-case applications is-bare", <CaseById id={block.id} />, "ptsc");
     case "contact":
       return (
         <section className="wrap corp-block is-contact" data-block={block.key}>

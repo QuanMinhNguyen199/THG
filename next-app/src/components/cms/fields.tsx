@@ -3,7 +3,7 @@
 // The content editor's form, built from a Payload-style schema (src/content/payload/*.json): fields,
 // arrays and blocks with their labels and help text, and validate.mjs's first problem explained in
 // the editor's words at the field it is about.
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 type Option = string | { label: string; value: string };
 export type Field = {
@@ -21,16 +21,18 @@ export type Field = {
   labels?: { singular: string; plural: string };
   fields?: Field[];
   blocks?: BlockDef[];
-  /** On a group: `selector` is the part of the page it edits (the preview scrolls there). */
-  custom?: { selector?: string };
+  /** On a group: `selector` is the part of the page it edits (the preview scrolls there).
+   *  On a text field: `media` makes it a media picker for that kind of file. */
+  custom?: { selector?: string; index?: number; media?: MediaKind; shared?: string };
 };
-/** `custom.shared` names a shared document the block shows (edited in place, for every page using it). */
-export type BlockDef = { slug: string; labels?: { singular: string }; admin?: { description?: string }; fields: Field[]; custom?: { shared?: string } };
+/** `custom.shared` names a shared document the block shows; `custom.sharedBy` takes its key from one of
+ *  the block's fields (a case study picked by id). Either is edited in place, for every page using it. */
+export type BlockDef = { slug: string; labels?: { singular: string }; admin?: { description?: string }; fields: Field[]; custom?: { shared?: string; sharedBy?: { field: string; prefix: string }; sharedList?: string[] } };
 export type Schema = { slug: string; fields: Field[] };
 export type Row = Record<string, unknown>;
 
 /** Fields with the presentational groups (collapsible) opened up, as the data sees them. */
-const flat = (defs: Field[]): Field[] => defs.flatMap((f) => (f.type === "collapsible" ? flat(f.fields ?? []) : [f]));
+export const flat = (defs: Field[]): Field[] => defs.flatMap((f) => (f.type === "collapsible" ? flat(f.fields ?? []) : [f]));
 const optionValue = (o: Option) => (typeof o === "string" ? o : o.value);
 const optionLabel = (o: Option) => (typeof o === "string" ? o : o.label);
 export const within = (errorPath: string | undefined, path: string) => !!errorPath && (errorPath === path || errorPath.startsWith(`${path}.`) || errorPath.startsWith(`${path}[`));
@@ -103,9 +105,23 @@ export function explain(error: string, doc: Row, schema: Schema): Problem {
     : code === "too many rows" ? `Tối đa ${field?.maxRows} dòng.`
     : anchorProblem ? "Mã neo sai định dạng hoặc trùng với section khác."
     : code.includes("block ID") ? "Mã section bị trùng. Hãy xoá section này và thêm lại."
+    : code === "expected slug" ? "Chỉ dùng chữ thường không dấu, số và gạch ngang, ví dụ ai-engineer."
+    : code === "duplicate" ? "Trùng với một mục khác trong danh sách; hãy đặt khác."
     : code;
   return { path, message, where };
 }
+
+export type MediaKind = "image" | "video";
+export type MediaItem = { path: string; kind: MediaKind; size: number };
+/**
+ * The files a media field can take: the library (public/media) and this browser's uploads.
+ * `upload` stores a picked file and gives its path, or a message saying why it was refused.
+ */
+export type Media = {
+  items: (kind: MediaKind) => (MediaItem & { uploaded: boolean })[];
+  urlOf: (path: string) => string;
+  upload: (file: File, kind: MediaKind) => Promise<{ path?: string; note?: string }>;
+};
 
 /** A shared document a block shows, edited in place. */
 export type Shared = { label: string; value: Row; onChange: (v: Row) => void; schema: Schema; problem?: Problem };
@@ -113,7 +129,7 @@ export type Shared = { label: string; value: Row; onChange: (v: Row) => void; sc
  * `problem` is this document's first problem. `active` is the section being edited; `select` makes a
  * section active (the preview scrolls to it). `shared` gives a shared document by key.
  */
-export type Ctx = { problem?: Problem; active?: string; select: (id: string, field: string) => void; shared: (key: string) => Shared | undefined; show?: (selector: string) => void };
+export type Ctx = { problem?: Problem; active?: string; select: (id: string, field: string) => void; shared: (key: string) => Shared | undefined; show?: (selector: string) => void; media?: Media };
 
 /** A panel that opens by itself when the current problem is inside it. */
 export function Disclosure({ summary, hasProblem, initial = false, className, onOpen, children }: { summary: React.ReactNode; hasProblem: boolean; initial?: boolean; className?: string; onOpen?: () => void; children: React.ReactNode }) {
@@ -163,6 +179,7 @@ function FieldView({ field, value, onChange, path, ctx }: { field: Field; value:
   if (field.type === "array") return <ArrayField field={field} rows={(value as Row[]) ?? []} onChange={onChange} path={path} ctx={ctx} />;
   if (field.type === "blocks") return <BlocksField field={field} blocks={(value as Row[]) ?? []} onChange={onChange} path={path} ctx={ctx} />;
   if (field.type === "group") return <GroupField field={field} value={(value as Row) ?? {}} onChange={onChange} path={path} ctx={ctx} />;
+  if (field.custom?.media && ctx.media) return <MediaField field={field} kind={field.custom.media} value={(value as string) ?? ""} onChange={onChange} path={path} ctx={ctx} media={ctx.media} />;
   const id = `f-${path.replace(/[^\w-]/g, "_")}`;
   const problem = ctx.problem?.path === path ? ctx.problem : undefined;
   const help = field.admin?.description;
@@ -217,9 +234,146 @@ function FieldView({ field, value, onChange, path, ctx }: { field: Field; value:
   );
 }
 
+const megabytes = (bytes: number) => `${(bytes / 1024 / 1024).toFixed(bytes < 1024 * 1024 ? 2 : 1)} MB`;
+const fileName = (path: string) => path.split("/").pop() ?? path;
+const ACCEPT: Record<MediaKind, string> = { image: "image/jpeg,image/png,image/webp,image/avif,image/gif", video: "video/mp4" };
+
+function Thumb({ kind, url, empty = "Chưa chọn" }: { kind: MediaKind; url?: string; empty?: string }) {
+  if (!url) return <span className="cms-media-empty">{empty}</span>;
+  return kind === "video" ? <video src={url} muted playsInline preload="metadata" /> : <img src={url} alt="" />;
+}
+
+/** A picture or film: its preview, picked from the library or uploaded from this computer. */
+function MediaField({ field, kind, value, onChange, path, ctx, media }: { field: Field; kind: MediaKind; value: string; onChange: (v: unknown) => void; path: string; ctx: Ctx; media: Media }) {
+  const id = `f-${path.replace(/[^\w-]/g, "_")}`;
+  const problem = ctx.problem?.path === path ? ctx.problem : undefined;
+  const library = useRef<HTMLDialogElement>(null);
+  const picker = useRef<HTMLInputElement>(null);
+  const [note, setNote] = useState<string>();
+  // The grid renders only while the library is open, so a closed one loads no previews.
+  const [browsing, setBrowsing] = useState(false);
+  const items = media.items(kind);
+  const current = items.find((i) => i.path === value);
+  const noun = kind === "video" ? "video" : "ảnh";
+  const pick = (p: string) => {
+    onChange(p);
+    setNote(undefined);
+    library.current?.close();
+  };
+  /** A file from the picker or dropped on the field. */
+  const take = async (file?: File) => {
+    if (!file) return;
+    const result = await media.upload(file, kind);
+    if (result.path) onChange(result.path);
+    setNote(result.note);
+  };
+  // Dragging a file anywhere over the field drops it there; the zone shows it will take it.
+  const [over, setOver] = useState(false);
+  const carriesFile = (e: React.DragEvent) => [...e.dataTransfer.types].includes("Files");
+  return (
+    <div
+      className={`cms-field cms-media${problem ? " has-problem" : ""}${over ? " is-over" : ""}`}
+      data-path={path}
+      role="group"
+      aria-labelledby={`${id}-label`}
+      onDragOver={(e) => {
+        if (!carriesFile(e)) return;
+        e.preventDefault();
+        e.dataTransfer.dropEffect = "copy";
+        setOver(true);
+      }}
+      onDragLeave={(e) => {
+        if (!e.currentTarget.contains(e.relatedTarget as Node | null)) setOver(false);
+      }}
+      onDrop={(e) => {
+        if (!carriesFile(e)) return;
+        e.preventDefault();
+        setOver(false);
+        take(e.dataTransfer.files[0]);
+      }}
+    >
+      <span className="cms-media-label" id={`${id}-label`}>
+        {field.label}
+        {field.required && <span className="cms-required" aria-label="bắt buộc"> *</span>}
+      </span>
+      <div className="cms-media-row">
+        {/* The drop zone; a click opens the file picker too. The buttons beside it serve the keyboard. */}
+        <div className="cms-media-thumb cms-drop" onClick={() => picker.current?.click()} aria-hidden="true">
+          <Thumb kind={kind} url={value ? media.urlOf(value) : undefined} empty={`Kéo thả ${noun} vào đây`} />
+          <span className="cms-drop-hint">{over ? `Thả để tải ${noun} lên` : value ? "Kéo thả để thay" : ""}</span>
+        </div>
+        <div className="cms-media-meta">
+          <code>{value ? fileName(value) : "Mặc định"}</code>
+          {current && <span className="cms-media-size">{megabytes(current.size)}</span>}
+          {current?.uploaded && <span className="cms-badge is-shared">Mới tải lên · lên website khi áp bản nháp</span>}
+          <span className="cms-media-actions">
+            <button
+              type="button"
+              onClick={() => {
+                setBrowsing(true);
+                library.current?.showModal();
+              }}
+            >
+              Chọn từ thư viện
+            </button>
+            <button type="button" onClick={() => picker.current?.click()}>Tải lên từ máy</button>
+            {value && <button type="button" onClick={() => pick("")}>Bỏ</button>}
+          </span>
+          <input
+            ref={picker}
+            type="file"
+            accept={ACCEPT[kind]}
+            hidden
+            onChange={(e) => {
+              const file = e.target.files?.[0];
+              e.target.value = "";
+              take(file);
+            }}
+          />
+        </div>
+      </div>
+      {field.admin?.description && <p className="cms-help">{field.admin.description}</p>}
+      {note && <p className="cms-media-note" role="status">{note}</p>}
+      {problem && <p className="cms-problem">{problem.message}</p>}
+      <dialog ref={library} className="cms-library" aria-labelledby={`${id}-library`} onClose={() => setBrowsing(false)}>
+        <div className="cms-library-head">
+          <h4 id={`${id}-library`}>Chọn {noun}: {field.label}</h4>
+          <button type="button" onClick={() => library.current?.close()}>Đóng</button>
+        </div>
+        {!browsing ? null : items.length === 0 ? (
+          <p className="cms-help">Thư viện chưa có {noun}. Dùng “Tải lên từ máy”.</p>
+        ) : (
+          <ul className="cms-library-grid">
+            {items.map((i) => (
+              <li key={i.path}>
+                <button type="button" aria-pressed={i.path === value} onClick={() => pick(i.path)}>
+                  <span className="cms-media-thumb"><Thumb kind={kind} url={media.urlOf(i.path)} /></span>
+                  <span className="cms-library-name">{fileName(i.path)}</span>
+                  <span className="cms-media-size">{megabytes(i.size)}{i.uploaded ? " · mới tải lên" : ""}</span>
+                </button>
+              </li>
+            ))}
+          </ul>
+        )}
+      </dialog>
+    </div>
+  );
+}
+
+/** A shared document edited in place: framed and named, so it reads as content other pages show too. */
+function SharedFields({ shared, ctx }: { shared: Shared; ctx: Ctx }) {
+  return (
+    <div className="cms-shared">
+      <p className="cms-shared-label">Nội dung dùng chung: {shared.label}</p>
+      <Fields defs={shared.schema.fields} value={shared.value} onChange={shared.onChange} path={shared.schema.slug} ctx={{ ...ctx, problem: shared.problem }} />
+    </div>
+  );
+}
+
 /** A part of the page as a framed group; working in it shows that part in the preview. */
 function GroupField({ field, value, onChange, path, ctx }: { field: Field; value: Row; onChange: (v: Row) => void; path: string; ctx: Ctx }) {
   const selector = field.custom?.selector;
+  const shared = field.custom?.shared ? ctx.shared(field.custom.shared) : undefined;
   return (
     <fieldset
       className="cms-part"
@@ -233,6 +387,7 @@ function GroupField({ field, value, onChange, path, ctx }: { field: Field; value
       <legend>{field.label}</legend>
       {field.admin?.description && <p className="cms-help">{field.admin.description}</p>}
       <Fields defs={field.fields ?? []} value={value} onChange={onChange} path={path} ctx={ctx} />
+      {shared && <SharedFields shared={shared} ctx={ctx} />}
     </fieldset>
   );
 }
@@ -320,14 +475,16 @@ function BlocksField({ field, blocks, onChange, path, ctx }: { field: Field; blo
           const blockPath = `${path}[${i}]`;
           const hidden = block.enabled === false;
           const id = String(block.id);
-          const shared = def?.custom?.shared ? ctx.shared(def.custom.shared) : undefined;
+          const by = def?.custom?.sharedBy;
+          const sharedKey = def?.custom?.shared ?? (by && block[by.field] ? `${by.prefix}${String(block[by.field])}` : undefined);
+          const shared = sharedKey ? ctx.shared(sharedKey) : undefined;
           return (
             // Opening a section or working in any of its fields makes it the one the preview shows.
             <li key={id} className={`cms-block${hidden ? " is-hidden" : ""}${ctx.active === id ? " is-active" : ""}`} onFocus={() => ctx.select(id, name)}>
               <Disclosure
                 className="cms-block-panel"
                 onOpen={() => ctx.select(id, name)}
-                hasProblem={within(ctx.problem?.path, blockPath) || !!shared?.problem}
+                hasProblem={within(ctx.problem?.path, blockPath) || !!shared?.problem || !!def?.custom?.sharedList?.some((k) => ctx.shared(k)?.problem)}
                 summary={
                   <>
                     <span className="cms-row-name">{i + 1}. {def?.labels?.singular ?? String(block.blockType)}</span>
@@ -344,11 +501,31 @@ function BlocksField({ field, blocks, onChange, path, ctx }: { field: Field; blo
                 ) : (
                   <p className="cms-problem">Loại “{String(block.blockType)}” không có trong schema.</p>
                 )}
-                {shared && (
-                  <div className="cms-shared">
-                    <p className="cms-shared-label">Nội dung dùng chung: {shared.label}</p>
-                    <Fields defs={shared.schema.fields} value={shared.value} onChange={shared.onChange} path={shared.schema.slug} ctx={{ ...ctx, problem: shared.problem }} />
-                  </div>
+                {shared && <SharedFields shared={shared} ctx={ctx} />}
+                {def?.custom?.sharedList && (
+                  <ol className="cms-rows cms-shared-list">
+                    {def.custom.sharedList.map((key) => {
+                      const item = ctx.shared(key);
+                      if (!item) return null;
+                      return (
+                        <li key={key}>
+                          <Disclosure
+                            className="cms-row-panel"
+                            hasProblem={!!item.problem}
+                            summary={
+                              <>
+                                <span className="cms-row-name">{preview(item.value, item.schema.fields) || key}</span>
+                                <span className="cms-badge is-shared">Dùng chung</span>
+                                {item.problem && <span className="cms-badge is-problem">Cần sửa</span>}
+                              </>
+                            }
+                          >
+                            <SharedFields shared={item} ctx={ctx} />
+                          </Disclosure>
+                        </li>
+                      );
+                    })}
+                  </ol>
                 )}
               </Disclosure>
               <RowTools index={i} count={blocks.length} min={field.minRows ?? 0} noun={noun}

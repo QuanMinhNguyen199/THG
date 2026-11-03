@@ -14,7 +14,7 @@ function Block({ block }: { block: PageBlock }) {
   const titleId = `block-${block.id}-title`;
   const anchor = block.anchor || `block-${block.id}`;
   switch (block.blockType) {
-    case "homeHero": return <HomeHero heading={block.heading} id={anchor} />;
+    case "homeHero": return <HomeHero heading={block.heading} id={anchor} video={block.video} videoSmall={block.videoSmall} poster={block.poster} />;
     case "metrics": return <Metrics items={block.items} label={block.label} id={anchor} />;
     case "cta": return <Cta data={block} id={anchor} titleId={titleId} />;
     case "partners": return (

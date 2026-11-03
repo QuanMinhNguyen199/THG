@@ -1,0 +1,47 @@
+{
+  "name": "Tổng đài AI",
+  "org": "Dịch vụ công · Hộ kinh doanh",
+  "index": "02 / DỊCH VỤ CÔNG",
+  "summary": "Tiếp nhận câu hỏi và hướng dẫn thủ tục cho hộ kinh doanh qua tổng đài AI.",
+  "description": "Tổng đài AI tiếp nhận câu hỏi của hộ kinh doanh, hướng dẫn thủ tục và giấy tờ cần chuẩn bị, chuyển cán bộ khi cần.",
+  "note": "AI trả lời trong phạm vi được phép. Cán bộ tiếp nhận các trường hợp cần xử lý.",
+  "kicker": "Dịch vụ công",
+  "checks": [
+    {
+      "text": "Tiếp nhận câu hỏi"
+    },
+    {
+      "text": "Hướng dẫn thủ tục"
+    },
+    {
+      "text": "Chuyển cán bộ"
+    }
+  ],
+  "checkFoot": "Theo từng cuộc gọi",
+  "tag": "AI / PUBLIC SERVICE",
+  "headline": "Hỏi đúng thủ tục.",
+  "headlineLine2": "Trả lời đúng lúc.",
+  "stamp": "AI",
+  "stampLine2": "CALL",
+  "tone": "navy",
+  "model": "call",
+  "script": [
+    {
+      "who": "in",
+      "text": "Cho tôi hỏi thủ tục cho hộ kinh doanh?"
+    },
+    {
+      "who": "agent",
+      "text": "Tôi gửi anh/chị danh sách giấy tờ cần chuẩn bị."
+    },
+    {
+      "who": "in",
+      "text": "Trường hợp của tôi phức tạp hơn."
+    },
+    {
+      "who": "agent",
+      "text": "Tôi chuyển cán bộ phụ trách tiếp nhận."
+    }
+  ],
+  "mock": true
+}

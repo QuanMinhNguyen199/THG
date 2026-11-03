@@ -9,6 +9,7 @@
 // Reduced motion skips the movement and shows the open state at once.
 import { useRouter } from "next/navigation";
 import { useEffect, useId, useRef, type MouseEvent, type SyntheticEvent } from "react";
+import { useContent } from "../cms/EditorBridge";
 import type { CaseData } from "./cases";
 
 const EASE = "cubic-bezier(0.22, 1, 0.36, 1)";
@@ -132,6 +133,12 @@ function reveal(kind: CaseData["model"], model: HTMLElement) {
       el.animate(fade("translateX(-18px)"), { duration: 380, delay: 760 + i * 130, easing: EASE, fill: "backwards" }),
     );
   }
+}
+
+/** A case study by id, as the content gives it (the content editor's draft, in its preview). */
+export function CaseById({ id }: { id: string }) {
+  const data = useContent().cases[id];
+  return data ? <CaseShowcase data={data} /> : null;
 }
 
 export function CaseShowcase({ data }: { data: CaseData }) {

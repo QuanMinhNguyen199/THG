@@ -4,17 +4,7 @@ import { useState } from "react";
 import { useContent } from "../cms/EditorBridge";
 import { applyHref, type Job } from "./catalog";
 import { ProjectCase } from "./Applications";
-import type { CaseData, PaperGlyphKind } from "./cases";
-
-// What each job's folder paper shows (Applications.tsx draws them).
-const GLYPH: Record<string, PaperGlyphKind> = {
-  "ai-engineer": "agents",
-  "mlops-engineer": "pipeline",
-  "data-engineer": "data",
-  "devops-platform-engineer": "platform",
-  "fullstack-engineer": "web",
-  "business-analyst": "flow",
-};
+import type { CaseData } from "./cases";
 
 const ALL = "Tất cả vị trí";
 
@@ -26,7 +16,7 @@ function jobFolder(job: Job): CaseData {
     note: `Địa điểm: ${job.location}.`,
     kicker: "Tuyển dụng THEHEGEO", checks: ["Công việc", "Yêu cầu", "Điểm cộng"],
     checkFoot: "Mô tả công việc", tag: "THEHEGEO / TUYỂN DỤNG",
-    headline: [job.title, ""], stamp: ["JD", job.code], tone: "white", model: "folder", glyph: GLYPH[job.slug],
+    headline: [job.title, ""], stamp: ["JD", job.code], tone: "white", model: "folder", glyph: job.glyph,
   };
 }
 

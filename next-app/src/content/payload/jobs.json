@@ -1,0 +1,304 @@
+{
+  "slug": "jobs",
+  "label": "Tin tuyển dụng",
+  "fields": [
+    {
+      "name": "jobs",
+      "type": "array",
+      "required": true,
+      "minRows": 1,
+      "label": "Các tin tuyển dụng",
+      "labels": {
+        "singular": "Tin",
+        "plural": "Tin"
+      },
+      "admin": {
+        "description": "Thứ tự ở đây là thứ tự trên trang Tuyển dụng. Tin mới có trang riêng sau khi bản nháp được áp và site build lại."
+      },
+      "fields": [
+        {
+          "name": "title",
+          "type": "text",
+          "label": "Tên vị trí",
+          "admin": {
+            "description": "Như JD ghi."
+          },
+          "required": true,
+          "custom": {
+            "selector": ".jd-head"
+          }
+        },
+        {
+          "name": "slug",
+          "type": "text",
+          "label": "Đường dẫn",
+          "admin": {
+            "description": "Phần cuối địa chỉ trang tin: /tuyen-dung/<đường dẫn>/. Viết thường không dấu, nối bằng gạch ngang, ví dụ ai-engineer. Không đổi sau khi tin đã đăng."
+          },
+          "required": true,
+          "unique": true,
+          "custom": {
+            "slug": true,
+            "selector": ".jd-head"
+          }
+        },
+        {
+          "name": "focus",
+          "type": "text",
+          "label": "Mảng chuyên môn",
+          "admin": {
+            "description": "Tuỳ chọn, ví dụ: LLM, Agents & Workflow."
+          },
+          "custom": {
+            "selector": ".jd-head"
+          }
+        },
+        {
+          "name": "code",
+          "type": "text",
+          "label": "Mã vị trí",
+          "admin": {
+            "description": "Mã ngắn trên tem hồ sơ và tiêu đề email ứng tuyển."
+          },
+          "required": true,
+          "custom": {
+            "selector": ".jd-side"
+          }
+        },
+        {
+          "name": "family",
+          "type": "text",
+          "label": "Nhóm nghề",
+          "admin": {
+            "description": "Dùng để lọc ở trang Tuyển dụng."
+          },
+          "required": true,
+          "custom": {
+            "selector": ".jd-head"
+          }
+        },
+        {
+          "name": "summary",
+          "type": "textarea",
+          "label": "Tóm tắt một dòng",
+          "admin": {
+            "description": "Hiện trên thẻ vị trí ở trang Tuyển dụng."
+          },
+          "required": true,
+          "custom": {
+            "selector": ".jd-head"
+          }
+        },
+        {
+          "name": "intro",
+          "type": "textarea",
+          "label": "Giới thiệu",
+          "required": true,
+          "custom": {
+            "selector": ".jd-section",
+            "index": 0
+          }
+        },
+        {
+          "name": "duties",
+          "type": "array",
+          "label": "Mô tả công việc",
+          "labels": {
+            "singular": "Ý",
+            "plural": "Ý"
+          },
+          "required": true,
+          "minRows": 1,
+          "fields": [
+            {
+              "name": "text",
+              "type": "text",
+              "required": true,
+              "label": "Nội dung"
+            }
+          ],
+          "custom": {
+            "selector": ".jd-section",
+            "index": 1
+          }
+        },
+        {
+          "name": "requirements",
+          "type": "array",
+          "label": "Yêu cầu",
+          "labels": {
+            "singular": "Ý",
+            "plural": "Ý"
+          },
+          "required": true,
+          "minRows": 1,
+          "fields": [
+            {
+              "name": "text",
+              "type": "text",
+              "required": true,
+              "label": "Nội dung"
+            }
+          ],
+          "custom": {
+            "selector": ".jd-section",
+            "index": 2
+          }
+        },
+        {
+          "name": "plus",
+          "type": "array",
+          "label": "Điểm cộng",
+          "labels": {
+            "singular": "Ý",
+            "plural": "Ý"
+          },
+          "required": true,
+          "minRows": 1,
+          "fields": [
+            {
+              "name": "text",
+              "type": "text",
+              "required": true,
+              "label": "Nội dung"
+            }
+          ],
+          "custom": {
+            "selector": ".jd-section",
+            "index": 3
+          }
+        },
+        {
+          "name": "benefits",
+          "type": "array",
+          "label": "Quyền lợi",
+          "labels": {
+            "singular": "Ý",
+            "plural": "Ý"
+          },
+          "required": true,
+          "minRows": 1,
+          "fields": [
+            {
+              "name": "text",
+              "type": "text",
+              "required": true,
+              "label": "Nội dung"
+            }
+          ],
+          "custom": {
+            "selector": ".jd-section",
+            "index": 4
+          }
+        },
+        {
+          "name": "location",
+          "type": "text",
+          "label": "Địa điểm làm việc",
+          "required": true,
+          "custom": {
+            "selector": ".jd-side"
+          }
+        },
+        {
+          "name": "subject",
+          "type": "text",
+          "label": "Tiêu đề email ứng tuyển",
+          "admin": {
+            "description": "Tuỳ chọn. Để trống thì dùng \"[Mã vị trí] Ứng tuyển Tên vị trí\"."
+          },
+          "custom": {
+            "selector": ".jd-side"
+          }
+        },
+        {
+          "name": "skills",
+          "type": "array",
+          "label": "Kỹ năng chính (nhãn)",
+          "labels": {
+            "singular": "Nhãn",
+            "plural": "Nhãn"
+          },
+          "admin": {
+            "description": "Tuỳ chọn. Để trống thì dùng phần Yêu cầu."
+          },
+          "fields": [
+            {
+              "name": "text",
+              "type": "text",
+              "required": true,
+              "label": "Nội dung"
+            }
+          ]
+        },
+        {
+          "name": "areas",
+          "type": "array",
+          "label": "Mảng công việc (nhãn)",
+          "labels": {
+            "singular": "Nhãn",
+            "plural": "Nhãn"
+          },
+          "admin": {
+            "description": "Tuỳ chọn."
+          },
+          "fields": [
+            {
+              "name": "text",
+              "type": "text",
+              "required": true,
+              "label": "Nội dung"
+            }
+          ]
+        },
+        {
+          "type": "collapsible",
+          "label": "Hình trên thẻ (thường không cần sửa)",
+          "admin": {
+            "initCollapsed": true
+          },
+          "fields": [
+            {
+              "name": "glyph",
+              "type": "select",
+              "label": "Hình vẽ trên giấy",
+              "options": [
+                {
+                  "label": "Agent",
+                  "value": "agents"
+                },
+                {
+                  "label": "Pipeline",
+                  "value": "pipeline"
+                },
+                {
+                  "label": "Dữ liệu",
+                  "value": "data"
+                },
+                {
+                  "label": "Nền tảng",
+                  "value": "platform"
+                },
+                {
+                  "label": "Web",
+                  "value": "web"
+                },
+                {
+                  "label": "Quy trình",
+                  "value": "flow"
+                },
+                {
+                  "label": "Sổ sách",
+                  "value": "ledger"
+                }
+              ],
+              "admin": {
+                "description": "Tuỳ chọn. Để trống thì giấy có dòng kẻ."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

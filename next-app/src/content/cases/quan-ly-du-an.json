@@ -1,0 +1,64 @@
+{
+  "name": "Trợ lý AI Quản lý Dự án Công nghiệp",
+  "org": "PTSC M&C",
+  "index": "03 / QUẢN LÝ DỰ ÁN",
+  "summary": "Tra cứu hồ sơ kỹ thuật, bản vẽ và tiến độ công trình dầu khí tại PTSC M&C.",
+  "description": "Kho tri thức RAG hỗ trợ tra cứu quy chuẩn, hồ sơ thiết kế và tiến độ công trình; cảnh báo mâu thuẫn kỹ thuật và đôn đốc các mốc công việc theo quy trình Human-in-the-Loop.",
+  "note": "Tìm kiếm hồ sơ từ hàng giờ xuống dưới 5 giây. Triển khai On-premise trong hạ tầng của đơn vị; con người kiểm soát các quyết định.",
+  "kicker": "Quản lý dự án",
+  "checks": [
+    {
+      "text": "Tiến độ"
+    },
+    {
+      "text": "Hồ sơ dự án"
+    },
+    {
+      "text": "Đầu việc"
+    }
+  ],
+  "checkFoot": "Theo từng hạng mục",
+  "tag": "AI / PROJECT MANAGEMENT",
+  "headline": "Đúng tiến độ.",
+  "headlineLine2": "Rõ đầu việc.",
+  "stamp": "PM",
+  "stampLine2": "AI",
+  "tone": "kraft",
+  "model": "board",
+  "board": [
+    {
+      "col": "Kế hoạch",
+      "cards": [
+        {
+          "text": "Hồ sơ thiết kế"
+        },
+        {
+          "text": "Dự toán"
+        }
+      ]
+    },
+    {
+      "col": "Đang làm",
+      "cards": [
+        {
+          "text": "Thi công hạng mục"
+        },
+        {
+          "text": "Nghiệm thu"
+        },
+        {
+          "text": "Báo cáo tuần"
+        }
+      ]
+    },
+    {
+      "col": "Hoàn thành",
+      "cards": [
+        {
+          "text": "Phê duyệt chủ trương"
+        }
+      ]
+    }
+  ],
+  "mock": false
+}

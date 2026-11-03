@@ -4,8 +4,9 @@
 import type { Block, Page } from "../components/site/sections/shared.ts";
 import type { Job } from "../components/site/sections/jobs.ts";
 import { PARTNERS } from "../components/site/sections/partners.ts";
-import type { CtaContent, Metric } from "./blocks.ts";
-import { jobFromRaw, pageFromRaw, type Context, type RawJob, type RawPage, type RawWays } from "./build.ts";
+import type { CtaContent, Film, Metric } from "./blocks.ts";
+import type { CaseData } from "../components/site/cases.ts";
+import { caseFromRaw, jobFromRaw, pageFromRaw, type Context, type RawCase, type RawJob, type RawPage, type RawWays } from "./build.ts";
 
 /** The corporate sections, their pages in menu order. Each page needs its route folder too. */
 export const SECTION_PAGES = {
@@ -14,12 +15,14 @@ export const SECTION_PAGES = {
   "ve-thehegeo": { title: "Về THEHEGEO", base: "/ve-thehegeo/", pages: ["kinh-nghiem-du-an", "su-menh-tam-nhin", "doi-tac", "lien-he"] },
 } as const;
 export type SectionKey = keyof typeof SECTION_PAGES;
-export const JOB_SLUGS = ["ai-engineer", "mlops-engineer", "data-engineer", "devops-platform-engineer", "fullstack-engineer", "business-analyst"] as const;
+/** Case studies, each shown where a page picks it: `shownAt` is a page that does, to open it there. */
+export const CASES = { tdn: "/geoagents", "dich-vu-cong": undefined, "quan-ly-du-an": "/ung-dung/quan-ly-du-an", "ai-platform": undefined } as const;
 
 /** Which schema (generated into src/content/payload/<schema>.json) edits a document. */
-export type Schema = "pages" | "corporate" | "job" | "header" | "footer" | "ways" | "geoagents";
-/** `path` is the page a document is; `shownAt`, a page that shows a shared document (to open it there). */
-export type Doc = { key: string; label: string; file: string; schema: Schema; path?: string; shownAt?: string };
+export type Schema = "pages" | "corporate" | "jobs" | "header" | "footer" | "ways" | "geoagents" | "case";
+/** `path` is the page a document is; `shownAt`, a page that shows a shared document (to open it there);
+ *  `item`, the row of a list document a page is (a posting's page is its row in the postings list). */
+export type Doc = { key: string; label: string; file: string; schema: Schema; path?: string; shownAt?: string; item?: string };
 
 const corporate = (key: string, label: string, file: string, path: string): Doc => ({ key, label, file, schema: "corporate", path });
 
@@ -35,11 +38,18 @@ export const DOCS: Doc[] = [
     ...s.pages.map((slug) => corporate(`page:/${key}/${slug}`, slug, `src/content/pages/${key}/${slug}.json`, `/${key}/${slug}`)),
   ]),
   corporate("page:/tuyen-dung", "Tuyển dụng", "src/content/pages/tuyen-dung.json", "/tuyen-dung"),
-  ...JOB_SLUGS.map((slug): Doc => ({ key: `job:${slug}`, label: slug, file: `src/content/jobs/${slug}.json`, schema: "job", path: `/tuyen-dung/${slug}` })),
+  ...Object.entries(CASES).map(([id, shownAt]): Doc => ({ key: `case:${id}`, label: `Case study ${id}`, file: `src/content/cases/${id}.json`, schema: "case", shownAt })),
+  // Every posting, one list: adding a row adds a posting and its page (/tuyen-dung/<slug>/).
+  { key: "jobs", label: "Tin tuyển dụng", file: "src/content/jobs.json", schema: "jobs", shownAt: "/tuyen-dung" },
 ];
 
 /** The document a site path shows (paths as usePathname gives them, without the base path). */
-export const docAt = (path: string) => DOCS.find((d) => d.path === (path.replace(/\/$/, "") || "/"));
+export function docAt(path: string): Doc | undefined {
+  const p = path.replace(/\/$/, "") || "/";
+  const posting = /^\/tuyen-dung\/([^/]+)$/.exec(p);
+  if (posting) return { ...DOCS.find((d) => d.key === "jobs")!, path: p, item: posting[1] };
+  return DOCS.find((d) => d.path === p);
+}
 
 export type NavItem = { href: string; label: string; children?: { href: string; label: string; kind: string }[] };
 export type Footer = { tagline: string; taglineHighlight: string; email: string; phone: string; phoneHref: string; address: string; copyright: string; motto: string; wordmark: string };
@@ -48,7 +58,7 @@ type Lines = { title: string; highlight: string; intro: string; introLine2: stri
 type Tier = { tab: string; product: string; body: string };
 /** The GEOagents page: its sections' copy, in page order. A tier's `floor` is its name in capitals. */
 export type Geoagents = {
-  hero: { title: string; highlight: string; subtitle: string; description: string; primaryLabel: string; secondaryLabel: string; secondaryHref: string };
+  hero: { title: string; highlight: string; subtitle: string; description: string; primaryLabel: string; secondaryLabel: string; secondaryHref: string } & Film;
   metrics: { label: string; items: Metric[] };
   architecture: Lines & { captionLeft: string; captionRight: string; layers: (Tier & { floor: string })[] };
   applications: Lines;
@@ -63,6 +73,7 @@ export type Content = {
   nav: NavItem[];
   footer: Footer;
   geoagents: Geoagents;
+  cases: Record<string, CaseData>;
 };
 
 /** Experience lists every project of the Use Case pages; dates and roles are not supplied yet. */
@@ -112,9 +123,10 @@ export function buildContent(raw: Record<string, unknown>): Content {
   return {
     sections,
     jobsHome: pageFromRaw("", get<RawPage>("page:/tuyen-dung"), ctx),
-    jobs: JOB_SLUGS.map((slug) => jobFromRaw(slug, get<RawJob>(`job:${slug}`))),
+    jobs: get<{ jobs: RawJob[] }>("jobs").jobs.map((r) => jobFromRaw(String(r.slug), r)),
     nav,
     footer: { ...f, phoneHref: `tel:+${f.phone.replace(/\D/g, "")}` },
+    cases: Object.fromEntries(Object.keys(CASES).map((id) => [id, caseFromRaw(id, get<RawCase>(`case:${id}`))])),
     geoagents: { ...geo, architecture: { ...geo.architecture, layers: geo.architecture.layers.map((l) => ({ ...l, floor: l.tab.toLocaleUpperCase("vi") })) } },
   };
 }

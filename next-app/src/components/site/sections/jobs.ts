@@ -1,5 +1,6 @@
 // Job postings: their type, and how applications reach HR. The postings themselves are content
-// (src/content/jobs/*.json, registry.ts).
+// (src/content/jobs.json, registry.ts).
+import type { PaperGlyphKind } from "../cases.ts";
 
 export type Job = {
   slug: string;
@@ -26,6 +27,8 @@ export type Job = {
   skills?: string[];
   /** Areas of work as short tags for the folder brief, when the JD's duties are full sentences. */
   areas?: string[];
+  /** The drawing on the posting's folder paper (JobList); without one the paper shows rule lines. */
+  glyph?: PaperGlyphKind;
 };
 
 // Applications go to HR_EMAIL / HR_PHONE as the JDs give them.

@@ -1,0 +1,29 @@
+{
+  "name": "AI DN360",
+  "org": "Cục Thuế TP. Hà Nội",
+  "index": "01 / TÀI CHÍNH & THUẾ",
+  "summary": "Đối chiếu BCTC, thuế GTGT/TNDN theo mã số thuế.",
+  "description": "Ứng dụng AI đối chiếu báo cáo tài chính, thuế giá trị gia tăng và thuế thu nhập doanh nghiệp theo mã số thuế.",
+  "note": "AI đối chiếu và chỉ ra chênh lệch. Cán bộ thuế xem xét và kết luận.",
+  "kicker": "Tài chính và thuế",
+  "checks": [
+    {
+      "text": "Báo cáo tài chính"
+    },
+    {
+      "text": "Thuế giá trị gia tăng"
+    },
+    {
+      "text": "Thuế thu nhập doanh nghiệp"
+    }
+  ],
+  "checkFoot": "Theo mã số thuế",
+  "tag": "AI / TAX INTELLIGENCE",
+  "headline": "Đúng dữ liệu.",
+  "headlineLine2": "Rõ nghĩa vụ.",
+  "stamp": "TAX",
+  "stampLine2": "360",
+  "tone": "white",
+  "model": "folder",
+  "glyph": "ledger"
+}
