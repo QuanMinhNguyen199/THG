@@ -15,25 +15,25 @@
       "label": "Các đặc tính GEOagents",
       "items": [
         {
-          "to": 4,
-          "pad": 2,
-          "label": "Tầng vận hành"
+          "value": 4,
+          "label": "Tầng vận hành",
+          "minDigits": 2
         },
         {
-          "to": 100,
+          "value": 100,
           "unit": "%",
           "label": "Chủ quyền dữ liệu"
         },
         {
-          "prefix": "Level ",
-          "to": 3,
+          "value": 3,
           "suffix": "+",
-          "label": "An toàn thông tin"
+          "label": "An toàn thông tin",
+          "prefix": "Level"
         },
         {
-          "to": 2,
-          "pad": 2,
-          "label": "Cấp độ kiểm soát"
+          "value": 2,
+          "label": "Cấp độ kiểm soát",
+          "minDigits": 2
         }
       ]
     },
@@ -110,7 +110,7 @@
       "id": "home-core",
       "blockType": "coreShowcase",
       "anchor": "home-showcase",
-      "kicker": "GEOAGENTS",
+      "kicker": "GEOagents",
       "title": "Một hệ thống.",
       "highlight": "4 tầng tổ chức.",
       "items": [
@@ -137,7 +137,7 @@
     {
       "id": "home-demo",
       "blockType": "agentDemo",
-      "kicker": "AI HỖ TRỢ, CON NGƯỜI QUYẾT ĐỊNH",
+      "kicker": "AI hỗ trợ, con người quyết định",
       "title": "Từ công văn đến",
       "highlight": "phê duyệt.",
       "body": "GEO Agent bóc tách nhiệm vụ từ công văn đến và đề xuất người phụ trách. Cán bộ xem xét và phê duyệt."
@@ -147,11 +147,13 @@
       "blockType": "navigationTiles",
       "title": "Khám phá",
       "highlight": "THEHEGEO.",
-      "items": [
+      "tiles": [
         {
+          "title": "GEOagents",
           "href": "/geoagents/",
-          "label": "GEOagents",
-          "items": [
+          "size": "wide",
+          "image": "/media/case-city.jpg",
+          "lines": [
             {
               "text": "4 tầng: Quản trị · Quản lý · Thực thi · Dịch vụ"
             },
@@ -164,14 +166,13 @@
             {
               "text": "AI hỗ trợ, con người quyết định"
             }
-          ],
-          "image": "/media/case-city.jpg",
-          "size": "wide"
+          ]
         },
         {
+          "title": "Giải pháp",
           "href": "/giai-phap/",
-          "label": "Giải pháp",
-          "items": [
+          "size": "normal",
+          "lines": [
             {
               "text": "Giải pháp AI"
             },
@@ -181,13 +182,14 @@
             {
               "text": "Giải pháp Công nghệ"
             }
-          ],
-          "size": "normal"
+          ]
         },
         {
+          "title": "Ứng dụng",
           "href": "/ung-dung/",
-          "label": "Ứng dụng",
-          "items": [
+          "size": "normal",
+          "image": null,
+          "lines": [
             {
               "text": "HKD: Trợ lý thuế cho hộ kinh doanh"
             },
@@ -200,14 +202,13 @@
             {
               "text": "Quản lý dự án công nghiệp: Trợ lý AI cho hồ sơ kỹ thuật và tiến độ"
             }
-          ],
-          "image": null,
-          "size": "normal"
+          ]
         },
         {
+          "title": "Về THEHEGEO",
           "href": "/ve-thehegeo/",
-          "label": "Về THEHEGEO",
-          "items": [
+          "size": "normal",
+          "lines": [
             {
               "text": "Câu chuyện TheheGEO"
             },
@@ -223,21 +224,20 @@
             {
               "text": "Liên hệ"
             }
-          ],
-          "size": "normal"
+          ]
         },
         {
+          "title": "Tuyển dụng",
           "href": "/tuyen-dung/",
-          "label": "Tuyển dụng",
-          "items": [
+          "size": "normal",
+          "lines": [
             {
               "text": "Vị trí đang tuyển"
             },
             {
               "text": "Gửi CV"
             }
-          ],
-          "size": "normal"
+          ]
         }
       ]
     },
@@ -245,14 +245,8 @@
       "id": "home-cta",
       "blockType": "cta",
       "anchor": "cta",
-      "title": [
-        {
-          "text": "Sẵn sàng đưa AI Agent vào"
-        },
-        {
-          "text": "bộ máy vận hành?"
-        }
-      ],
+      "title": "Sẵn sàng đưa AI Agent vào",
+      "highlight": "bộ máy vận hành?",
       "question": "Nhiệm vụ vận hành nào anh/chị muốn cải thiện ngay hôm nay?",
       "body": "Hãy gửi cho chúng tôi một bài toán cụ thể. Đội ngũ chuyên gia Thehegeo sẽ xây dựng bản Demo GEO Agent chạy trực tiếp trên dữ liệu mẫu của quý cơ quan/doanh nghiệp.",
       "action": "Gửi yêu cầu tư vấn & đặt lịch",

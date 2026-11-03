@@ -3,6 +3,8 @@ export function validateDocument(document, collection) {
   function fields(value, definitions, path) {
     if (!value || typeof value !== 'object' || Array.isArray(value)) throw new Error(`${path}: expected object`);
     for (const field of definitions) {
+      // Presentational wrappers (the collapsed "Nâng cao" group) keep their fields on the same object.
+      if (field.type === 'collapsible' || field.type === 'row') { fields(value, field.fields, path); continue; }
       const item = value[field.name];
       const key = `${path}.${field.name}`;
       if (item === undefined || item === null || item === '') {
@@ -11,18 +13,19 @@ export function validateDocument(document, collection) {
       }
       switch (field.type) {
         case 'text':
+        case 'textarea':
           if (typeof item !== 'string' || (field.required && !item.trim())) throw new Error(`${key}: expected text`);
           if (['href', 'image'].includes(field.name) && !(/^(\/(?!\/)|https?:\/\/|#)/.test(item))) throw new Error(`${key}: expected local path, anchor or HTTP(S) URL`);
           break;
         case 'number':
           if (typeof item !== 'number' || !Number.isFinite(item) || item < (field.min ?? -Infinity) || item > (field.max ?? Infinity)) throw new Error(`${key}: invalid number`);
-          if (field.name === 'pad' && !Number.isInteger(item)) throw new Error(`${key}: expected integer`);
+          if (field.name === 'minDigits' && !Number.isInteger(item)) throw new Error(`${key}: expected integer`);
           break;
         case 'checkbox':
           if (typeof item !== 'boolean') throw new Error(`${key}: expected boolean`);
           break;
         case 'select':
-          if (!field.options.includes(item)) throw new Error(`${key}: invalid option`);
+          if (!field.options.some(option => (option.value ?? option) === item)) throw new Error(`${key}: invalid option`);
           break;
         case 'array':
         case 'blocks': {

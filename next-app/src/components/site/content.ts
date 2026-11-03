@@ -30,5 +30,4 @@ export const projects: Record<ProjectId, { name: string; company: string; summar
   },
 };
 
-import defaultCta from "@/content/globals/cta.json";
-export const cta = { ...defaultCta, title: defaultCta.title.map(line => line.text) };
+export { default as cta } from "@/content/globals/cta.json";

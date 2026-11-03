@@ -6,7 +6,7 @@
 [data-theme] .home-hero-shade {
   background: linear-gradient(180deg, #0009 0%, #0000 20%, #0000 75%, #050505 100%);
 }
-.home-kicker { margin: 0 0 18px; font-size: 12px; font-weight: 600; letter-spacing: 0.16em; color: var(--muted); }
+.home-kicker { margin: 0 0 18px; font-size: 12px; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; color: var(--muted); }
 
 /* Two-column showcases: copy beside a stage. */
 .home-split { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: clamp(32px, 5vw, 80px); align-items: center; padding: 120px 0; border-top: 1px solid var(--line); }
