@@ -12,7 +12,10 @@
       "admin": {
         "description": "Tên ngắn trên menu, thẻ và mục \"Xem thêm\"."
       },
-      "required": true
+      "required": true,
+      "custom": {
+        "selector": ".page-head"
+      }
     },
     {
       "name": "kind",
@@ -20,6 +23,9 @@
       "label": "Dòng mô tả ngắn",
       "admin": {
         "description": "Tuỳ chọn. Hiện dưới tên trang trong menu và mục \"Xem thêm\"."
+      },
+      "custom": {
+        "selector": ".page-head"
       }
     },
     {
@@ -29,7 +35,10 @@
       "admin": {
         "description": "Câu tiêu đề ở đầu trang."
       },
-      "required": true
+      "required": true,
+      "custom": {
+        "selector": ".page-head"
+      }
     },
     {
       "name": "en",
@@ -37,6 +46,9 @@
       "label": "Dòng tiếng Anh",
       "admin": {
         "description": "Tuỳ chọn, dưới tiêu đề lớn."
+      },
+      "custom": {
+        "selector": ".page-head"
       }
     },
     {
@@ -45,6 +57,9 @@
       "label": "Đoạn mở đầu",
       "admin": {
         "description": "Tuỳ chọn, dưới tiêu đề. Cũng là mô tả trang cho công cụ tìm kiếm."
+      },
+      "custom": {
+        "selector": ".page-head"
       }
     },
     {
@@ -52,10 +67,17 @@
       "type": "text",
       "label": "Ảnh banner",
       "admin": {
-        "description": "Tuỳ chọn. Đường dẫn ảnh, ví dụ /media/case-city.jpg. Trên trang tổng, ảnh của trang con đầu tiên làm thẻ lớn."
+        "description": "Tuỳ chọn. Ảnh rộng dưới tiêu đề trang. Trên trang tổng, ảnh của trang con đầu tiên làm thẻ lớn."
+      },
+      "custom": {
+        "media": "image",
+        "selector": ".corp-banner"
       }
     },
     {
+      "custom": {
+        "selector": ".corp-model"
+      },
       "name": "model",
       "type": "blocks",
       "maxRows": 1,
@@ -335,7 +357,10 @@
                   "type": "text",
                   "label": "Ảnh",
                   "admin": {
-                    "description": "Tuỳ chọn, chỉ dùng cho thẻ đầu. Đường dẫn ảnh, ví dụ /media/case-city.jpg."
+                    "description": "Tuỳ chọn, chỉ dùng cho thẻ đầu: có ảnh thì danh sách hiện thành một thẻ lớn có ảnh."
+                  },
+                  "custom": {
+                    "media": "image"
                   }
                 }
               ]
@@ -986,7 +1011,7 @@
             "plural": "Case study"
           },
           "admin": {
-            "description": "Hồ sơ case study có sẵn (nội dung case nằm trong code)."
+            "description": "Hồ sơ case study dùng chung: chọn hồ sơ, rồi sửa nội dung ngay bên dưới. Trang nào dùng cùng hồ sơ cũng đổi theo."
           },
           "fields": [
             {
@@ -1017,16 +1042,26 @@
                   "value": "quan-ly-du-an"
                 },
                 {
-                  "label": "Dịch vụ công",
+                  "label": "Tổng đài AI dịch vụ công (minh hoạ)",
                   "value": "dich-vu-cong"
                 },
                 {
-                  "label": "AI Platform",
+                  "label": "AI Platform (minh hoạ)",
                   "value": "ai-platform"
+                },
+                {
+                  "label": "AI DN360",
+                  "value": "tdn"
                 }
               ]
             }
-          ]
+          ],
+          "custom": {
+            "sharedBy": {
+              "field": "caseId",
+              "prefix": "case:"
+            }
+          }
         },
         {
           "slug": "project",
@@ -1162,7 +1197,7 @@
             "plural": "Danh sách vị trí"
           },
           "admin": {
-            "description": "Các vị trí đang tuyển. Sửa từng vị trí ở trang tin tuyển dụng đó."
+            "description": "Các vị trí đang tuyển: thêm, xoá, đổi thứ tự và sửa từng tin ngay bên dưới. Mỗi tin có trang riêng /tuyen-dung/<đường dẫn>/."
           },
           "fields": [
             {
@@ -1174,7 +1209,10 @@
                 "description": "Bỏ chọn để ẩn tạm section mà không mất nội dung."
               }
             }
-          ]
+          ],
+          "custom": {
+            "shared": "jobs"
+          }
         },
         {
           "slug": "projectIndex",
@@ -1224,6 +1262,9 @@
       ]
     },
     {
+      "custom": {
+        "selector": ".corp-cta"
+      },
       "name": "cta",
       "type": "array",
       "label": "Nút cuối trang",

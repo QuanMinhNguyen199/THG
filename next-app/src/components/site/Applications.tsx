@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import { useContent } from "../cms/EditorBridge";
 import { useEffect, useId, useRef, type MouseEvent, type ReactNode, type SyntheticEvent } from "react";
 import Link from "next/link";
-import { TDN, type CaseData, type PaperGlyphKind } from "./cases";
+import type { CaseData, PaperGlyphKind } from "./cases";
 
 const EASE = "cubic-bezier(0.22, 1, 0.36, 1)";
 // Paper springing up off a fold: a little overshoot past upright, then settling.
@@ -140,7 +140,8 @@ function Piece({ at, className, children, label }: { at: string; className: stri
 
 /** `bare`: the project card alone, for pages that give it their own heading (Use Case). */
 export function Applications({ bare = false }: { bare?: boolean }) {
-  const copy = useContent().geoagents.applications;
+  const { geoagents, cases } = useContent();
+  const copy = geoagents.applications;
   return (
     <section className={bare ? "applications is-bare" : "applications wrap"} id={bare ? undefined : "applications"}>
       {!bare && (
@@ -157,7 +158,7 @@ export function Applications({ bare = false }: { bare?: boolean }) {
           </p>
         </div>
       )}
-      <ProjectCase data={TDN} />
+      <ProjectCase data={cases.tdn} />
     </section>
   );
 }

@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState, type MouseEvent, type PointerEvent, type ReactNode } from "react";
 import Link from "next/link";
+import type { Film } from "@/content/blocks";
 import { asset } from "@/lib/asset";
 import { useContent } from "../cms/EditorBridge";
 import { useSite } from "./SiteContext";
@@ -32,12 +33,25 @@ const INTERACTIVE = "a,button";
  * `children` replaces the GEOagents copy (the home page puts its own over the same stage, with the
  * same cursor); `autoplay` starts the film instead of waiting for a click.
  */
-export function Hero({ children, className = "", id = "geoagents", autoplay = false, video: film, videoSmall: filmSmall, poster }: { children?: ReactNode; className?: string; id?: string; autoplay?: boolean; /** One MP4 in place of the GEOagents film set. */ video?: string; /** A lighter MP4 of the same film for phones. */ videoSmall?: string; poster?: string } = {}) {
+export function Hero({ children, className = "", id = "geoagents", autoplay = false, video: filmProp, videoSmall: filmSmallProp, poster: posterProp }: { children?: ReactNode; className?: string; id?: string; autoplay?: boolean; /** One MP4 in place of the GEOagents film set. */ video?: string; /** A lighter MP4 of the same film for phones. */ videoSmall?: string; poster?: string } = {}) {
   const { paused: motionPaused } = useSite();
   const { hero } = useContent().geoagents;
+  // Without its own copy this is the GEOagents hero: its film comes from that page's content.
+  const own: Film = children ? {} : hero;
+  const film = filmProp ?? (own.video || undefined);
+  const filmSmall = filmSmallProp ?? (own.videoSmall || undefined);
+  const poster = posterProp ?? (own.poster || undefined);
   const section = useRef<HTMLElement>(null);
   const video = useRef<HTMLVideoElement>(null);
   const cursor = useRef<HTMLDivElement>(null);
+  // A changed <source> does not reload by itself (a new film picked in the content editor); the
+  // first run is the page loading, which needs no reload.
+  const shownFilm = useRef(`${film}|${filmSmall}`);
+  useEffect(() => {
+    if (shownFilm.current === `${film}|${filmSmall}`) return;
+    shownFilm.current = `${film}|${filmSmall}`;
+    video.current?.load();
+  }, [film, filmSmall]);
   const [playing, setPlaying] = useState(false);
   const [cursorOn, setCursorOn] = useState(false);
   const [feedback, setFeedback] = useState<{ id: number; action: "play" | "pause"; x: number; y: number } | null>(null);

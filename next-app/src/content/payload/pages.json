@@ -79,6 +79,39 @@
               }
             },
             {
+              "name": "video",
+              "type": "text",
+              "label": "Video (máy tính)",
+              "admin": {
+                "description": "Tuỳ chọn. File MP4, nên dưới 25 MB. Để trống thì dùng phim mặc định."
+              },
+              "custom": {
+                "media": "video"
+              }
+            },
+            {
+              "name": "videoSmall",
+              "type": "text",
+              "label": "Video nhẹ cho điện thoại",
+              "admin": {
+                "description": "Tuỳ chọn. Bản MP4 nhẹ hơn của cùng video (720p). Để trống thì điện thoại dùng video máy tính."
+              },
+              "custom": {
+                "media": "video"
+              }
+            },
+            {
+              "name": "poster",
+              "type": "text",
+              "label": "Ảnh chờ (poster)",
+              "admin": {
+                "description": "Tuỳ chọn. Ảnh hiện trước khi video chạy. Để trống thì dùng ảnh mặc định."
+              },
+              "custom": {
+                "media": "image"
+              }
+            },
+            {
               "type": "collapsible",
               "label": "Nâng cao (thường không cần sửa)",
               "admin": {
@@ -596,7 +629,10 @@
                   "type": "text",
                   "label": "Ảnh nền",
                   "admin": {
-                    "description": "Tuỳ chọn. Đường dẫn ảnh, ví dụ /media/case-city.jpg. Sẽ đổi sang chọn từ thư viện ảnh khi có Media."
+                    "description": "Tuỳ chọn. Ảnh phủ kín ô, chữ trắng nằm trên."
+                  },
+                  "custom": {
+                    "media": "image"
                   }
                 },
                 {

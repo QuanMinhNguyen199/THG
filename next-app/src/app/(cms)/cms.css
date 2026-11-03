@@ -137,3 +137,41 @@ button, input, select, textarea { font: inherit; color: inherit; }
 .cms-part { margin: 0 0 16px; padding: 10px 14px 4px; border: 1px solid var(--line); border-left: 4px solid var(--ink); border-radius: 6px; background: #fff; }
 .cms-part > legend { padding: 0 6px; font-weight: 700; font-size: 15px; }
 .cms-part:focus-within { border-color: var(--accent); border-left-color: var(--accent); }
+
+/* Media fields: a preview, the file's name, and the ways to change it. */
+.cms-media-label { font-weight: 600; font-size: 14px; }
+.cms-media-row { display: flex; flex-wrap: wrap; align-items: flex-start; gap: 12px; }
+.cms-media-thumb { flex: none; width: 132px; aspect-ratio: 16 / 10; display: grid; place-items: center; overflow: hidden; border: 1px solid var(--line); border-radius: 6px; background: repeating-conic-gradient(#eef0f3 0 25%, #fff 0 50%) 0 0 / 16px 16px; }
+.cms-media-thumb img, .cms-media-thumb video { width: 100%; height: 100%; object-fit: cover; display: block; }
+.cms-media-empty { font-size: 12px; color: var(--muted); }
+.cms-media-meta { flex: 1; min-width: 180px; display: grid; gap: 6px; justify-items: start; }
+.cms-media-meta code { max-width: 100%; overflow-wrap: anywhere; font: 13px/1.4 ui-monospace, Consolas, monospace; }
+.cms-media-size { font-size: 12px; color: var(--muted); }
+.cms-media-actions { display: flex; flex-wrap: wrap; gap: 6px; }
+.cms-media-note { margin: 0; padding: 6px 10px; border-radius: 6px; background: #fff7e6; font-size: 13px; color: #5c3d00; }
+
+/* The library: a modal grid of the files of one kind. */
+.cms-library { width: min(760px, calc(100vw - 32px)); max-height: min(640px, calc(100vh - 48px)); padding: 0; border: 1px solid var(--line); border-radius: 10px; box-shadow: 0 20px 60px #0004; }
+.cms-library::backdrop { background: #0006; }
+.cms-library-head { position: sticky; top: 0; display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 16px; border-bottom: 1px solid var(--line); background: var(--panel); }
+.cms-library-head h4 { margin: 0; font-size: 16px; }
+.cms-library > .cms-help { padding: 16px; }
+.cms-library-grid { margin: 0; padding: 16px; list-style: none; display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; }
+.cms-library-grid button { width: 100%; height: 100%; display: grid; gap: 4px; justify-items: start; padding: 8px; text-align: left; }
+.cms-library-grid button[aria-pressed="true"] { border-color: var(--accent); box-shadow: 0 0 0 3px #c1152b33; }
+.cms-library-grid .cms-media-thumb { width: 100%; }
+.cms-library-name { font-size: 13px; font-weight: 600; overflow-wrap: anywhere; }
+
+/* The preview doubles as a drop zone: dashed, and lit while a file is dragged over the field. */
+.cms-drop { position: relative; width: 176px; cursor: pointer; border: 2px dashed #b9bdc6; transition: border-color 0.15s, background-color 0.15s; }
+.cms-drop:hover { border-color: #6b7280; }
+.cms-drop .cms-media-empty { padding: 0 10px; text-align: center; font-size: 13px; line-height: 1.35; }
+.cms-drop-hint { position: absolute; inset: auto 0 0; padding: 3px 6px; font-size: 11px; font-weight: 600; text-align: center; color: #fff; background: #000a; }
+.cms-drop-hint:empty { display: none; }
+.cms-media.is-over { border-radius: 8px; box-shadow: 0 0 0 3px #1d4ed833; }
+.cms-media.is-over .cms-drop { border-color: #1d4ed8; background: #eef3ff; }
+@media (prefers-reduced-motion: reduce) { .cms-drop { transition: none; } }
+.cms-library-grid .cms-drop { width: 100%; }
+
+/* Shown while the editor loads in the browser (it is not rendered on the server). */
+.cms-loading { margin: 0; padding: 40px 20px; font-size: 15px; color: var(--muted); }

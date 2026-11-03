@@ -3,6 +3,7 @@
 // so Node scripts and tests can use it as well as the site and the editor's live preview.
 import type { Block, Model, Page } from "../components/site/sections/shared.ts";
 import type { Job } from "../components/site/sections/jobs.ts";
+import type { CaseData } from "../components/site/cases.ts";
 
 type Text = { text: string };
 type Row = Record<string, unknown>;
@@ -138,6 +139,7 @@ export function jobFromRaw(slug: string, r: RawJob): Job {
     subject: s(r.subject),
     skills: list("skills"),
     areas: list("areas"),
+    glyph: has(r.glyph) ? (r.glyph as Job["glyph"]) : undefined,
   }) as Job;
 }
 
@@ -177,4 +179,43 @@ export function modelToRaw(m: Model): Row & { blockType: string } {
 export function jobToRaw(j: Job): RawJob {
   const { slug: _slug, duties, requirements, plus, benefits, skills, areas, ...rest } = j;
   return omit({ ...rest, duties: toTexts(duties), requirements: toTexts(requirements), plus: toTexts(plus), benefits: toTexts(benefits), skills: skills && toTexts(skills), areas: areas && toTexts(areas) });
+}
+
+// ── Case studies (the paper cards on GEOagents and in the Use Case pages' case block) ────────────
+
+/** Stored: arrays as objects, each two-line text as two fields. */
+export type RawCase = Row;
+
+export function caseFromRaw(id: string, r: RawCase): CaseData {
+  return clean({
+    id,
+    name: String(r.name),
+    org: String(r.org),
+    index: String(r.index),
+    summary: String(r.summary),
+    description: String(r.description),
+    note: String(r.note),
+    kicker: String(r.kicker),
+    checks: texts(r.checks) as [string, string, string],
+    checkFoot: String(r.checkFoot),
+    tag: String(r.tag),
+    headline: [String(r.headline), String(r.headlineLine2)] as [string, string],
+    stamp: [String(r.stamp), String(r.stampLine2)] as [string, string],
+    tone: r.tone as CaseData["tone"],
+    model: r.model as CaseData["model"],
+    script: (r.script as Row[] | undefined)?.length ? (r.script as Row[]).map((l) => ({ who: l.who as "in" | "agent", text: String(l.text) })) : undefined,
+    board: (r.board as Row[] | undefined)?.length ? (r.board as Row[]).map((c) => ({ col: String(c.col), cards: texts(c.cards) })) : undefined,
+    glyph: has(r.glyph) ? (r.glyph as CaseData["glyph"]) : undefined,
+    mock: typeof r.mock === "boolean" ? r.mock : undefined,
+  });
+}
+
+export function caseToRaw(c: CaseData): RawCase {
+  return omit({
+    name: c.name, org: c.org, index: c.index, summary: c.summary, description: c.description, note: c.note, kicker: c.kicker,
+    checks: toTexts(c.checks), checkFoot: c.checkFoot, tag: c.tag,
+    headline: c.headline[0], headlineLine2: c.headline[1], stamp: c.stamp[0], stampLine2: c.stamp[1],
+    tone: c.tone, model: c.model, glyph: c.glyph,
+    script: c.script, board: c.board?.map((b) => ({ col: b.col, cards: toTexts(b.cards) })), mock: c.mock,
+  });
 }

@@ -11,15 +11,19 @@ import corporate from "@/content/payload/corporate.json";
 import footer from "@/content/payload/footer.json";
 import geoagents from "@/content/payload/geoagents.json";
 import header from "@/content/payload/header.json";
-import job from "@/content/payload/job.json";
+import jobs from "@/content/payload/jobs.json";
 import pages from "@/content/payload/pages.json";
 import ways from "@/content/payload/ways.json";
+import caseStudy from "@/content/payload/case.json";
 import { PUBLISHED } from "@/content/published";
 import { DOCS, docAt, type Doc } from "@/content/registry";
+import library from "@/content/media.json";
+import { asset } from "@/lib/asset";
 import { validateDocument } from "@/content/validate.mjs";
-import { Disclosure, Fields, explain, type Ctx, type Problem, type Row, type Schema } from "./fields";
+import { Disclosure, Fields, explain, flat, type Ctx, type Media, type MediaItem, type MediaKind, type Problem, type Row, type Schema } from "./fields";
+import { clearUploads, loadUploads, saveUpload, toBase64 } from "./mediaStore";
 
-const SCHEMAS = { pages, corporate, job, header, footer, ways, geoagents } as unknown as Record<Doc["schema"], Schema>;
+const SCHEMAS = { pages, corporate, jobs, header, footer, ways, geoagents, case: caseStudy } as unknown as Record<Doc["schema"], Schema>;
 const STORE = "cms-mock:drafts";
 const BASE = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
 // Folder-style URLs: the GitHub Pages export serves each page as <path>/index.html.
@@ -27,9 +31,26 @@ const siteUrl = (path: string) => `${BASE}${path === "/" ? "/" : `${path}/`}`;
 const byKey = (key: string) => DOCS.find((d) => d.key === key)!;
 const same = (a: unknown, b: unknown) => JSON.stringify(a) === JSON.stringify(b);
 
+// What an upload may be: the types a media field takes (validate.mjs), and sizes worth a warning.
+const TYPES: Record<MediaKind, Record<string, string>> = {
+  image: { "image/jpeg": "jpg", "image/png": "png", "image/webp": "webp", "image/avif": "avif", "image/gif": "gif" },
+  video: { "video/mp4": "mp4" },
+};
+const HEAVY: Record<MediaKind, number> = { image: 1.5 * 1024 * 1024, video: 25 * 1024 * 1024 };
+const LIMIT = 100 * 1024 * 1024;
+/** A safe file name for public/media/uploads: no accents or spaces, and unique. */
+const uploadPath = (name: string, ext: string) => {
+  const base = name.replace(/\.[^.]+$/, "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/đ/gi, "d").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0, 40) || "file";
+  return `/media/uploads/${base}-${Date.now().toString(36)}.${ext}`;
+};
+
 /** How the editor names a page: its own name or title, as the content gives it. */
 function pageName(doc: Doc, value?: Row) {
   if (doc.key === "page:/") return "Trang chủ";
+  if (doc.item) {
+    const row = ((value?.jobs as Row[] | undefined) ?? []).find((r) => r.slug === doc.item);
+    return String(row?.title || doc.item);
+  }
   // A name being edited can be empty for a moment: fall back to the title, then the file's name.
   return String(value?.name || value?.title || doc.label);
 }
@@ -41,11 +62,18 @@ export function ContentEditor() {
   const [active, setActive] = useState<string>();
   const frame = useRef<HTMLIFrameElement>(null);
   const lastValid = useRef<Record<string, Row>>({});
+  // Files uploaded in this browser, by the path they will have on the site.
+  const [uploads, setUploads] = useState<Record<string, Blob>>({});
+  const uploadsRef = useRef(uploads);
+  uploadsRef.current = uploads;
 
   const docOf = (key: string) => (drafts[key] ?? PUBLISHED[key]) as Row | undefined;
   const setDoc = (key: string) => (value: Row) => setDrafts((d) => ({ ...d, [key]: value }));
 
   // Drafts live in this browser only, so a reload keeps the editor's work (the earlier home-only draft too).
+  // Saving waits until the saved drafts are restored: otherwise the first save writes the empty
+  // initial state over them (React runs effects twice in development).
+  const [restored, setRestored] = useState(false);
   useEffect(() => {
     try {
       const saved = localStorage.getItem(STORE);
@@ -53,12 +81,17 @@ export function ContentEditor() {
       if (saved) setDrafts(JSON.parse(saved));
       else if (old) setDrafts({ "page:/": JSON.parse(old) });
     } catch {}
+    setRestored(true);
   }, []);
   useEffect(() => {
+    loadUploads().then(setUploads);
+  }, []);
+  useEffect(() => {
+    if (!restored) return;
     try {
       localStorage.setItem(STORE, JSON.stringify(drafts));
     } catch {}
-  }, [drafts]);
+  }, [drafts, restored]);
 
   // Each changed document is checked against its schema; the first problem of each is kept.
   const problems = useMemo(() => {
@@ -76,15 +109,24 @@ export function ContentEditor() {
   const changed = useMemo(() => Object.keys(drafts).filter((k) => !same(drafts[k], PUBLISHED[k])), [drafts]);
 
   const current = docAt(path);
-  // The documents on screen: header, this page, footer, and a shared section the page shows in place.
+  // The documents on screen: header, this page, footer, and the shared ones the page shows in place
+  // (its "ways of working" section, the case studies its case blocks pick, GEOagents' AI DN360).
   const pageBlocks = (current && (docOf(current.key)?.blocks as Row[] | undefined)) ?? [];
-  const onScreen = ["header", ...(current ? [current.key] : []), "footer", ...(pageBlocks.some((b) => b.blockType === "waysOfWorking") ? ["ways"] : [])];
+  const sharedHere = [
+    ...(pageBlocks.some((b) => b.blockType === "waysOfWorking") ? ["ways"] : []),
+    ...pageBlocks.filter((b) => b.blockType === "case" && b.caseId).map((b) => `case:${String(b.caseId)}`),
+    ...(pageBlocks.some((b) => b.blockType === "jobs") ? ["jobs"] : []),
+    ...(current?.key === "page:/geoagents" ? ["case:tdn"] : []),
+  ];
+  const onScreen = ["header", ...(current ? [current.key] : []), "footer", ...sharedHere];
   const visibleProblem = onScreen.find((k) => problems[k]);
   const anyProblem = visibleProblem ?? Object.keys(problems)[0];
 
   // Only valid drafts reach the preview; while one has a problem, its last valid version stands.
   const post = (message: unknown) => frame.current?.contentWindow?.postMessage(message, location.origin);
+  // Uploads go first, so the drafts that use them find them.
   const sendDrafts = () => {
+    if (Object.keys(uploadsRef.current).length) post({ type: "cms:media", files: uploadsRef.current });
     if (Object.keys(lastValid.current).length) post({ type: "cms:drafts", drafts: lastValid.current });
   };
   useEffect(() => {
@@ -112,7 +154,7 @@ export function ContentEditor() {
   }, []);
 
   /** Scrolls the preview to a part of the page and outlines it; `note` says why it cannot be shown. */
-  const show = (selector: string, note?: string) => post({ type: "cms:part", selector, index: 0, note });
+  const show = (selector: string, note?: string, index = 0) => post({ type: "cms:part", selector, index, note });
   const select = (key: string) => (id: string, field: string) => {
     setActive(id);
     const doc = byKey(key);
@@ -128,14 +170,55 @@ export function ContentEditor() {
     const selector = doc.schema === "pages" ? `#${CSS.escape(String(block?.anchor || `block-${id}`))}` : `[data-block="${CSS.escape(id)}"]`;
     show(selector);
   };
-  // Working in the header or footer group shows that part of the page; blocks show themselves.
-  const focusGroup = (selector: string) => (e: React.FocusEvent) => {
-    if ((e.target as HTMLElement).closest(".cms-block")) return;
+  // Working in a field shows where it is on the page: the place its schema gives (custom.selector,
+  // custom.index), else the area's own. Sections and the GEOagents parts show themselves.
+  /** On a posting's page, the list's row for it: its fields, and the path validate.mjs names them by. */
+  const itemOf = (doc: Doc) => {
+    if (!current?.item || doc.key !== current.key) return undefined;
+    const list = SCHEMAS[doc.schema].fields[0];
+    const rows = (docOf(doc.key)?.[list.name!] as Row[] | undefined) ?? [];
+    const index = rows.findIndex((r) => r.slug === current.item);
+    return { list: list.name!, index, defs: list.fields ?? [], rows };
+  };
+  const focusArea = (key: string, fallback: string) => (e: React.FocusEvent) => {
+    const target = e.target as HTMLElement;
+    if (target.closest(".cms-block")) return;
+    const fieldPath = target.closest("[data-path]")?.getAttribute("data-path") ?? "";
+    const doc = byKey(key);
+    const segments = fieldPath.split(".").slice(1).map((s) => s.replace(/\[.*$/, ""));
+    const defs = itemOf(doc) ? itemOf(doc)!.defs : SCHEMAS[doc.schema].fields;
+    const top = itemOf(doc) ? segments[1] : segments[0];
+    const field = flat(defs).find((f) => f.name === top);
     setActive(undefined);
-    show(selector);
+    show(field?.custom?.selector ?? fallback, undefined, field?.custom?.index ?? 0);
+  };
+
+  // Previews of uploads in this window (the preview makes its own from the same files).
+  const uploadUrls = useMemo(() => Object.fromEntries(Object.entries(uploads).map(([p, b]) => [p, URL.createObjectURL(b)])), [uploads]);
+  useEffect(() => () => Object.values(uploadUrls).forEach((u) => URL.revokeObjectURL(u)), [uploadUrls]);
+  const media: Media = {
+    items: (kind) => [
+      ...Object.entries(uploads).filter(([p]) => (kind === "video" ? /\.mp4$/ : /\.(jpe?g|png|webp|avif|gif)$/).test(p)).map(([p, b]) => ({ path: p, kind, size: b.size, uploaded: true })),
+      ...(library as MediaItem[]).filter((m) => m.kind === kind).map((m) => ({ ...m, uploaded: false })),
+    ],
+    urlOf: (p) => uploadUrls[p] ?? (/^https?:\/\//.test(p) ? p : asset(p)),
+    upload: async (file, kind) => {
+      const ext = TYPES[kind][file.type];
+      if (!ext) return { note: kind === "video" ? "Chỉ nhận video MP4." : "Chỉ nhận ảnh JPG, PNG, WebP, AVIF hoặc GIF." };
+      if (file.size > LIMIT) return { note: `File nặng ${(file.size / 1024 / 1024).toFixed(0)} MB, vượt giới hạn 100 MB. Hãy nén lại rồi tải lên.` };
+      const p = uploadPath(file.name, ext);
+      const kept = await saveUpload(p, file);
+      setUploads((u) => ({ ...u, [p]: file }));
+      const notes = [
+        file.size > HEAVY[kind] && `File nặng ${(file.size / 1024 / 1024).toFixed(1)} MB: trang sẽ tải chậm, nên nén ${kind === "video" ? "dưới 25 MB" : "dưới 1,5 MB"}.`,
+        !kept && "Trình duyệt không cho lưu file: file mất khi đóng trang. Hãy tải bản nháp trước khi đóng.",
+      ].filter(Boolean);
+      return { path: p, note: notes.join(" ") || undefined };
+    },
   };
 
   const ctxFor = (key: string): Ctx => ({
+    media,
     problem: problems[key],
     active,
     select: select(key),
@@ -146,7 +229,9 @@ export function ContentEditor() {
     shared: (sharedKey) => {
       const value = docOf(sharedKey);
       if (!value) return undefined;
-      return { label: byKey(sharedKey).label, value, onChange: setDoc(sharedKey), schema: SCHEMAS[byKey(sharedKey).schema], problem: problems[sharedKey] };
+      // Case studies and postings are named as editors know them: the product, the role.
+      const label = sharedKey.startsWith("case:") ? `case study ${String(value.name)}` : byKey(sharedKey).label;
+      return { label, value, onChange: setDoc(sharedKey), schema: SCHEMAS[byKey(sharedKey).schema], problem: problems[sharedKey] };
     },
   });
 
@@ -165,15 +250,22 @@ export function ContentEditor() {
       el?.querySelector<HTMLElement>("input, textarea, select")?.focus({ preventScroll: true });
     });
   };
-  const download = () => {
+  // The uploads the changed documents use travel in the same file, as base64 by their place in public/.
+  const download = async () => {
     const files = Object.fromEntries(changed.map((k) => [byKey(k).file, drafts[k]]));
-    const blob = new Blob([JSON.stringify({ kind: "thehegeo-content-drafts", files }, null, 2) + "\n"], { type: "application/json" });
+    const text = JSON.stringify(files);
+    const used = Object.keys(uploads).filter((p) => text.includes(JSON.stringify(p)));
+    const media = Object.fromEntries(await Promise.all(used.map(async (p) => [`public${p}`, await toBase64(uploads[p])])));
+    const blob = new Blob([JSON.stringify({ kind: "thehegeo-content-drafts", files, media }, null, 2) + "\n"], { type: "application/json" });
     const url = URL.createObjectURL(blob);
     Object.assign(document.createElement("a"), { href: url, download: "noi-dung-ban-nhap.json" }).click();
     URL.revokeObjectURL(url);
   };
   const discard = () => {
-    if (confirm(`Bỏ thay đổi ở ${changed.length} tài liệu và quay về nội dung đang có trên website?`)) setDrafts({});
+    if (!confirm(`Bỏ thay đổi ở ${changed.length} tài liệu (và các file đã tải lên) và quay về nội dung đang có trên website?`)) return;
+    setDrafts({});
+    setUploads({});
+    clearUploads();
   };
 
   // Areas start closed, and a page's content area closes again when the preview moves to another page.
@@ -182,6 +274,8 @@ export function ContentEditor() {
     const value = docOf(key);
     if (!value) return null;
     const problem = problems[key];
+    // A posting's page edits its own row of the postings list.
+    const item = itemOf(doc);
     return (
       <Disclosure
         key={key}
@@ -196,8 +290,22 @@ export function ContentEditor() {
           </>
         }
       >
-        <div onFocus={focusGroup(selector)}>
-          <Fields defs={SCHEMAS[doc.schema].fields} value={value} onChange={setDoc(key)} path={SCHEMAS[doc.schema].slug} ctx={ctxFor(key)} />
+        <div onFocus={focusArea(key, selector)}>
+          {item ? (
+            item.index < 0 ? (
+              <p className="cms-outline-note">Tin này không còn trong danh sách tin tuyển dụng (đã đổi đường dẫn hoặc đã xoá).</p>
+            ) : (
+              <Fields
+                defs={item.defs}
+                value={item.rows[item.index]}
+                onChange={(row) => setDoc(key)({ ...value, [item.list]: item.rows.map((r, i) => (i === item.index ? row : r)) })}
+                path={`${SCHEMAS[doc.schema].slug}.${item.list}[${item.index}]`}
+                ctx={ctxFor(key)}
+              />
+            )
+          ) : (
+            <Fields defs={SCHEMAS[doc.schema].fields} value={value} onChange={setDoc(key)} path={SCHEMAS[doc.schema].slug} ctx={ctxFor(key)} />
+          )}
         </div>
       </Disclosure>
     );

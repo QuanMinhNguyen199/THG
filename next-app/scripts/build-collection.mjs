@@ -5,6 +5,9 @@ import { fileURLToPath } from 'node:url';
 // The partner list the site itself uses (Về THEHEGEO, the logos), so the select cannot drift from it.
 import { PARTNER_NAMES } from '../src/components/site/sections/partners.ts';
 
+/** Where a field shows on its page: the content editor's preview scrolls there (EditorBridge). */
+const at = (field, selector, index) => ({ ...field, custom: { ...field.custom, selector, ...(index !== undefined && { index }) } });
+
 const link = (label, description = 'Trang trong website bắt đầu bằng /, ví dụ /geoagents/. Link ngoài bắt đầu bằng https://.') =>
   ({ name: 'href', type: 'text', required: true, label, admin: { description } });
 
@@ -25,6 +28,14 @@ const heading = (titleDescription, highlightLabel, highlightDescription) => [
   { name: 'title', type: 'text', required: true, label: 'Tiêu đề', admin: { description: titleDescription } },
   { name: 'highlight', type: 'text', required: true, label: highlightLabel, admin: { description: highlightDescription } },
 ];
+/** A file from the media library or uploaded in the editor; `custom.media` is its kind (image or video). */
+const media = (name, label, kind, description) => ({ name, type: 'text', label, admin: { description }, custom: { media: kind } });
+/** The hero's film: empty fields keep the default film and poster. */
+const film = [
+  media('video', 'Video (máy tính)', 'video', 'Tuỳ chọn. File MP4, nên dưới 25 MB. Để trống thì dùng phim mặc định.'),
+  media('videoSmall', 'Video nhẹ cho điện thoại', 'video', 'Tuỳ chọn. Bản MP4 nhẹ hơn của cùng video (720p). Để trống thì điện thoại dùng video máy tính.'),
+  media('poster', 'Ảnh chờ (poster)', 'image', 'Tuỳ chọn. Ảnh hiện trước khi video chạy. Để trống thì dùng ảnh mặc định.'),
+];
 const kicker = { name: 'kicker', type: 'text', required: true, label: 'Nhãn nhỏ trên tiêu đề', admin: { description: 'Gõ chữ thường như bình thường, website tự viết in hoa.' } };
 
 const blocks = [
@@ -34,6 +45,7 @@ const blocks = [
     admin: { description: 'Phần đầu trang có video. Mỗi trang chỉ nên có một Hero vì đây là tiêu đề chính (H1). Video và hiệu ứng nằm trong code.' },
     fields: [...common,
       { name: 'heading', type: 'text', required: true, label: 'Tiêu đề chính (H1)', admin: { description: 'Câu mô tả cả trang, dùng cho người đọc màn hình và công cụ tìm kiếm.' } },
+      ...film,
       advanced()],
   },
   {
@@ -114,7 +126,7 @@ const blocks = [
           { name: 'title', type: 'text', required: true, label: 'Tên ô', admin: { description: 'Ví dụ: Giải pháp.' } },
           link('Link khi bấm vào ô'),
           { name: 'size', type: 'select', required: true, defaultValue: 'normal', label: 'Kích thước', options: [{ label: 'Thường (1 cột)', value: 'normal' }, { label: 'Rộng (2 cột)', value: 'wide' }] },
-          { name: 'image', type: 'text', label: 'Ảnh nền', admin: { description: 'Tuỳ chọn. Đường dẫn ảnh, ví dụ /media/case-city.jpg. Sẽ đổi sang chọn từ thư viện ảnh khi có Media.' } },
+          media('image', 'Ảnh nền', 'image', 'Tuỳ chọn. Ảnh phủ kín ô, chữ trắng nằm trên.'),
           {
             name: 'lines', type: 'array', required: true, minRows: 1, label: 'Gạch đầu dòng',
             labels: { singular: 'Dòng', plural: 'Dòng' },
@@ -177,7 +189,7 @@ const corporateBlocks = [
       area('body', 'Mô tả'),
       optionalLink(),
       text('cta', 'Chữ trên link', 'Ví dụ: Xem giải pháp.'),
-      text('image', 'Ảnh', 'Tuỳ chọn, chỉ dùng cho thẻ đầu. Đường dẫn ảnh, ví dụ /media/case-city.jpg.'),
+      media('image', 'Ảnh', 'image', 'Tuỳ chọn, chỉ dùng cho thẻ đầu: có ảnh thì danh sách hiện thành một thẻ lớn có ảnh.'),
     ] },
   ]),
   corporateBlock('table', 'Bảng (hiện thành thẻ)', 'Mỗi hàng thành một thẻ: ô đầu là tên thẻ, các ô sau có tên cột làm nhãn. Ô có link biến cả thẻ thành link.', [
@@ -226,10 +238,10 @@ const corporateBlocks = [
     lines('items', 'Các vòng', 'Vòng', 'Từ trong ra ngoài.', { required: true, minRows: 2 }),
   ]),
   corporateBlock('values', 'Giá trị', 'Một hàng chữ lớn, mỗi giá trị một ô.', [sectionTitle, lines('items', 'Các giá trị', 'Giá trị', undefined, { required: true, minRows: 1 })]),
-  corporateBlock('case', 'Case study', 'Hồ sơ case study có sẵn (nội dung case nằm trong code).', [
+  corporateBlock('case', 'Case study', 'Hồ sơ case study dùng chung: chọn hồ sơ, rồi sửa nội dung ngay bên dưới. Trang nào dùng cùng hồ sơ cũng đổi theo.', [
     sectionTitle,
-    { name: 'caseId', type: 'select', required: true, label: 'Case study', options: [{ label: 'Quản lý dự án công nghiệp (PTSC M&C)', value: 'quan-ly-du-an' }, { label: 'Dịch vụ công', value: 'dich-vu-cong' }, { label: 'AI Platform', value: 'ai-platform' }] },
-  ]),
+    { name: 'caseId', type: 'select', required: true, label: 'Case study', options: [{ label: 'Quản lý dự án công nghiệp (PTSC M&C)', value: 'quan-ly-du-an' }, { label: 'Tổng đài AI dịch vụ công (minh hoạ)', value: 'dich-vu-cong' }, { label: 'AI Platform (minh hoạ)', value: 'ai-platform' }, { label: 'AI DN360', value: 'tdn' }] },
+  ], { custom: { sharedBy: { field: 'caseId', prefix: 'case:' } } }),
   corporateBlock('project', 'Dự án', 'Hồ sơ một dự án: bài toán, giải pháp, kết quả.', [
     text('title', 'Tên dự án', undefined, { required: true }),
     text('client', 'Khách hàng', undefined, { required: true }),
@@ -240,7 +252,7 @@ const corporateBlocks = [
     ...textLink,
   ]),
   corporateBlock('contact', 'Biểu mẫu liên hệ', 'Biểu mẫu liên hệ và thông tin liên hệ. Email, điện thoại, địa chỉ sửa ở Footer.'),
-  corporateBlock('jobs', 'Danh sách vị trí', 'Các vị trí đang tuyển. Sửa từng vị trí ở trang tin tuyển dụng đó.'),
+  corporateBlock('jobs', 'Danh sách vị trí', 'Các vị trí đang tuyển: thêm, xoá, đổi thứ tự và sửa từng tin ngay bên dưới. Mỗi tin có trang riêng /tuyen-dung/<đường dẫn>/.', [], { custom: { shared: 'jobs' } }),
   corporateBlock('projectIndex', 'Danh sách dự án', 'Tự liệt kê mọi dự án trên các trang Use Case; sửa dự án ở trang Use Case đó.'),
   corporateBlock('waysOfWorking', 'Cách chúng tôi làm việc (dùng chung)', 'Nội dung dùng chung cho trang Sứ mệnh và Tầm nhìn và trang Tuyển dụng: sửa ở một chỗ, cả hai trang cùng đổi.', [], { custom: { shared: 'ways' } }),
 ];
@@ -267,36 +279,45 @@ export const corporate = {
   slug: 'corporate',
   labels: { singular: 'Trang doanh nghiệp', plural: 'Các trang doanh nghiệp' },
   fields: [
-    text('name', 'Tên trang', 'Tên ngắn trên menu, thẻ và mục "Xem thêm".', { required: true }),
-    text('kind', 'Dòng mô tả ngắn', 'Tuỳ chọn. Hiện dưới tên trang trong menu và mục "Xem thêm".'),
-    area('title', 'Tiêu đề lớn (H1)', 'Câu tiêu đề ở đầu trang.', { required: true }),
-    text('en', 'Dòng tiếng Anh', 'Tuỳ chọn, dưới tiêu đề lớn.'),
-    area('lead', 'Đoạn mở đầu', 'Tuỳ chọn, dưới tiêu đề. Cũng là mô tả trang cho công cụ tìm kiếm.'),
-    text('image', 'Ảnh banner', 'Tuỳ chọn. Đường dẫn ảnh, ví dụ /media/case-city.jpg. Trên trang tổng, ảnh của trang con đầu tiên làm thẻ lớn.'),
-    { name: 'model', type: 'blocks', maxRows: 1, label: 'Hình minh hoạ cạnh tiêu đề', labels: { singular: 'Hình', plural: 'Hình' }, admin: { description: 'Tuỳ chọn, tối đa một hình.' }, blocks: modelBlocks },
+    at(text('name', 'Tên trang', 'Tên ngắn trên menu, thẻ và mục "Xem thêm".', { required: true }), '.page-head'),
+    at(text('kind', 'Dòng mô tả ngắn', 'Tuỳ chọn. Hiện dưới tên trang trong menu và mục "Xem thêm".'), '.page-head'),
+    at(area('title', 'Tiêu đề lớn (H1)', 'Câu tiêu đề ở đầu trang.', { required: true }), '.page-head'),
+    at(text('en', 'Dòng tiếng Anh', 'Tuỳ chọn, dưới tiêu đề lớn.'), '.page-head'),
+    at(area('lead', 'Đoạn mở đầu', 'Tuỳ chọn, dưới tiêu đề. Cũng là mô tả trang cho công cụ tìm kiếm.'), '.page-head'),
+    at(media('image', 'Ảnh banner', 'image', 'Tuỳ chọn. Ảnh rộng dưới tiêu đề trang. Trên trang tổng, ảnh của trang con đầu tiên làm thẻ lớn.'), '.corp-banner'),
+    { custom: { selector: '.corp-model' }, name: 'model', type: 'blocks', maxRows: 1, label: 'Hình minh hoạ cạnh tiêu đề', labels: { singular: 'Hình', plural: 'Hình' }, admin: { description: 'Tuỳ chọn, tối đa một hình.' }, blocks: modelBlocks },
     { name: 'blocks', type: 'blocks', required: true, minRows: 1, label: 'Các section của trang', labels: { singular: 'Section', plural: 'Section' }, admin: { description: 'Thứ tự từ trên xuống ở đây là thứ tự trên trang.' }, blocks: corporateBlocks },
-    { name: 'cta', type: 'array', label: 'Nút cuối trang', labels: { singular: 'Nút', plural: 'Nút' }, admin: { description: 'Nút đầu là nút chính, các nút sau là nút phụ.' }, fields: [text('label', 'Chữ trên nút', undefined, { required: true }), optionalLink('Để trống thì dẫn tới trang Liên hệ.')] },
+    { custom: { selector: '.corp-cta' }, name: 'cta', type: 'array', label: 'Nút cuối trang', labels: { singular: 'Nút', plural: 'Nút' }, admin: { description: 'Nút đầu là nút chính, các nút sau là nút phụ.' }, fields: [text('label', 'Chữ trên nút', undefined, { required: true }), optionalLink('Để trống thì dẫn tới trang Liên hệ.')] },
   ],
 };
 
-export const job = {
-  slug: 'job',
-  labels: { singular: 'Tin tuyển dụng', plural: 'Tin tuyển dụng' },
-  fields: [
-    text('title', 'Tên vị trí', 'Như JD ghi.', { required: true }),
-    text('focus', 'Mảng chuyên môn', 'Tuỳ chọn, ví dụ: LLM, Agents & Workflow.'),
-    text('code', 'Mã vị trí', 'Mã ngắn trên tem hồ sơ và tiêu đề email ứng tuyển.', { required: true }),
-    text('family', 'Nhóm nghề', 'Dùng để lọc ở trang Tuyển dụng.', { required: true }),
-    area('summary', 'Tóm tắt một dòng', 'Hiện trên thẻ vị trí.', { required: true }),
-    area('intro', 'Giới thiệu', undefined, { required: true }),
-    lines('duties', 'Mô tả công việc', 'Ý', undefined, { required: true, minRows: 1 }),
-    lines('requirements', 'Yêu cầu', 'Ý', undefined, { required: true, minRows: 1 }),
-    lines('plus', 'Điểm cộng', 'Ý', undefined, { required: true, minRows: 1 }),
-    lines('benefits', 'Quyền lợi', 'Ý', undefined, { required: true, minRows: 1 }),
-    text('location', 'Địa điểm làm việc', undefined, { required: true }),
-    text('subject', 'Tiêu đề email ứng tuyển', 'Tuỳ chọn. Để trống thì dùng "[Mã vị trí] Ứng tuyển Tên vị trí".'),
+/** One posting; `slug` is its page, /tuyen-dung/<slug>/ (one route for every posting). */
+const posting = [
+    at(text('title', 'Tên vị trí', 'Như JD ghi.', { required: true }), '.jd-head'),
+    at(text('slug', 'Đường dẫn', 'Phần cuối địa chỉ trang tin: /tuyen-dung/<đường dẫn>/. Viết thường không dấu, nối bằng gạch ngang, ví dụ ai-engineer. Không đổi sau khi tin đã đăng.', { required: true, unique: true, custom: { slug: true } }), '.jd-head'),
+    at(text('focus', 'Mảng chuyên môn', 'Tuỳ chọn, ví dụ: LLM, Agents & Workflow.'), '.jd-head'),
+    at(text('code', 'Mã vị trí', 'Mã ngắn trên tem hồ sơ và tiêu đề email ứng tuyển.', { required: true }), '.jd-side'),
+    at(text('family', 'Nhóm nghề', 'Dùng để lọc ở trang Tuyển dụng.', { required: true }), '.jd-head'),
+    at(area('summary', 'Tóm tắt một dòng', 'Hiện trên thẻ vị trí ở trang Tuyển dụng.', { required: true }), '.jd-head'),
+    at(area('intro', 'Giới thiệu', undefined, { required: true }), '.jd-section', 0),
+    at(lines('duties', 'Mô tả công việc', 'Ý', undefined, { required: true, minRows: 1 }), '.jd-section', 1),
+    at(lines('requirements', 'Yêu cầu', 'Ý', undefined, { required: true, minRows: 1 }), '.jd-section', 2),
+    at(lines('plus', 'Điểm cộng', 'Ý', undefined, { required: true, minRows: 1 }), '.jd-section', 3),
+    at(lines('benefits', 'Quyền lợi', 'Ý', undefined, { required: true, minRows: 1 }), '.jd-section', 4),
+    at(text('location', 'Địa điểm làm việc', undefined, { required: true }), '.jd-side'),
+    at(text('subject', 'Tiêu đề email ứng tuyển', 'Tuỳ chọn. Để trống thì dùng "[Mã vị trí] Ứng tuyển Tên vị trí".'), '.jd-side'),
     lines('skills', 'Kỹ năng chính (nhãn)', 'Nhãn', 'Tuỳ chọn. Để trống thì dùng phần Yêu cầu.'),
     lines('areas', 'Mảng công việc (nhãn)', 'Nhãn', 'Tuỳ chọn.'),
+    { type: 'collapsible', label: 'Hình trên thẻ (thường không cần sửa)', admin: { initCollapsed: true }, fields: [
+      { name: 'glyph', type: 'select', label: 'Hình vẽ trên giấy', options: [['agents', 'Agent'], ['pipeline', 'Pipeline'], ['data', 'Dữ liệu'], ['platform', 'Nền tảng'], ['web', 'Web'], ['flow', 'Quy trình'], ['ledger', 'Sổ sách']].map(([value, label]) => ({ label, value })), admin: { description: 'Tuỳ chọn. Để trống thì giấy có dòng kẻ.' } },
+    ] },
+];
+
+export const jobs = {
+  slug: 'jobs',
+  label: 'Tin tuyển dụng',
+  fields: [
+    { name: 'jobs', type: 'array', required: true, minRows: 1, label: 'Các tin tuyển dụng', labels: { singular: 'Tin', plural: 'Tin' }, admin: { description: 'Thứ tự ở đây là thứ tự trên trang Tuyển dụng. Tin mới có trang riêng sau khi bản nháp được áp và site build lại.' }, fields: posting },
   ],
 };
 
@@ -339,7 +360,8 @@ export const ways = {
 // ── GEOagents (its own components; the copy of each section) ────────────────────────────────────
 
 /** A section of the page; `custom.selector` is where the editor's preview scrolls to it. */
-const part = (name, label, selector, fields, description) => ({ name, type: 'group', label, ...(description && { admin: { description } }), custom: { selector }, fields });
+/** `shared` names a shared document the section shows, edited in place under its own fields. */
+const part = (name, label, selector, fields, description, shared) => ({ name, type: 'group', label, ...(description && { admin: { description } }), custom: { selector, ...(shared && { shared }) }, fields });
 const homeBlock = (slug) => blocks.find((b) => b.slug === slug).fields;
 const twoLines = [
   text('title', 'Tiêu đề, dòng 1', undefined, { required: true }),
@@ -360,6 +382,7 @@ export const geoagents = {
       text('primaryLabel', 'Chữ trên nút chính', 'Nút dẫn xuống phần bốn tầng.', { required: true }),
       text('secondaryLabel', 'Chữ trên nút phụ', undefined, { required: true }),
       text('secondaryHref', 'Link nút phụ', 'Trang trong website bắt đầu bằng /.', { required: true }),
+      ...film,
     ], 'Video và hiệu ứng nằm trong code; ở đây sửa chữ.'),
     part('metrics', 'Dải số liệu', '.metrics', [
       text('label', 'Tên dải cho trình đọc màn hình', 'Không hiện trên trang.', { required: true }),
@@ -375,7 +398,7 @@ export const geoagents = {
         area('body', 'Mô tả tầng', undefined, { required: true }),
       ] },
     ], 'Sơ đồ chuyển động nằm trong code; ở đây sửa chữ và tên các tầng.'),
-    part('applications', 'Ứng dụng thực tiễn', '#applications', twoLines, 'Hồ sơ case study bên dưới nằm trong code.'),
+    part('applications', 'Ứng dụng thực tiễn', '#applications', twoLines, 'Hồ sơ case study AI DN360 bên dưới là nội dung dùng chung.', 'case:tdn'),
     part('careers', 'Tuyển dụng', '#careers', [
       text('title', 'Tiêu đề, dòng 1', undefined, { required: true }),
       text('highlight', 'Tiêu đề, dòng 2 (màu nhấn)', undefined, { required: true }),
@@ -388,8 +411,47 @@ export const geoagents = {
   ],
 };
 
+// ── Case studies (shared: GEOagents and the Use Case pages' case block show them) ────────────────
+
+const caseTwo = (name, label, description) => [
+  text(name, `${label}, dòng 1`, description, { required: true }),
+  text(`${name}Line2`, `${label}, dòng 2`, undefined, { required: true }),
+];
+export const caseStudy = {
+  slug: 'case',
+  label: 'Case study',
+  fields: [
+    text('name', 'Tên sản phẩm', 'Ví dụ: AI DN360. Tên lớn trên thẻ.', { required: true }),
+    text('org', 'Đơn vị', 'Khách hàng hoặc nơi triển khai, ví dụ: Cục Thuế TP. Hà Nội.', { required: true }),
+    text('index', 'Nhãn số thứ tự', 'Ví dụ: 01 / TÀI CHÍNH & THUẾ. Gõ như muốn hiện.', { required: true }),
+    area('summary', 'Tóm tắt trên thẻ', 'Một câu ngắn dưới tên sản phẩm.', { required: true }),
+    area('description', 'Mô tả khi mở hồ sơ', undefined, { required: true }),
+    area('note', 'Ghi chú: AI làm gì, con người quyết định gì', undefined, { required: true }),
+    text('kicker', 'Lĩnh vực', 'Ví dụ: Tài chính và thuế.', { required: true }),
+    lines('checks', 'Ba mục kiểm tra', 'Mục', 'Ba tờ đứng phía sau khi mở hồ sơ.', { required: true, minRows: 3, maxRows: 3 }),
+    text('checkFoot', 'Dòng dưới ba mục', 'Ví dụ: Theo mã số thuế.', { required: true }),
+    text('tag', 'Dòng nhỏ trên giấy', 'Ví dụ: AI / TAX INTELLIGENCE.', { required: true }),
+    ...caseTwo('headline', 'Tiêu đề trên giấy'),
+    ...caseTwo('stamp', 'Con dấu'),
+    { type: 'collapsible', label: 'Hình dạng và màu (thường không cần sửa)', admin: { initCollapsed: true }, fields: [
+      { name: 'model', type: 'select', required: true, label: 'Kiểu mô hình', options: [{ label: 'Tập hồ sơ mở như sách', value: 'folder' }, { label: 'Điện thoại có cuộc gọi', value: 'call' }, { label: 'Bảng việc theo cột', value: 'board' }, { label: 'Chồng máy chủ', value: 'stack' }] },
+      { name: 'tone', type: 'select', required: true, label: 'Màu giấy', options: [{ label: 'Trắng', value: 'white' }, { label: 'Xanh navy', value: 'navy' }, { label: 'Giấy kraft', value: 'kraft' }, { label: 'Xám than', value: 'graphite' }] },
+      { name: 'glyph', type: 'select', label: 'Hình vẽ trên giấy', options: ['agents', 'pipeline', 'data', 'platform', 'web', 'flow', 'ledger'].map((value) => ({ label: value, value })), admin: { description: 'Tuỳ chọn, chỉ dùng cho kiểu Tập hồ sơ. Để trống thì giấy có dòng kẻ.' } },
+      { name: 'script', type: 'array', label: 'Lời thoại', labels: { singular: 'Câu', plural: 'Câu' }, admin: { description: 'Chỉ dùng cho kiểu Điện thoại.' }, fields: [
+        { name: 'who', type: 'select', required: true, label: 'Ai nói', options: [{ label: 'Người gọi', value: 'in' }, { label: 'Agent', value: 'agent' }] },
+        area('text', 'Nội dung', undefined, { required: true }),
+      ] },
+      { name: 'board', type: 'array', label: 'Các cột việc', labels: { singular: 'Cột', plural: 'Cột' }, admin: { description: 'Chỉ dùng cho kiểu Bảng việc.' }, fields: [
+        text('col', 'Tên cột', undefined, { required: true }),
+        lines('cards', 'Các việc', 'Việc', undefined, { required: true, minRows: 1 }),
+      ] },
+      { name: 'mock', type: 'checkbox', label: 'Nội dung minh hoạ (chưa có bản chính thức)', admin: { description: 'Chỉ để theo dõi; không hiện gì trên trang.' } },
+    ] },
+  ],
+};
+
 /** Every schema by the name registry.ts gives it, and the file it is written to. */
-export const SCHEMAS = { pages: collection, corporate, job, header, footer, ways, geoagents };
+export const SCHEMAS = { pages: collection, corporate, jobs, header, footer, ways, geoagents, case: caseStudy };
 
 // Written only when run (npm run content:schema); the tests import SCHEMAS to check the files are current.
 if (process.argv[1] === fileURLToPath(import.meta.url)) {

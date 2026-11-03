@@ -88,3 +88,28 @@ test('each home navigation tile lists every page of its section', () => {
   }
   assert.deepEqual(missing, []);
 });
+test('media.json lists exactly the images and videos in public/media (run npm run content:media)', async () => {
+  const { listMedia } = await import('./build-media.mjs');
+  assert.deepEqual(read('../src/content/media.json'), listMedia());
+});
+test('media fields take only their kind of file', () => {
+  const page = sample();
+  page.layout[0].video = '/media/hero-poster.jpg';
+  assert.throws(() => validateDocument(page, schema), /wrong media type/);
+  page.layout[0].video = '/media/hero-1080.mp4';
+  page.layout[0].poster = '/media/logo.svg';
+  assert.throws(() => validateDocument(page, schema), /wrong media type/);
+});
+test('postings need a well-formed slug, unique in the list', () => {
+  const schema = read('../src/content/payload/jobs.json');
+  const list = () => read('../src/content/jobs.json');
+  const spaced = list();
+  spaced.jobs[0].slug = 'AI Engineer';
+  assert.throws(() => validateDocument(spaced, schema), /jobs\[0\]\.slug: expected slug/);
+  const twice = list();
+  twice.jobs[1].slug = twice.jobs[0].slug;
+  assert.throws(() => validateDocument(twice, schema), /jobs\[1\]\.slug: duplicate/);
+  const added = list();
+  added.jobs.push({ ...added.jobs[0], slug: 'new-role', title: 'New role' });
+  assert.doesNotThrow(() => validateDocument(added, schema));
+});

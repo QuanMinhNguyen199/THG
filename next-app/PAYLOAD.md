@@ -12,15 +12,16 @@ Mọi trang của site đọc nội dung từ JSON trong `src/content`, theo dan
 | Trang chủ | `pages/home.json` | `pages` |
 | GEOagents | `pages/geoagents.json` | `geoagents` |
 | Trang tổng và trang con của Giải pháp, Use Case, Về THEHEGEO; trang tổng Tuyển dụng | `pages/<section>.json`, `pages/<section>/<trang>.json`, `pages/tuyen-dung.json` | `corporate` |
-| Tin tuyển dụng | `jobs/<vị-trí>.json` | `job` |
+| Tin tuyển dụng, một danh sách; mỗi tin có trang `/tuyen-dung/<slug>/` (route động `tuyen-dung/[slug]`) | `jobs.json` | `jobs` |
+| Case study (thẻ hồ sơ 3D), dùng chung: GEOagents dùng `tdn`, Giải pháp AI và Use Case Quản lý dự án dùng `quan-ly-du-an` | `cases/<id>.json` | `case` |
 
 `src/content/build.ts` và `buildContent()` trong `registry.ts` biến JSON (dạng Payload: mảng object,
 `blockType`, field trống bị bỏ qua) thành dữ liệu component đang render. `published.ts` import mọi
 file JSON. Các điểm nội dung chưa xác nhận ghi ở `src/content/NOTES.md`, vì JSON không có ghi chú.
 
 Đây là bước chuẩn bị dữ liệu và giao diện, **chưa cài Payload, database, API hoặc /admin**.
-Nội dung còn nằm trong code: hồ sơ case study (`cases.ts`), mô phỏng trong `HomeDemo`, video, mô
-hình 3D, sơ đồ bốn tầng, danh sách đối tác và logo (`sections/partners.ts`), email và điện thoại
+Nội dung còn nằm trong code: mô phỏng trong `HomeDemo`, mô hình 3D và cách vẽ thẻ case study, sơ đồ
+bốn tầng, danh sách đối tác và logo (`sections/partners.ts`), email và điện thoại
 tuyển dụng (`sections/jobs.ts`), chữ hướng dẫn nhỏ trên giao diện.
 
 ## Chỉnh nội dung
@@ -32,15 +33,26 @@ trang) quanh **Nội dung trang**. Form dựng từ schema trong `src/content/pa
 thì xem trước cuộn tới phần đó. Section "Cách chúng tôi làm việc" sửa tại chỗ và đổi trên cả hai
 trang dùng nó.
 
+**Ảnh và video.** Field media (video và ảnh chờ của Hero trang chủ và GEOagents, ảnh ô điều hướng,
+ảnh thẻ, ảnh banner trang) hiện ảnh/video xem trước kèm ba cách thay: kéo thả file vào field (hoặc
+bấm vào vùng thả), "Chọn từ thư viện" (các file trong `public/media`, liệt kê ở `src/content/media.json`),
+"Tải lên từ máy". "Bỏ" trả field về mặc định (Hero: phim và ảnh chờ mặc định). Chỉ nhận ảnh
+JPG/PNG/WebP/AVIF/GIF và video MP4 (không nhận SVG); cảnh báo khi ảnh trên 1,5 MB hoặc video trên
+25 MB, chặn file trên 100 MB. File tải lên nằm trong trình duyệt (IndexedDB) và hiện ngay trong xem trước.
+
 Trang soạn không ghi gì vào website: bản nháp nằm trong trình duyệt của người thử. "Tải bản nháp"
-xuất một file gồm mọi tài liệu đã sửa; dev đưa vào repo bằng:
+xuất một file gồm mọi tài liệu đã sửa và các file đã tải lên mà chúng dùng; dev đưa vào repo bằng:
 
 ```sh
 npm run content:apply -- đường/dẫn/noi-dung-ban-nhap.json
 ```
 
-Lệnh chỉ ghi khi mọi tài liệu trong file đều hợp lệ và site vẫn dựng được nội dung; xem lại bằng
-`git diff` rồi build. Trang soạn không có link từ site và gắn `noindex`, nhưng ai có đường dẫn đều mở được.
+Lệnh ghi tài liệu vào `src/content`, file tải lên vào `public/media/uploads/` và cập nhật
+`src/content/media.json`. Lệnh chỉ ghi khi mọi tài liệu trong file đều hợp lệ, mọi file tải lên đúng
+loại và giới hạn, mọi đường dẫn media có thật, và site vẫn dựng được nội dung; xem lại bằng
+`git diff` rồi build. Thêm hoặc xoá tay file trong `public/media` thì chạy `npm run content:media`.
+
+Trang soạn không có link từ site và gắn `noindex`, nhưng ai có đường dẫn đều mở được.
 
 > **Trước khi chạy trên domain chính thức:** `/soan-noi-dung` (route `src/app/(cms)`) sẽ công khai
 > cho bất kỳ ai có đường dẫn. Trang không ghi được gì vào website, nhưng là một "trang quản trị" lộ
@@ -59,12 +71,15 @@ Khi sửa tay file JSON:
   CSS tự viết in hoa.
 - Số liệu: `value` là con số; `prefix` gõ `Level` (khoảng cách tự thêm khi kết thúc bằng chữ cái);
   `suffix` cùng cỡ chữ với số, `unit` nhỏ hơn; `minDigits: 2` hiển thị 4 thành 04.
-- Ảnh là đường dẫn `/media/...` hoặc URL HTTPS, chưa phải quan hệ Media/upload. Trên trang tổng,
-  ảnh banner của trang con đầu tiên làm thẻ lớn; không có ảnh thì các trang hiện thành hàng.
+- Ảnh và video là đường dẫn `/media/...` hoặc URL HTTPS (field có `custom.media` trong schema),
+  chưa phải quan hệ Media/upload của Payload. File phải có trong `public/` và đúng loại (video: MP4).
+  Trên trang tổng, ảnh banner của trang con đầu tiên làm thẻ lớn; không có ảnh thì các trang hiện thành hàng.
 - Đối tác (dải logo trang chủ, trang Đối tác) lấy từ `PARTNERS` trong `sections/partners.ts`.
   Thêm đối tác ở đó rồi chạy `npm run content:schema`.
-- Thêm trang hay tin tuyển dụng mới: thêm vào `SECTION_PAGES` / `JOB_SLUGS` trong `registry.ts`,
-  tạo file JSON, import nó trong `published.ts` và tạo thư mục route tương ứng trong `src/app/(site)`.
+- Thêm tin tuyển dụng: thêm một dòng vào `jobs.json` (hoặc "+ Thêm tin" ở block Danh sách vị trí
+  trong trang soạn). `slug` là đường dẫn trang, viết thường không dấu, không trùng tin khác; trang có
+  sau khi build. Thêm trang doanh nghiệp: thêm vào `SECTION_PAGES` trong `registry.ts`, tạo file JSON,
+  import nó trong `published.ts` và tạo thư mục route tương ứng trong `src/app/(site)`.
 
 Chạy trong thư mục `next-app`:
 
@@ -76,7 +91,8 @@ npm run build
 
 `build` (và `build:pages`, bản xuất tĩnh cũ cho GitHub Pages) kiểm tra mọi tài liệu trước khi build: field thiếu hoặc sai kiểu, block
 không được hỗ trợ, ID/anchor trùng, đường dẫn không hợp lệ, và việc site dựng được nội dung từ
-chúng. `npm run test:content` còn báo khi: schema trong `payload/` chưa sinh lại sau khi sửa script,
+chúng, đường dẫn media trỏ tới file không có trong `public/`. `npm run test:content` còn báo khi: schema
+trong `payload/` chưa sinh lại sau khi sửa script, `media.json` không khớp `public/media`, field media nhận sai loại file,
 có field thiếu nhãn tiếng Việt, tên đối tác không có logo (trừ tên được ghi rõ là chưa có logo),
 hoặc một ô điều hướng trên trang chủ thiếu trang con của section mà ô đó dẫn tới.
 
@@ -89,7 +105,7 @@ Metrics) nằm trong nhóm thu gọn "Nâng cao". Schema trong `src/content/payl
 ## Kết nối Payload sau này
 
 Schema đã chuẩn bị tại `src/content/payload/`: `pages` (trang chủ), `corporate` (các trang doanh nghiệp)
-và `job` (tin tuyển dụng) là collection; `header`, `footer`, `ways` và `geoagents` là Global. Theo
+và `jobs` (tin tuyển dụng: seed mỗi dòng thành một bản ghi, route `tuyen-dung/[slug]` giữ nguyên) là collection; `header`, `footer`, `ways` và `geoagents` là Global. Theo
 [Blocks field](https://payloadcms.com/docs/fields/blocks) và
 [Collection config](https://payloadcms.com/docs/configuration/collections).
 JSON này là cấu hình collection/fields, không phải JSON Schema và không tự khởi động CMS.
@@ -131,7 +147,9 @@ JSON này là cấu hình collection/fields, không phải JSON Schema và khôn
    Payload gửi qua `postMessage` vào `EditorBridge` (xem mục dưới). Thêm hook `afterChange` khi xuất
    bản để gọi `revalidatePath` cho trang của tài liệu (Header/Footer/`ways`: mọi trang dùng chúng),
    nên nội dung mới lên ngay, không cần build lại. Không trả draft cho khách truy cập website công khai.
-7. Thêm Media (ảnh, logo đối tác), chuyển case study và danh sách đối tác sang collection, thêm SEO.
+7. Thêm collection Media (storage trên server hoặc S3); đổi các field có `custom.media` thành field `upload`
+   trỏ tới Media, chuyển các file trong `public/media` vào đó. Case study (`case`) thành collection,
+   block Case study dùng relationship tới nó. Chuyển logo và danh sách đối tác sang collection, thêm SEO.
    Trang soạn giả lập `/soan-noi-dung` khi đó được thay bằng `/admin` và Live Preview của Payload.
 
 ## Trang soạn giả lập so với Payload
@@ -150,6 +168,7 @@ JSON này là cấu hình collection/fields, không phải JSON Schema và khôn
 | Mở section / bấm vào ô thì xem trước cuộn tới và viền section | Không có sẵn | Custom field component gửi `postMessage` sang frontend, như `cms:part` trong `ContentEditor.tsx` | Suy luận, cần thử |
 | Sửa section dùng chung ("Cách chúng tôi làm việc") ngay trong trang | Không có sẵn | Cách chuẩn: relationship tới Global `ways`, sửa ở màn hình Global. Sửa tại chỗ cần custom component | Suy luận |
 | Báo lỗi tiếng Việt, chỉ đúng field | Một phần | Hàm `validate` của từng field trả câu tiếng Việt (chuyển các câu trong `fields.tsx`). Giao diện admin có bản tiếng Việt hay không: chưa kiểm tra | Cần xác nhận |
+| Thay ảnh, video: kéo thả, chọn từ thư viện, tải lên | Có sẵn (Upload field + collection Media) | Field `upload` trỏ tới Media có ô tải file và chọn file đã có; cần storage. Hiển thị giống hệt (kéo thả, cảnh báo dung lượng) thì kiểm tra trong bản thử | Theo docs; chi tiết giao diện cần kiểm |
 | Bấm thẳng lên trang để sửa (click-to-edit) | Chưa dùng được | Visual Editor của Payload đang "Coming Soon", thuộc gói Enterprise. Có plugin cộng đồng (payload-better-editor, payload-visual-editor), chưa đánh giá | Theo trang Enterprise |
 
 **Phần frontend tận dụng được.** Trang soạn đã hiển thị bản nháp hoàn toàn phía trình duyệt:

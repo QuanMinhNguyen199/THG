@@ -1,0 +1,32 @@
+[
+  {
+    "path": "/media/case-city.jpg",
+    "kind": "image",
+    "size": 32046
+  },
+  {
+    "path": "/media/case-ptsc.jpg",
+    "kind": "image",
+    "size": 94787
+  },
+  {
+    "path": "/media/case-tax.jpg",
+    "kind": "image",
+    "size": 47678
+  },
+  {
+    "path": "/media/hero-1080.mp4",
+    "kind": "video",
+    "size": 3667464
+  },
+  {
+    "path": "/media/hero-720.mp4",
+    "kind": "video",
+    "size": 1893836
+  },
+  {
+    "path": "/media/hero-poster.jpg",
+    "kind": "image",
+    "size": 181092
+  }
+]

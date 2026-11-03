@@ -15,7 +15,11 @@ export function validateDocument(document, collection) {
         case 'text':
         case 'textarea':
           if (typeof item !== 'string' || (field.required && !item.trim())) throw new Error(`${key}: expected text`);
-          if ((['href', 'image'].includes(field.name) || field.name.endsWith('Href')) && !(/^(\/(?!\/)|https?:\/\/|#)/.test(item))) throw new Error(`${key}: expected local path, anchor or HTTP(S) URL`);
+          if ((['href', 'image'].includes(field.name) || field.name.endsWith('Href') || field.custom?.media) && !(/^(\/(?!\/)|https?:\/\/|#)/.test(item))) throw new Error(`${key}: expected local path, anchor or HTTP(S) URL`);
+          // A media file must be of its kind's type (build-media.mjs MEDIA_TYPES): MP4 plays in the hero, SVG is never taken.
+          if (field.custom?.media && !(field.custom.media === 'video' ? /\.mp4$/i : /\.(jpe?g|png|webp|avif|gif)$/i).test(item.split(/[?#]/)[0])) throw new Error(`${key}: wrong media type`);
+          // A slug is a page's address: lowercase letters and digits joined by single hyphens.
+          if (field.custom?.slug && !/^[a-z0-9]+(-[a-z0-9]+)*$/.test(item)) throw new Error(`${key}: expected slug`);
           break;
         case 'number':
           if (typeof item !== 'number' || !Number.isFinite(item) || item < (field.min ?? -Infinity) || item > (field.max ?? Infinity)) throw new Error(`${key}: invalid number`);
@@ -36,9 +40,20 @@ export function validateDocument(document, collection) {
           if (item.length > (field.maxRows ?? Infinity)) throw new Error(`${key}: too many rows`);
           const ids = new Set();
           const anchors = new Set();
+          // Array fields marked `unique` (a posting's slug) differ from row to row.
+          const seen = new Map();
           item.forEach((row, index) => {
             const rowPath = `${key}[${index}]`;
-            if (field.type === 'array') return fields(row, field.fields, rowPath);
+            if (field.type === 'array') {
+              fields(row, field.fields, rowPath);
+              for (const sub of field.fields.filter(f => f.unique && f.name)) {
+                const value = row[sub.name];
+                const taken = seen.get(sub.name) ?? new Set();
+                if (taken.has(value)) throw new Error(`${rowPath}.${sub.name}: duplicate`);
+                seen.set(sub.name, taken.add(value));
+              }
+              return;
+            }
             if (!row || typeof row !== 'object') throw new Error(`${rowPath}: expected block`);
             const block = field.blocks.find(candidate => candidate.slug === row.blockType);
             if (!block) throw new Error(`${rowPath}: unknown block type ${row.blockType}`);

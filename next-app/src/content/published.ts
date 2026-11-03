@@ -21,12 +21,11 @@ import doc_page_ve_thehegeo_su_menh_tam_nhin from "@/content/pages/ve-thehegeo/s
 import doc_page_ve_thehegeo_doi_tac from "@/content/pages/ve-thehegeo/doi-tac.json";
 import doc_page_ve_thehegeo_lien_he from "@/content/pages/ve-thehegeo/lien-he.json";
 import doc_page_tuyen_dung from "@/content/pages/tuyen-dung.json";
-import doc_job_ai_engineer from "@/content/jobs/ai-engineer.json";
-import doc_job_mlops_engineer from "@/content/jobs/mlops-engineer.json";
-import doc_job_data_engineer from "@/content/jobs/data-engineer.json";
-import doc_job_devops_platform_engineer from "@/content/jobs/devops-platform-engineer.json";
-import doc_job_fullstack_engineer from "@/content/jobs/fullstack-engineer.json";
-import doc_job_business_analyst from "@/content/jobs/business-analyst.json";
+import doc_case_tdn from "@/content/cases/tdn.json";
+import doc_case_dich_vu_cong from "@/content/cases/dich-vu-cong.json";
+import doc_case_quan_ly_du_an from "@/content/cases/quan-ly-du-an.json";
+import doc_case_ai_platform from "@/content/cases/ai-platform.json";
+import doc_jobs from "@/content/jobs.json";
 import { buildContent } from "./registry";
 
 /** The stored documents by key (the editor starts its drafts from these). */
@@ -52,12 +51,11 @@ export const PUBLISHED: Record<string, unknown> = {
   "page:/ve-thehegeo/doi-tac": doc_page_ve_thehegeo_doi_tac,
   "page:/ve-thehegeo/lien-he": doc_page_ve_thehegeo_lien_he,
   "page:/tuyen-dung": doc_page_tuyen_dung,
-  "job:ai-engineer": doc_job_ai_engineer,
-  "job:mlops-engineer": doc_job_mlops_engineer,
-  "job:data-engineer": doc_job_data_engineer,
-  "job:devops-platform-engineer": doc_job_devops_platform_engineer,
-  "job:fullstack-engineer": doc_job_fullstack_engineer,
-  "job:business-analyst": doc_job_business_analyst,
+  "case:tdn": doc_case_tdn,
+  "case:dich-vu-cong": doc_case_dich_vu_cong,
+  "case:quan-ly-du-an": doc_case_quan_ly_du_an,
+  "case:ai-platform": doc_case_ai_platform,
+  "jobs": doc_jobs,
 };
 
 export const CONTENT = buildContent(PUBLISHED);

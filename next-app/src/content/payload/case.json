@@ -1,0 +1,306 @@
+{
+  "slug": "case",
+  "label": "Case study",
+  "fields": [
+    {
+      "name": "name",
+      "type": "text",
+      "label": "Tên sản phẩm",
+      "admin": {
+        "description": "Ví dụ: AI DN360. Tên lớn trên thẻ."
+      },
+      "required": true
+    },
+    {
+      "name": "org",
+      "type": "text",
+      "label": "Đơn vị",
+      "admin": {
+        "description": "Khách hàng hoặc nơi triển khai, ví dụ: Cục Thuế TP. Hà Nội."
+      },
+      "required": true
+    },
+    {
+      "name": "index",
+      "type": "text",
+      "label": "Nhãn số thứ tự",
+      "admin": {
+        "description": "Ví dụ: 01 / TÀI CHÍNH & THUẾ. Gõ như muốn hiện."
+      },
+      "required": true
+    },
+    {
+      "name": "summary",
+      "type": "textarea",
+      "label": "Tóm tắt trên thẻ",
+      "admin": {
+        "description": "Một câu ngắn dưới tên sản phẩm."
+      },
+      "required": true
+    },
+    {
+      "name": "description",
+      "type": "textarea",
+      "label": "Mô tả khi mở hồ sơ",
+      "required": true
+    },
+    {
+      "name": "note",
+      "type": "textarea",
+      "label": "Ghi chú: AI làm gì, con người quyết định gì",
+      "required": true
+    },
+    {
+      "name": "kicker",
+      "type": "text",
+      "label": "Lĩnh vực",
+      "admin": {
+        "description": "Ví dụ: Tài chính và thuế."
+      },
+      "required": true
+    },
+    {
+      "name": "checks",
+      "type": "array",
+      "label": "Ba mục kiểm tra",
+      "labels": {
+        "singular": "Mục",
+        "plural": "Mục"
+      },
+      "admin": {
+        "description": "Ba tờ đứng phía sau khi mở hồ sơ."
+      },
+      "required": true,
+      "minRows": 3,
+      "maxRows": 3,
+      "fields": [
+        {
+          "name": "text",
+          "type": "text",
+          "required": true,
+          "label": "Nội dung"
+        }
+      ]
+    },
+    {
+      "name": "checkFoot",
+      "type": "text",
+      "label": "Dòng dưới ba mục",
+      "admin": {
+        "description": "Ví dụ: Theo mã số thuế."
+      },
+      "required": true
+    },
+    {
+      "name": "tag",
+      "type": "text",
+      "label": "Dòng nhỏ trên giấy",
+      "admin": {
+        "description": "Ví dụ: AI / TAX INTELLIGENCE."
+      },
+      "required": true
+    },
+    {
+      "name": "headline",
+      "type": "text",
+      "label": "Tiêu đề trên giấy, dòng 1",
+      "required": true
+    },
+    {
+      "name": "headlineLine2",
+      "type": "text",
+      "label": "Tiêu đề trên giấy, dòng 2",
+      "required": true
+    },
+    {
+      "name": "stamp",
+      "type": "text",
+      "label": "Con dấu, dòng 1",
+      "required": true
+    },
+    {
+      "name": "stampLine2",
+      "type": "text",
+      "label": "Con dấu, dòng 2",
+      "required": true
+    },
+    {
+      "type": "collapsible",
+      "label": "Hình dạng và màu (thường không cần sửa)",
+      "admin": {
+        "initCollapsed": true
+      },
+      "fields": [
+        {
+          "name": "model",
+          "type": "select",
+          "required": true,
+          "label": "Kiểu mô hình",
+          "options": [
+            {
+              "label": "Tập hồ sơ mở như sách",
+              "value": "folder"
+            },
+            {
+              "label": "Điện thoại có cuộc gọi",
+              "value": "call"
+            },
+            {
+              "label": "Bảng việc theo cột",
+              "value": "board"
+            },
+            {
+              "label": "Chồng máy chủ",
+              "value": "stack"
+            }
+          ]
+        },
+        {
+          "name": "tone",
+          "type": "select",
+          "required": true,
+          "label": "Màu giấy",
+          "options": [
+            {
+              "label": "Trắng",
+              "value": "white"
+            },
+            {
+              "label": "Xanh navy",
+              "value": "navy"
+            },
+            {
+              "label": "Giấy kraft",
+              "value": "kraft"
+            },
+            {
+              "label": "Xám than",
+              "value": "graphite"
+            }
+          ]
+        },
+        {
+          "name": "glyph",
+          "type": "select",
+          "label": "Hình vẽ trên giấy",
+          "options": [
+            {
+              "label": "agents",
+              "value": "agents"
+            },
+            {
+              "label": "pipeline",
+              "value": "pipeline"
+            },
+            {
+              "label": "data",
+              "value": "data"
+            },
+            {
+              "label": "platform",
+              "value": "platform"
+            },
+            {
+              "label": "web",
+              "value": "web"
+            },
+            {
+              "label": "flow",
+              "value": "flow"
+            },
+            {
+              "label": "ledger",
+              "value": "ledger"
+            }
+          ],
+          "admin": {
+            "description": "Tuỳ chọn, chỉ dùng cho kiểu Tập hồ sơ. Để trống thì giấy có dòng kẻ."
+          }
+        },
+        {
+          "name": "script",
+          "type": "array",
+          "label": "Lời thoại",
+          "labels": {
+            "singular": "Câu",
+            "plural": "Câu"
+          },
+          "admin": {
+            "description": "Chỉ dùng cho kiểu Điện thoại."
+          },
+          "fields": [
+            {
+              "name": "who",
+              "type": "select",
+              "required": true,
+              "label": "Ai nói",
+              "options": [
+                {
+                  "label": "Người gọi",
+                  "value": "in"
+                },
+                {
+                  "label": "Agent",
+                  "value": "agent"
+                }
+              ]
+            },
+            {
+              "name": "text",
+              "type": "textarea",
+              "label": "Nội dung",
+              "required": true
+            }
+          ]
+        },
+        {
+          "name": "board",
+          "type": "array",
+          "label": "Các cột việc",
+          "labels": {
+            "singular": "Cột",
+            "plural": "Cột"
+          },
+          "admin": {
+            "description": "Chỉ dùng cho kiểu Bảng việc."
+          },
+          "fields": [
+            {
+              "name": "col",
+              "type": "text",
+              "label": "Tên cột",
+              "required": true
+            },
+            {
+              "name": "cards",
+              "type": "array",
+              "label": "Các việc",
+              "labels": {
+                "singular": "Việc",
+                "plural": "Việc"
+              },
+              "required": true,
+              "minRows": 1,
+              "fields": [
+                {
+                  "name": "text",
+                  "type": "text",
+                  "required": true,
+                  "label": "Nội dung"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "mock",
+          "type": "checkbox",
+          "label": "Nội dung minh hoạ (chưa có bản chính thức)",
+          "admin": {
+            "description": "Chỉ để theo dõi; không hiện gì trên trang."
+          }
+        }
+      ]
+    }
+  ]
+}
