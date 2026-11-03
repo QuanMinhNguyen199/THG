@@ -13,6 +13,12 @@ và có dữ liệu mặc định tại `src/content/globals/`.
 
 ## Chỉnh nội dung hiện tại
 
+Mở `/soan-noi-dung` (cả khi dev lẫn trên GitHub Pages: `/THG/soan-noi-dung/`) để thử trình soạn
+giả lập: form dựng từ `pages.collection.json` (nhãn, mô tả, nhóm "Nâng cao"), báo lỗi theo
+`validate.mjs` và xem trước bằng component thật. Trang không ghi gì vào website: bản nháp nằm trong
+trình duyệt của người thử, nút "Tải home.json" xuất file để dev thay vào `src/content/pages/home.json`.
+Trang không có link từ site và gắn `noindex`, nhưng ai có đường dẫn đều mở được.
+
 - Sửa `src/content/pages/home.json` để sửa trang chủ.
 - Đổi thứ tự phần tử trong `layout` để di chuyển section.
 - Đặt `enabled: false` để ẩn block, bỏ thuộc tính hoặc đặt `true` để hiện.
@@ -20,8 +26,14 @@ và có dữ liệu mặc định tại `src/content/globals/`.
 - Giữ Hero duy nhất để trang có một tiêu đề H1. Giữ các anchor đang có nếu có link trỏ tới chúng.
 - `anchor` là ID HTML cho liên kết trong trang, không phải ID dữ liệu của Payload.
 - Array văn bản dùng object như `[{ "text": "Dòng 1" }]`, phù hợp với field array của Payload.
+- Tiêu đề hai phần luôn là `title` (phần thường) + `highlight` (phần nhấn). Kicker gõ chữ thường,
+  CSS tự viết in hoa.
+- Số liệu: `value` là con số; `prefix` gõ `Level` (khoảng cách tự thêm khi kết thúc bằng chữ cái);
+  `suffix` cùng cỡ chữ với số, `unit` nhỏ hơn; `minDigits: 2` hiển thị 4 thành 04.
+- Ô điều hướng: `tiles[]`, mỗi ô có `title`, `href`, `size` và `lines[]` (gạch đầu dòng).
 - Ảnh tile hiện là đường dẫn `/media/...` hoặc URL HTTPS. Chưa phải quan hệ Media/upload.
-- Đối tác dùng tên để chọn logo có sẵn trong `PartnerMark`; muốn quản lý logo cần thêm Media.
+- Đối tác là select: chỉ nhận tên có trong danh sách `PARTNER_NAMES` của `scripts/build-collection.mjs`
+  (khớp `PARTNER_LOGOS`). Muốn quản lý logo trong CMS cần thêm Media.
 - Nội dung mô phỏng bên trong `HomeDemo`, video Hero và cấu hình mô hình 3D vẫn ở code.
 - CTA trang chủ là bản riêng trong `home.json`; CTA mặc định của các trang khác ở
   `globals/cta.json`. Metrics cũng có bản riêng của trang chủ và bộ mặc định cho trang GEOagents.
@@ -39,6 +51,13 @@ Cả `build` và `build:pages` kiểm tra dữ liệu trước khi build. Bộ k
 field thiếu/sai kiểu, block không được hỗ trợ, ID/anchor trùng và đường dẫn không hợp lệ.
 
 ## Kết nối Payload sau này
+
+## Nhãn trong /admin
+
+Mỗi block và field có nhãn, mô tả tiếng Việt. Field kỹ thuật (`anchor`, nhãn đọc màn hình của
+Metrics) nằm trong nhóm thu gọn "Nâng cao". Test `content.test.mjs` báo lỗi nếu field nào thiếu nhãn.
+`pages.collection.json` được sinh từ `scripts/build-collection.mjs`: sửa script rồi chạy
+`npm run content:schema`, không sửa tay file JSON.
 
 Schema field đã chuẩn bị tại `src/content/payload/pages.collection.json`, theo
 [Blocks field](https://payloadcms.com/docs/fields/blocks) và
@@ -89,6 +108,7 @@ JSON này là cấu hình collection/fields, không phải JSON Schema và khôn
 
 ## Thêm loại block mới
 
-Khai báo fields trong `pages.collection.json`, thêm type vào `blocks.ts`, thêm case trong
+Khai báo fields (kèm `label`, `admin.description`) trong `scripts/build-collection.mjs`, chạy
+`npm run content:schema`, thêm type vào `blocks.ts`, thêm case trong
 `RenderBlocks.tsx`, rồi thêm dữ liệu vào `layout`. Không lưu JSX, CSS hay mã JavaScript
 trong nội dung CMS. Các lựa chọn giao diện nên là select có tập giá trị cố định.
