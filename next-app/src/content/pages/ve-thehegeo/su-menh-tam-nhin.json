@@ -1,0 +1,76 @@
+{
+  "name": "Sứ mệnh và Tầm nhìn",
+  "title": "Xây nền tảng. Kiến tạo tương lai.",
+  "lead": "Chúng tôi không chỉ xây phần mềm. Chúng tôi xây những nền tảng, giải pháp và hạ tầng công nghệ có khả năng vận hành trong thế giới thực.",
+  "blocks": [
+    {
+      "id": "b1",
+      "blockType": "callout",
+      "title": "Sứ mệnh",
+      "body": "Giúp những hệ thống mà hàng triệu người dựa vào vận hành đúng, mỗi ngày.",
+      "detail": "Cầu, cảng, tuyến metro, bộ máy hành chính: đó là những hệ thống rất nhiều người dựa vào mỗi ngày mà không cần nghĩ tới. Việc của Thehegeo là mang công nghệ phù hợp nhất đến cho chính phủ và doanh nghiệp, để những hệ thống đó vận hành đúng và mang lại lợi ích thật cho người dân."
+    },
+    {
+      "id": "b2",
+      "blockType": "rings",
+      "title": "Tầm nhìn",
+      "statement": "Từ một doanh nghiệp đến quy mô quốc gia.",
+      "body": "Từng nền tảng và giải pháp hôm nay là một bước hướng tới năng lực AI có thể phục vụ doanh nghiệp, chính quyền, ngành và quốc gia.",
+      "items": [
+        {
+          "text": "Doanh nghiệp"
+        },
+        {
+          "text": "Ngành"
+        },
+        {
+          "text": "Thành phố"
+        },
+        {
+          "text": "Quốc gia"
+        }
+      ]
+    },
+    {
+      "id": "b3",
+      "blockType": "values",
+      "title": "Giá trị cốt lõi",
+      "items": [
+        {
+          "text": "Chính trực"
+        },
+        {
+          "text": "Chủ động và chịu trách nhiệm"
+        },
+        {
+          "text": "Hợp tác"
+        },
+        {
+          "text": "Học hỏi liên tục"
+        },
+        {
+          "text": "Đổi mới sáng tạo"
+        }
+      ]
+    },
+    {
+      "id": "b4",
+      "blockType": "waysOfWorking"
+    },
+    {
+      "id": "b5",
+      "blockType": "text",
+      "body": [
+        {
+          "text": "AI hỗ trợ quyết định. Con người làm chủ quyết định."
+        }
+      ]
+    }
+  ],
+  "cta": [
+    {
+      "label": "Liên hệ",
+      "href": "/ve-thehegeo/lien-he/"
+    }
+  ]
+}

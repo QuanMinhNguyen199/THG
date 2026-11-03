@@ -1,0 +1,44 @@
+{
+  "name": "Giải pháp",
+  "title": "Bốn nhóm giải pháp. Một nền tảng AI.",
+  "en": "Four solution lines. One AI foundation.",
+  "lead": "Từ cảm biến trên công trình đến AI Agent trong bộ máy, Thehegeo làm chủ cả thiết bị, dữ liệu và AI.",
+  "blocks": [
+    {
+      "id": "b1",
+      "blockType": "cards",
+      "items": [
+        {
+          "title": "Giải pháp AI",
+          "body": "AI Agent làm việc thật trong bộ máy.",
+          "href": "/giai-phap/ai/",
+          "cta": "Xem giải pháp"
+        },
+        {
+          "title": "Giải pháp AIoT",
+          "body": "Quan trắc môi trường, tai biến địa chất và hạ tầng giao thông theo thời gian thực.",
+          "href": "/giai-phap/aiot/",
+          "cta": "Xem giải pháp"
+        },
+        {
+          "title": "Giải pháp Công nghệ",
+          "body": "Robot và AI xử lý ngay tại hiện trường.",
+          "href": "/giai-phap/cong-nghe/",
+          "cta": "Xem giải pháp"
+        },
+        {
+          "title": "Tư vấn công nghệ",
+          "body": "Thiết kế trung tâm dữ liệu AI, an ninh – an toàn thông tin, chuyển đổi số.",
+          "href": "/giai-phap/tu-van/",
+          "cta": "Xem giải pháp"
+        }
+      ]
+    }
+  ],
+  "cta": [
+    {
+      "label": "Đặt lịch demo",
+      "href": "/ve-thehegeo/lien-he/"
+    }
+  ]
+}

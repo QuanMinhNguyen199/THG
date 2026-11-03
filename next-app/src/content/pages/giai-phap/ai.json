@@ -1,0 +1,145 @@
+{
+  "name": "Giải pháp AI",
+  "kind": "AI Agent làm việc thật trong bộ máy",
+  "title": "AI cho những việc bộ máy làm mỗi ngày.",
+  "en": "AI for the work government does every day.",
+  "model": [
+    {
+      "id": "m1",
+      "blockType": "core"
+    }
+  ],
+  "blocks": [
+    {
+      "id": "b1",
+      "blockType": "table",
+      "title": "Năm bài toán AI đang giải",
+      "head": [
+        {
+          "text": "Bài toán"
+        },
+        {
+          "text": "AI làm gì"
+        },
+        {
+          "text": "Dẫn tới"
+        }
+      ],
+      "rows": [
+        {
+          "cells": [
+            {
+              "text": "Văn bản và điều hành"
+            },
+            {
+              "text": "Bóc tách nhiệm vụ, giao việc, theo dõi, báo cáo"
+            },
+            {
+              "text": "GEOagents",
+              "href": "/geoagents/"
+            }
+          ]
+        },
+        {
+          "cells": [
+            {
+              "text": "Thuế và ngân sách"
+            },
+            {
+              "text": "Phân tích doanh nghiệp 16 chiều, dự thu ngân sách"
+            },
+            {
+              "text": "Ứng dụng A360",
+              "href": "/ung-dung/a360/"
+            }
+          ]
+        },
+        {
+          "cells": [
+            {
+              "text": "Dịch vụ công"
+            },
+            {
+              "text": "Giúp hộ kinh doanh khai và nộp thuế"
+            },
+            {
+              "text": "Ứng dụng HKD",
+              "href": "/ung-dung/hkd/"
+            }
+          ]
+        },
+        {
+          "cells": [
+            {
+              "text": "Hạ tầng AI dùng chung"
+            },
+            {
+              "text": "Nhiều cơ quan, một nền tảng, một cổng mô hình"
+            },
+            {
+              "text": "Ứng dụng AI Platform",
+              "href": "/ung-dung/ai-platform/"
+            }
+          ]
+        },
+        {
+          "cells": [
+            {
+              "text": "Doanh nghiệp công nghiệp"
+            },
+            {
+              "text": "Trợ lý AI cho hồ sơ kỹ thuật dự án"
+            },
+            {
+              "text": "Dự án PTSC M&C",
+              "href": "#ptsc"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "b2",
+      "blockType": "text",
+      "title": "Một lõi chung",
+      "body": [
+        {
+          "text": "GEO Agent là lõi của giải pháp AI. Hướng tới: cơ quan đi sau dùng lại được những gì cơ quan đi trước đã xây."
+        }
+      ],
+      "linkLabel": "Tìm hiểu GEO Agent",
+      "linkHref": "/geoagents/"
+    },
+    {
+      "id": "b3",
+      "blockType": "pills",
+      "title": "Triển khai",
+      "items": [
+        {
+          "text": "Tại chỗ"
+        },
+        {
+          "text": "Dữ liệu ở lại với cơ quan"
+        },
+        {
+          "text": "Đổi được mô hình AI"
+        },
+        {
+          "text": "An toàn thông tin từ cấp độ 3"
+        }
+      ]
+    },
+    {
+      "id": "b4",
+      "blockType": "case",
+      "title": "Doanh nghiệp công nghiệp",
+      "caseId": "quan-ly-du-an"
+    }
+  ],
+  "cta": [
+    {
+      "label": "Đặt lịch demo",
+      "href": "/ve-thehegeo/lien-he/"
+    }
+  ]
+}

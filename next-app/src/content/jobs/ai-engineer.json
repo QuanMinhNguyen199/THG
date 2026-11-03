@@ -1,0 +1,47 @@
+{
+  "title": "AI Engineer",
+  "focus": "LLM, Agents & Workflow",
+  "code": "AI",
+  "family": "AI & ML Engineering",
+  "summary": "Phát triển AI Agents, Copilot, Tool Calling, Workflow và RAG.",
+  "intro": "TheHeGeo đang xây dựng nền tảng Data, AI, Agent và các sản phẩm chuyển đổi số quy mô lớn cho doanh nghiệp và cơ quan chính phủ.",
+  "location": "Giảng Võ, Hà Nội",
+  "duties": [
+    {
+      "text": "Phát triển AI Agents, Copilot."
+    },
+    {
+      "text": "Tool Calling và Workflow."
+    },
+    {
+      "text": "RAG và Knowledge Services."
+    },
+    {
+      "text": "Guardrails và Audit."
+    }
+  ],
+  "requirements": [
+    {
+      "text": "Python hoặc TypeScript"
+    },
+    {
+      "text": "LLM APIs"
+    },
+    {
+      "text": "RAG"
+    },
+    {
+      "text": "Backend Engineering"
+    }
+  ],
+  "plus": [
+    {
+      "text": "Kinh nghiệm AI/LLM, Kubernetes, hệ thống phân tán, GovTech hoặc Enterprise Platform."
+    }
+  ],
+  "benefits": [
+    {
+      "text": "Mức thu nhập cạnh tranh, thưởng theo hiệu quả, tham gia các dự án AI/Data quy mô lớn, môi trường công nghệ hiện đại."
+    }
+  ]
+}

@@ -2,11 +2,13 @@
 
 import { animate, utils, type JSAnimation } from "animejs";
 import { useEffect, useRef } from "react";
+import { useContent } from "../cms/EditorBridge";
 import { ContactList } from "./Contacts";
 import { useSite } from "./SiteContext";
 
 export function Footer() {
   const { paused } = useSite();
+  const { footer } = useContent();
   const clip = useRef<HTMLDivElement>(null);
   const word = useRef<HTMLDivElement>(null);
 
@@ -61,20 +63,20 @@ export function Footer() {
     <footer id="about">
       <div className="wrap footer-top">
         <p>
-          Công nghệ có tầm nhìn.
+          {footer.tagline}
           <br />
-          <span>Vận hành có chủ quyền.</span>
+          <span>{footer.taglineHighlight}</span>
         </p>
       </div>
       <ContactList className="wrap footer-contacts" />
       <div className="wrap footer-bottom">
-        <span>© 2026 THEHEGEO</span>
-        <span>HUMAN-LED. AI-POWERED.</span>
+        <span>{footer.copyright}</span>
+        <span>{footer.motto}</span>
         <a className="mobile-top-link" href="#main">Về đầu trang ↑</a>
       </div>
       <div ref={clip} className="footer-word-clip" aria-hidden="true">
         <div ref={word} className="footer-word">
-          THEHEGEO
+          {footer.wordmark}
         </div>
       </div>
     </footer>

@@ -4,7 +4,10 @@ import Link from "next/link";
 import { asset } from "@/lib/asset";
 import { CaseShowcase } from "./CaseShowcase";
 import { MOCK_CASES } from "./cases";
-import { HR_EMAIL, HR_PHONE, JOBS, SECTIONS, applyHref, type Block, type Cell, type Job, type Page, type SectionKey } from "./catalog";
+import { HR_EMAIL, HR_PHONE, applyHref, type Block, type Cell, type Job, type Page, type SectionKey } from "./catalog";
+import { Editable } from "../cms/Editable";
+import { CONTENT } from "@/content/published";
+import type { Content } from "@/content/registry";
 import { ContactForm } from "./ContactForm";
 import { ContactList } from "./Contacts";
 import { JobList } from "./JobList";
@@ -107,7 +110,7 @@ function BlockView({ block, index }: { block: Block; index: number }) {
   const id = `b${index}`;
   const head = "title" in block && block.title ? <h2 id={`${id}-t`}>{block.title}</h2> : null;
   const wrap = (cls: string, body: React.ReactNode, anchor?: string) => (
-    <section id={anchor} className={`wrap corp-block ${cls}`} aria-labelledby={head ? `${id}-t` : undefined}>
+    <section id={anchor} className={`wrap corp-block ${cls}`} aria-labelledby={head ? `${id}-t` : undefined} data-block={block.key}>
       {head}
       {body}
     </section>
@@ -338,7 +341,7 @@ function BlockView({ block, index }: { block: Block; index: number }) {
       return wrap("is-case applications is-bare", <CaseShowcase data={MOCK_CASES[block.id]} />, "ptsc");
     case "contact":
       return (
-        <section className="wrap corp-block is-contact">
+        <section className="wrap corp-block is-contact" data-block={block.key}>
           <ContactForm />
           <aside className="corp-contact-side">
             <h2>Thông tin liên hệ</h2>
@@ -404,9 +407,14 @@ function Blocks({ page }: { page: Page }) {
   );
 }
 
+// Each page renderer takes the site's content. Without it, it renders the published content inside an
+// Editable, which swaps in the content editor's draft when the page shows in its preview; the draft
+// renderer passes its own content, so it does not wrap again.
+
 /** A section's landing page, with its own heading and blocks. */
-export function SectionOverview({ section }: { section: SectionKey }) {
-  const s = SECTIONS[section];
+export function SectionOverview({ section, content }: { section: SectionKey; content?: Content }) {
+  if (!content) return <Editable target={{ kind: "overview", section }}><SectionOverview section={section} content={CONTENT} /></Editable>;
+  const s = content.sections[section];
   return (
     <>
       <BlockMotion />
@@ -423,8 +431,9 @@ export function SectionOverview({ section }: { section: SectionKey }) {
 }
 
 /** A detail page: heading, blocks, call to action, and the other pages of its section. */
-export function Detail({ section, page }: { section: SectionKey; page: Page }) {
-  const s = SECTIONS[section];
+export function Detail({ section, page, content }: { section: SectionKey; page: Page; content?: Content }) {
+  if (!content) return <Editable target={{ kind: "detail", section, slug: page.slug }}><Detail section={section} page={page} content={CONTENT} /></Editable>;
+  const s = content.sections[section];
   const siblings = s.pages.filter((p) => p.slug !== page.slug);
   return (
     <>
@@ -454,7 +463,8 @@ export function Detail({ section, page }: { section: SectionKey; page: Page }) {
 }
 
 /** The recruitment landing page. */
-export function JobsPage({ page }: { page: Page }) {
+export function JobsPage({ page, content }: { page: Page; content?: Content }) {
+  if (!content) return <Editable target={{ kind: "jobs" }}><JobsPage page={page} content={CONTENT} /></Editable>;
   return (
     <>
       <BlockMotion />
@@ -469,13 +479,14 @@ export function JobsPage({ page }: { page: Page }) {
  * tuyển, numbered as the document numbers them), with a card beside it holding the hiring facts and
  * the apply action that stays in view while reading. Other open roles close it. Content: catalog.ts.
  */
-export function JobDetail({ job }: { job: Job }) {
+export function JobDetail({ job, content }: { job: Job; content?: Content }) {
+  if (!content) return <Editable target={{ kind: "job", slug: job.slug }}><JobDetail job={job} content={CONTENT} /></Editable>;
   const apply = applyHref(job);
   const facts: [string, string][] = [
     ["Vị trí", job.family],
     ["Địa điểm", job.location],
   ];
-  const others = JOBS.filter((j) => j.slug !== job.slug);
+  const others = content.jobs.filter((j) => j.slug !== job.slug);
   // "Kubernetes & ảo hóa: …" items lead with their area in bold.
   const item = (text: string) => {
     const m = text.match(/^([^:]{2,48}):\s(.+)$/);

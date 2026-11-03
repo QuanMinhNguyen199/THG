@@ -1,0 +1,59 @@
+{
+  "slug": "header",
+  "label": "Header",
+  "fields": [
+    {
+      "name": "nav",
+      "type": "array",
+      "required": true,
+      "minRows": 1,
+      "label": "Menu",
+      "labels": {
+        "singular": "Mục menu",
+        "plural": "Mục menu"
+      },
+      "admin": {
+        "description": "Thứ tự từ trái sang. Menu con lấy tự động từ các trang của section được chọn."
+      },
+      "fields": [
+        {
+          "name": "label",
+          "type": "text",
+          "label": "Chữ trên menu",
+          "required": true
+        },
+        {
+          "name": "href",
+          "type": "text",
+          "label": "Link",
+          "admin": {
+            "description": "Trang trong website bắt đầu bằng /, ví dụ /giai-phap/."
+          },
+          "required": true
+        },
+        {
+          "name": "menu",
+          "type": "select",
+          "label": "Menu con",
+          "options": [
+            {
+              "label": "Các trang Giải pháp",
+              "value": "giai-phap"
+            },
+            {
+              "label": "Các trang Use Case",
+              "value": "ung-dung"
+            },
+            {
+              "label": "Các trang Về THEHEGEO",
+              "value": "ve-thehegeo"
+            }
+          ],
+          "admin": {
+            "description": "Tuỳ chọn. Để trống thì không có menu con."
+          }
+        }
+      ]
+    }
+  ]
+}

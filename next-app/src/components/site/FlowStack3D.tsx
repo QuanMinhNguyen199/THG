@@ -10,7 +10,7 @@
 // block positions.
 
 import { useCallback, useEffect, useLayoutEffect, useRef, useState, type CSSProperties } from "react";
-import { layers } from "./content";
+import { useContent } from "../cms/EditorBridge";
 import { WAVES, litTiming, seedOf } from "./flowSignals";
 import type { StackGL } from "./FlowStackGL";
 import { chooseRenderer, rememberCSS } from "./stackRenderer";
@@ -114,6 +114,7 @@ export function FlowStack3D({
   onChoose: (col: number, i: number) => void;
   onTier: (col: number) => void;
 }) {
+  const { layers } = useContent().geoagents.architecture;
   const root = useRef<HTMLDivElement>(null);
   const scene = useRef<HTMLDivElement>(null);
   const world = useRef<HTMLDivElement>(null);

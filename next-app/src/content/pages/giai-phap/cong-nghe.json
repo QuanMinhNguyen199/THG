@@ -1,0 +1,152 @@
+{
+  "name": "Giải pháp Công nghệ",
+  "kind": "Thiết bị và AI tại biên",
+  "title": "Tự nghiên cứu, tự chế tạo. Đưa AI ra tận hiện trường.",
+  "en": "Researched and built in-house. AI, out in the field.",
+  "lead": "Thehegeo tự nghiên cứu và chế tạo cảm biến và datalogger cho quan trắc công trình lớn. Từ nhu cầu phân tích giao thông trên cầu, Thehegeo phát triển AI phân tích hình ảnh camera, triển khai dạng AI Box. Thehegeo làm chủ công nghệ từ phần cứng, dữ liệu đến AI Agent.",
+  "model": [
+    {
+      "id": "m1",
+      "blockType": "devices",
+      "items": [
+        {
+          "text": "Cảm biến"
+        },
+        {
+          "text": "Datalogger"
+        },
+        {
+          "text": "AI Box"
+        },
+        {
+          "text": "Cảnh báo"
+        }
+      ]
+    }
+  ],
+  "blocks": [
+    {
+      "id": "b1",
+      "blockType": "text",
+      "title": "Sinh ra từ nhu cầu ở hiện trường",
+      "body": [
+        {
+          "text": "Cảng Phước An, các cầu dây văng lớn, tuyến metro số 1 TP.HCM cần giám sát kết cấu, tai biến địa chất và môi trường. Vì vậy Thehegeo tự nghiên cứu và chế tạo cảm biến cùng bộ ghi dữ liệu."
+        },
+        {
+          "text": "Đây là đo lường công nghiệp cho công trình quy mô lớn, đòi hỏi độ ổn định và chính xác rất cao. Sau đó, chính những thiết bị này được đưa vào nhà máy thông minh."
+        }
+      ]
+    },
+    {
+      "id": "b2",
+      "blockType": "table",
+      "title": "Dòng thiết bị",
+      "head": [
+        {
+          "text": "Thiết bị"
+        },
+        {
+          "text": "Làm gì"
+        },
+        {
+          "text": "Dùng ở đâu"
+        }
+      ],
+      "rows": [
+        {
+          "cells": [
+            {
+              "text": "Cảm biến"
+            },
+            {
+              "text": "Đo nghiêng, ứng suất, áp lực"
+            },
+            {
+              "text": "Cầu, cảng, metro"
+            }
+          ]
+        },
+        {
+          "cells": [
+            {
+              "text": "Datalogger"
+            },
+            {
+              "text": "Đọc dữ liệu cảm biến, đẩy lên cloud và datalake"
+            },
+            {
+              "text": "Các hệ thống quan trắc của Thehegeo"
+            }
+          ]
+        },
+        {
+          "cells": [
+            {
+              "text": "AI Box"
+            },
+            {
+              "text": "Chạy AI phân tích hình ảnh camera"
+            },
+            {
+              "text": "Giao thông (TranspoX), an ninh đô thị (CiviX)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "b3",
+      "blockType": "steps",
+      "title": "Từ thiết bị đến cảnh báo",
+      "flow": true,
+      "items": [
+        {
+          "title": "Cảm biến đo"
+        },
+        {
+          "title": "Datalogger đẩy dữ liệu lên cloud, datalake"
+        },
+        {
+          "title": "Phân tích dữ liệu lớn để cảnh báo sớm sức khỏe kết cấu"
+        },
+        {
+          "title": "Người phụ trách nhận cảnh báo và quyết định"
+        }
+      ]
+    },
+    {
+      "id": "b4",
+      "blockType": "list",
+      "title": "Đang chạy ở đâu",
+      "items": [
+        {
+          "title": "Công trình",
+          "body": "Quan trắc cầu dây văng, cảng, metro; ứng dụng AI trong quan trắc hầm đô thị.",
+          "href": "/giai-phap/aiot/"
+        },
+        {
+          "title": "Giao thông",
+          "body": "TranspoX, AI cho giao thông thông minh."
+        },
+        {
+          "title": "An ninh đô thị",
+          "body": "CiviX, camera AI và đám mây."
+        }
+      ]
+    },
+    {
+      "id": "b5",
+      "blockType": "callout",
+      "title": "Hướng tới: Physical AI",
+      "body": "Cảm biến, cơ khí, bo mạch của những năm qua là nền để Thehegeo hướng tới Physical AI, nơi AI Agent không chỉ làm việc với văn bản, dữ liệu mà còn điều khiển thiết bị, robot trong thế giới thật. Đây là hướng phát triển, chưa phải sản phẩm đang cung cấp.",
+      "en": "Where we are heading: agents that work not only with documents and data, but also control devices and robots in the real world. A direction, not a product on offer today."
+    }
+  ],
+  "cta": [
+    {
+      "label": "Trao đổi về bài toán thiết bị của anh/chị",
+      "href": "/ve-thehegeo/lien-he/"
+    }
+  ]
+}

@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { EditorBridge } from "../cms/EditorBridge";
 import { BackToTop, ScrollLight, ThemeDock } from "./Chrome";
 import { ConceptEffects } from "./ConceptEffects";
 import { Cta } from "./Cta";
@@ -13,22 +14,25 @@ import { SiteProvider } from "./SiteContext";
 export function SiteShell({ children, subpage = false, cta = true }: { children: ReactNode; subpage?: boolean; cta?: boolean }) {
   return (
     <SiteProvider>
-      <div className={`shared-page${subpage ? " is-subpage" : ""}`}>
-        <div className="bg-grid" aria-hidden="true" />
-        <a className="skip" href="#main">
-          Đến nội dung
-        </a>
-        <Header />
-        <ScrollLight />
-        <main id="main">
-          {children}
-          {cta && <Cta />}
-          <Footer />
-        </main>
-      </div>
-      <BackToTop />
-      <ThemeDock />
-      <ConceptEffects />
+      {/* Gives every part of the page its content (published, or the content editor's drafts). */}
+      <EditorBridge>
+        <div className={`shared-page${subpage ? " is-subpage" : ""}`}>
+          <div className="bg-grid" aria-hidden="true" />
+          <a className="skip" href="#main">
+            Đến nội dung
+          </a>
+          <Header />
+          <ScrollLight />
+          <main id="main">
+            {children}
+            {cta && <Cta />}
+            <Footer />
+          </main>
+        </div>
+        <BackToTop />
+        <ThemeDock />
+        <ConceptEffects />
+      </EditorBridge>
     </SiteProvider>
   );
 }

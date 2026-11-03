@@ -15,11 +15,14 @@ export function validateDocument(document, collection) {
         case 'text':
         case 'textarea':
           if (typeof item !== 'string' || (field.required && !item.trim())) throw new Error(`${key}: expected text`);
-          if (['href', 'image'].includes(field.name) && !(/^(\/(?!\/)|https?:\/\/|#)/.test(item))) throw new Error(`${key}: expected local path, anchor or HTTP(S) URL`);
+          if ((['href', 'image'].includes(field.name) || field.name.endsWith('Href')) && !(/^(\/(?!\/)|https?:\/\/|#)/.test(item))) throw new Error(`${key}: expected local path, anchor or HTTP(S) URL`);
           break;
         case 'number':
           if (typeof item !== 'number' || !Number.isFinite(item) || item < (field.min ?? -Infinity) || item > (field.max ?? Infinity)) throw new Error(`${key}: invalid number`);
           if (field.name === 'minDigits' && !Number.isInteger(item)) throw new Error(`${key}: expected integer`);
+          break;
+        case 'group':
+          fields(item, field.fields, key);
           break;
         case 'checkbox':
           if (typeof item !== 'boolean') throw new Error(`${key}: expected boolean`);
@@ -30,6 +33,7 @@ export function validateDocument(document, collection) {
         case 'array':
         case 'blocks': {
           if (!Array.isArray(item) || item.length < (field.minRows ?? 0)) throw new Error(`${key}: invalid array`);
+          if (item.length > (field.maxRows ?? Infinity)) throw new Error(`${key}: too many rows`);
           const ids = new Set();
           const anchors = new Set();
           item.forEach((row, index) => {
