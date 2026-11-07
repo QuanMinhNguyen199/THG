@@ -54,22 +54,29 @@ export function HomeTiers({ names }: { names: { product: string; label: string }
   const [active, setActive] = useState(0);
   const [inView, setInView] = useState(false);
   const [hover, setHover] = useState<number | null>(null);
+  // Once the visitor picks a tier it stays picked: no auto-advance takes it away.
+  const [picked, setPicked] = useState(false);
 
   useEffect(() => {
     const el = root.current;
     if (!el) return;
     const io = new IntersectionObserver(([e]) => setInView(e.isIntersecting), { threshold: 0.3 });
     io.observe(el);
-    // The tier list sits in the copy column beside this picture.
+    // The tier list sits in the copy column beside this picture. A click or tap picks a tier;
+    // a mouse hover only previews it (touch fires enter/leave around every tap, so it is ignored).
     const items = [...(el.closest("section")?.querySelectorAll<HTMLLIElement>(".home-tiers li") ?? [])];
     const off = items.map((li, i) => {
-      const enter = () => setHover(i);
+      const enter = (e: PointerEvent) => { if (e.pointerType === "mouse") setHover(i); };
       const leave = () => setHover(null);
+      const pick = () => { setActive(i); setPicked(true); };
+      const button = li.querySelector("button");
       li.addEventListener("pointerenter", enter);
       li.addEventListener("pointerleave", leave);
+      button?.addEventListener("click", pick);
       return () => {
         li.removeEventListener("pointerenter", enter);
         li.removeEventListener("pointerleave", leave);
+        button?.removeEventListener("click", pick);
       };
     });
     return () => {
@@ -80,18 +87,21 @@ export function HomeTiers({ names }: { names: { product: string; label: string }
 
   const still = paused || (typeof matchMedia !== "undefined" && matchMedia("(prefers-reduced-motion: reduce)").matches);
   useEffect(() => {
-    if (!inView || still || hover !== null) return;
+    if (!inView || still || picked || hover !== null) return;
     const id = setInterval(() => setActive((a) => (a + 1) % UNITS.length), STEP_MS);
     return () => clearInterval(id);
-  }, [inView, still, hover]);
+  }, [inView, still, picked, hover]);
 
   const focus = hover ?? active;
 
-  // Mark the focused tier in the list too.
+  // Mark the focused tier in the list too; the picked one is announced as the current tier.
   useEffect(() => {
     const items = root.current?.closest("section")?.querySelectorAll(".home-tiers li");
-    items?.forEach((li, i) => li.classList.toggle("is-focus", i === focus));
-  }, [focus]);
+    items?.forEach((li, i) => {
+      li.classList.toggle("is-focus", i === focus);
+      li.querySelector("button")?.setAttribute("aria-pressed", String(i === active));
+    });
+  }, [focus, active]);
 
   const decks = UNITS.map(units);
   // Cables: from each unit straight up to the underside of the deck above. Drawn over the lower

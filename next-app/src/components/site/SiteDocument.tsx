@@ -21,6 +21,7 @@ import "@/styles/site/corporate.css";
 import "@/styles/site/blocks.css";
 import "@/styles/site/models.css";
 import "@/styles/site/mobile.css";
+import { MotionCheck, motionCheckInit } from "./MotionCheck";
 
 // The site CSS refers to these variables instead of hard-coded family names.
 const body = Manrope({
@@ -41,8 +42,12 @@ export function SiteDocument({ children }: { children: ReactNode }) {
     <html lang="vi" data-theme="tech" className={body.variable} suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeInit }} />
+        <script dangerouslySetInnerHTML={{ __html: motionCheckInit }} />
       </head>
-      <body>{children}</body>
+      <body>
+        {children}
+        <MotionCheck />
+      </body>
     </html>
   );
 }
