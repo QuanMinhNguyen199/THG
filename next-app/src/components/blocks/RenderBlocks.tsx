@@ -7,6 +7,7 @@ import { HomeDemo } from "../site/HomeDemo";
 import { Metrics } from "../site/Metrics";
 import { Cta } from "../site/Cta";
 import { PartnerMark } from "../site/PartnerMark";
+import { PartnerCarousel } from "../site/PartnerCarousel";
 
 const Arrow = () => <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9" /></svg>;
 
@@ -20,11 +21,11 @@ function Block({ block }: { block: PageBlock }) {
     case "partners": return (
       <section className="wrap home-partners" id={anchor} aria-labelledby={titleId}>
         <h2 id={titleId}>{block.title}</h2>
-        <div className="partner-marquee"><div className="partner-track">
+        <PartnerCarousel><div className="partner-track">
           {[0, 1].map(copy => <ul key={copy} aria-hidden={copy === 1 || undefined}>
             {block.items.map((item, index) => <li key={index}><PartnerMark name={item.name} eager /></li>)}
           </ul>)}
-        </div></div>
+        </div></PartnerCarousel>
         <Link className="home-link" href={block.href} scroll={false}>{block.linkLabel} <Arrow /></Link>
       </section>
     );
@@ -33,7 +34,7 @@ function Block({ block }: { block: PageBlock }) {
         <div className="home-split-copy">
           <p className="home-kicker">{block.kicker}</p>
           <h2 id={titleId}>{block.title}<br /><span>{block.highlight}</span></h2>
-          <ul className="home-tiers">{block.items.map((item, index) => <li key={index}><strong>{item.product}</strong><span>{item.label}</span></li>)}</ul>
+          <ul className="home-tiers">{block.items.map((item, index) => <li key={index}><button type="button"><strong>{item.product}</strong><span>{item.label}</span></button></li>)}</ul>
           <Link className="home-link" href={block.href} scroll={false}>{block.linkLabel} <Arrow /></Link>
         </div>
         <HomeTiers names={block.items} />

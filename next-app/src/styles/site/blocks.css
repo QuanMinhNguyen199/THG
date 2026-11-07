@@ -230,9 +230,11 @@
 /* Home: the partner strip */
 .home-partners { padding: 72px 0; border-top: 1px solid var(--line); }
 .home-partners h2 { margin: 0 0 28px; font-size: 13px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); }
-/* A display strip, not a control: it keeps drifting and takes no pointer or touch input. */
+/* Normally a display strip, not a control: it keeps drifting and takes no pointer or touch input. */
+.partner-carousel { margin-bottom: 24px; min-width: 0; }
+.partner-nav { display: none; }
 .partner-marquee {
-  margin: 0 0 24px; overflow: hidden; pointer-events: none; user-select: none; -webkit-user-select: none;
+  min-width: 0; overflow: hidden; pointer-events: none; user-select: none; -webkit-user-select: none;
   -webkit-mask-image: linear-gradient(90deg, #0000, #000 8%, #000 92%, #0000); mask-image: linear-gradient(90deg, #0000, #000 8%, #000 92%, #0000);
 }
 .partner-track { display: flex; width: max-content; animation: partner-drift 60s linear infinite; }
@@ -240,12 +242,40 @@
 .partner-track .partner-mark { min-height: 110px; white-space: nowrap; }
 .partner-track .partner-mark img { width: calc(var(--logo-w) * var(--logo-k, 1)); max-width: none; }
 @keyframes partner-drift { to { transform: translateX(-50%); } }
+/* Reduced motion (also what Windows "best performance" / animations-off sends on slow machines):
+   the strip shows whole logos without fading the edges, and becomes a stationary row the
+   visitor moves with arrows (mouse devices) or by swiping (touch), never showing a scrollbar. */
 @media (prefers-reduced-motion: reduce) {
-  .partner-marquee { -webkit-mask-image: none; mask-image: none; }
-  .partner-track { width: auto; animation: none; }
-  /* Without the drift, the logos sit in aligned columns instead of ragged centred rows. */
-  .partner-track ul { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 8px 32px; padding: 0; }
-  .partner-track ul[aria-hidden] { display: none; }
+  .partner-marquee {
+    --partner-visible: 6; --partner-gap: 32px;
+    overflow-x: auto; overscroll-behavior-x: contain; pointer-events: auto;
+    scrollbar-width: none; scroll-snap-type: x mandatory;
+    -webkit-mask-image: none; mask-image: none;
+  }
+  .partner-marquee::-webkit-scrollbar { display: none; }
+  .partner-track { width: 100%; animation: none; }
+  .partner-marquee .partner-track ul {
+    flex: 0 0 100%; width: 100%; min-width: 0; display: grid; grid-auto-flow: column;
+    grid-auto-columns: calc((100% - (var(--partner-visible) - 1) * var(--partner-gap)) / var(--partner-visible));
+    gap: var(--partner-gap); padding: 0;
+  }
+  .partner-track li { min-width: 0; scroll-snap-align: start; }
+  .partner-track .partner-mark { white-space: normal; overflow-wrap: anywhere; }
+  .partner-track .partner-mark img { max-width: 100%; }
+  .partner-marquee .partner-track ul[aria-hidden] { display: none; }
+}
+@media (prefers-reduced-motion: reduce) and (max-width: 1023px) {
+  .partner-marquee { --partner-visible: 4; --partner-gap: 24px; }
+}
+@media (prefers-reduced-motion: reduce) and (max-width: 720px) {
+  .partner-marquee { --partner-visible: 2; --partner-gap: 20px; }
+}
+@media (prefers-reduced-motion: reduce) and (min-width: 1024px) and (hover: hover) and (pointer: fine) {
+  .partner-carousel { display: grid; grid-template-columns: 44px minmax(0, 1fr) 44px; gap: 12px; align-items: center; }
+  .partner-nav { display: grid; place-items: center; width: 44px; height: 44px; padding: 10px; border: 1px solid var(--line); border-radius: 50%; background: transparent; color: var(--white); }
+  .partner-nav:hover:not(:disabled) { border-color: var(--red); }
+  .partner-nav:disabled { opacity: 0.35; cursor: default; }
+  .partner-nav svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 1.8; }
 }
 
 @media (max-width: 1023px) {
@@ -347,3 +377,11 @@
   .project-evidence-client { max-width: none; }
   .project-evidence-dossier { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; margin-top: 20px; }
 }
+
+/* QA switch for reduced motion (MotionCheck): bottom-left, clear of the to-top button. */
+.motion-check {
+  position: fixed; left: 16px; bottom: 64px; z-index: var(--z-popover);
+  min-height: 36px; padding: 8px 12px; border: 1px solid var(--line); border-radius: 8px;
+  background: var(--bg); color: var(--white); font-size: 13px; font-weight: 600; box-shadow: 0 6px 20px #0004;
+}
+.motion-check.is-on { background: var(--red); border-color: var(--red); color: #fff; }

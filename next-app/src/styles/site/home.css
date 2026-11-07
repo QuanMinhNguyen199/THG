@@ -18,7 +18,9 @@
 .home-split h2 span, .home-tiles-title span { color: var(--accent-text, var(--red)); }
 .home-lead { margin: 24px 0 0; max-width: 46ch; font-size: 17px; line-height: 1.75; color: color-mix(in srgb, var(--white) 76%, transparent); }
 .home-tiers { margin: 32px 0 0; padding: 0; list-style: none; border-top: 1px solid var(--line); }
-.home-tiers li { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; padding: 14px 0; border-bottom: 1px solid var(--line); }
+.home-tiers li { border-bottom: 1px solid var(--line); }
+.home-tiers button { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; width: 100%; min-height: 48px; padding: 14px 0; background: none; text-align: left; }
+.home-tiers button:hover strong { color: var(--red-text); }
 .home-tiers strong { font-size: 13px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--white); }
 .home-tiers span { font-size: 15px; color: var(--muted); }
 .home-link { display: inline-flex; align-items: center; gap: 10px; margin-top: 28px; font-size: 15px; font-weight: 600; color: var(--accent-text, var(--red)); }
